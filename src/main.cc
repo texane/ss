@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Mon Oct  4 22:49:16 2010 texane
+// Last update Mon Oct  4 23:06:13 2010 texane
 //
 
 
@@ -103,25 +103,50 @@ static cpSpace* create_space(conf& conf)
   list<conf::object_t>::const_iterator end = conf._objects.end();
   for (; pos != end; ++pos)
   {
-    if (pos->_type != conf::object::OBJECT_TYPE_WALL)
-      continue ;
+    switch (pos->_type)
+    {
+    case conf::object::OBJECT_TYPE_WALL:
+      {
+	// body
+	cpBody* const body = cpBodyNew(INFINITY, INFINITY);
+	body->p = cpv(pos->_x, pos->_y); // position
+	cpSpaceAddBody(space, body);
 
-    // body
+	// shape
+	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
+	cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
+	cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
+	shape->e = 1.f; // elasticity
+	shape->u = 1.f; // friction
+	cpSpaceAddStaticShape(space, shape);
 
-    cpBody* const body = cpBodyNew(INFINITY, INFINITY);
-    body->p = cpv(pos->_x, pos->_y); // position
-    cpSpaceAddBody(space, body);
+	break;
+      }
 
-    // shape
+#if 0
+    case conf::object::OBJECT_TYPE_RED_BOT:
+    case conf::object::OBJECT_TYPE_BLUE_BOT:
+      {
+	// body
+	cpBody* const body = cpBodyNew(INFINITY, INFINITY);
+	body->p = cpv(pos->_x, pos->_y); // position
+	cpSpaceAddBody(space, body);
 
-    cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
-    cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
+	// shape
+	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
+	cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
+	cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
+	shape->e = 1.f; // elasticity
+	shape->u = 1.f; // friction
+	cpSpaceAddShape(space, shape);
+	break;
+      }
+#endif
 
-    cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
-    shape->e = 1.f; // elasticity
-    shape->u = 1.f; // friction
+    default:
+      break;
+    }
 
-    cpSpaceAddShape(space, shape);
   }
 
   return space;
