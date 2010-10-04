@@ -2,14 +2,14 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct  4 19:57:57 2010 texane
+## Last update Mon Oct  4 22:11:22 2010 texane
 ##
 
 
 CC	:=	g++
 LD	:=	g++
-CFLAGS	:=	-Wall -Werror -O3 `pkg-config --cflags sdl` -I../src
-LFLAGS	:=	`pkg-config --libs sdl`
+CFLAGS	:=	-Wall -O3 `pkg-config --cflags sdl` -I../src
+LFLAGS	:=	`pkg-config --libs sdl` -lchipmunk
 RM	:=	rm -f
 
 

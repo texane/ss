@@ -37,12 +37,14 @@ public:
 
   } object_t;
 
-
   // members
   static const double _space_width = 3000;
   static const double _space_height = 2000;
 
   std::list<object_t> _objects;
+
+  unsigned int _active_count;
+  unsigned int _static_count;
 
   // exported
   int load(const char*);

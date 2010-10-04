@@ -1,5 +1,6 @@
-. physics engine
- . chipmunk
+. chipmunk physics engine
+ . bodies
+ . arbitrer, collision
 
 . since 2d, associate a weight in case of a multiobject
  . the object color (yellow) is dependent on the weight

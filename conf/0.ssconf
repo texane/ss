@@ -2,7 +2,7 @@
 # map index xxx
 #
 
-# bot0
+# red bot
 begin object
 type red_bot
 x 0
@@ -10,7 +10,7 @@ y 42
 a 90
 end object
 
-# bot1
+# blue
 begin object
 type blue_bot
 x 42
@@ -18,7 +18,7 @@ y 0
 a -90
 end object
 
-# object 0
+# pawn 0
 begin object
 type pawn
 x 42
@@ -27,11 +27,29 @@ w 24
 h 24
 end object
 
-# object 1
+# king
 begin object
 type king
 x 42
 y 42
 w 24
 h 24
+end object
+
+# top wall
+begin object
+type wall
+x 1500
+y 300
+w 2000
+h 10
+end object
+
+# bottom wall
+begin object
+type wall
+x 1500
+y 1700
+w 2000
+h 10
 end object

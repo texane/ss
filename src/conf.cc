@@ -178,6 +178,9 @@ int conf::load(const char* path)
 
   object_t object;
 
+  _active_count = 0;
+  _static_count = 0;
+
   if (map_file(&mf, path) == -1)
     return -1;
 
@@ -189,7 +192,13 @@ int conf::load(const char* path)
     if (key.compare("begin") == 0)
       memset(&object, 0, sizeof(object));
     else if (key.compare("end") == 0)
+    {
       _objects.push_back(object);
+      if (object._type != object::OBJECT_TYPE_WALL)
+	++_active_count;
+      else
+	++_static_count;
+    }
     else if (key.compare("type") == 0)
       object._type = str_to_type(val);
     else if (key.compare("x") == 0)
