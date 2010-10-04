@@ -1,0 +1,8 @@
+. since 2d, associate a weight in case of a multiobject
+ . the object color (yellow) is dependent on the weight
+
+. scale_coords(world(x, y), x::width, x::height);
+ . scale
+
+. state snapshot
+ . snap::load, snap::store
