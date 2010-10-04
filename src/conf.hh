@@ -43,8 +43,8 @@ namespace conf
 
     unsigned int _map_index;
 
-    double _map_width;
-    double _map_height;
+    static const double _space_width = 3000;
+    static const double _space_height = 2000;
 
     list<object_t> _obj_confs;
 

@@ -1,3 +1,6 @@
+. physics engine
+ . chipmunk
+
 . since 2d, associate a weight in case of a multiobject
  . the object color (yellow) is dependent on the weight
 
