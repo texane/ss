@@ -200,6 +200,8 @@ int conf::load(const char* path)
       object._w = ::atof(val.c_str());
     else if (key.compare("h") == 0)
       object._h = ::atof(val.c_str());
+    else if (key.compare("a") == 0)
+      object._a = ::atof(val.c_str());
   }
 
   unmap_file(&mf);
@@ -234,7 +236,9 @@ typedef struct printer
 {
   void operator()(const conf::object& o) const
   {
-    printf("%s\n", type_to_str(o._type).c_str());
+    printf("%s %lf %lf %lf %lf %lf\n",
+	   type_to_str(o._type).c_str(),
+	   o._x, o._y, o._w, o._h, o._a);
   }
 
 } printer_t;

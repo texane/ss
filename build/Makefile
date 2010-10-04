@@ -2,21 +2,22 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct  4 12:15:55 2010 fabien le mentec
+## Last update Mon Oct  4 19:57:57 2010 texane
 ##
 
 
 CC	:=	g++
 LD	:=	g++
-CFLAGS	:=	-Wall -Werror -O3 -I../src -DCONFIG_DEBUG=1
-LFLAGS	:=	
+CFLAGS	:=	-Wall -Werror -O3 `pkg-config --cflags sdl` -I../src
+LFLAGS	:=	`pkg-config --libs sdl`
 RM	:=	rm -f
 
 
 BIN	:=	ss
 
 SRCS	:=	../src/main.cc		\
-		../src/conf.cc
+		../src/conf.cc		\
+		../src/x.cc
 
 OBJS	:=	$(SRCS:.cc=.o)
 

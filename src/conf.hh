@@ -33,6 +33,8 @@ public:
     double _w;
     double _h;
 
+    double _a;
+
   } object_t;
 
 

@@ -7,6 +7,7 @@ begin object
 type red_bot
 x 0
 y 42
+a 90
 end object
 
 # bot1
@@ -14,6 +15,7 @@ begin object
 type blue_bot
 x 42
 y 0
+a -90
 end object
 
 # object 0
