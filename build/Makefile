@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct  4 08:40:54 2010 fabien le mentec
+## Last update Mon Oct  4 08:57:16 2010 fabien le mentec
 ##
 
 
@@ -17,7 +17,9 @@ BIN	:=	ss
 
 SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
-		../src/view.cc
+		../src/view.cc		\
+		../src/bot.cc		\
+		../src/asserv.cc
 
 OBJS	:=	$(SRCS:.cc=.o)
 
