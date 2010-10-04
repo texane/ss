@@ -1,0 +1,35 @@
+# simple simu conf file
+# map index xxx
+#
+
+# bot0
+begin object
+type red_bot
+x 0
+y 42
+end
+
+# bot1
+begin object
+type blue_bot
+x 42
+y 0
+end
+
+# object 0
+begin object
+type pawn
+x 42
+y 42
+w 24
+h 24
+end
+
+# object 1
+begin object
+type king
+x 42
+y 42
+w 24
+h 24
+end

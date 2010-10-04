@@ -3,57 +3,52 @@
 
 
 #include <list>
+#include <string>
 
 
-namespace conf
+class conf
 {
-  // robot configuration
-  typedef struct bot
-  {
-    // bot type
-    std::string _type;
-
-    double _x;
-    double _y;
-
-    bool _is_red;
-
-  } bot_t;
-
+public:
 
   // object configuration
   typedef struct object
   {
+    enum object_type
+    {
+      OBJECT_TYPE_BLUE_BOT = 0,
+      OBJECT_TYPE_RED_BOT,
+      OBJECT_TYPE_PAWN,
+      OBJECT_TYPE_KING,
+      OBJECT_TYPE_QUEEN,
+      OBJECT_TYPE_WALL,
+      OBJECT_TYPE_INVALID
+    };
+
     // object type
-    std::string _type;
+    enum object_type _type;
 
     double _x;
     double _y;
 
-    // radius in case of a circle
-    double _width;
-    double _height;
+    double _w;
+    double _h;
 
   } object_t;
 
-  // grouped configuration
-  typedef struct all
-  {
-    std::list<bot_t> _bot_confs;
 
-    unsigned int _map_index;
+  // members
+  static const double _space_width = 3000;
+  static const double _space_height = 2000;
 
-    static const double _space_width = 3000;
-    static const double _space_height = 2000;
-
-    list<object_t> _obj_confs;
-
-  } all_t;
-
+  std::list<object_t> _objects;
 
   // exported
-  int load(all_t&, const char*);
-}
+  int load(const char*);
+
+#if CONFIG_DEBUG
+  void print() const;
+#endif
+};
 
 
 #endif // ! CONF_HH_INCLUDED

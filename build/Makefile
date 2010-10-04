@@ -2,13 +2,13 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct  4 08:57:16 2010 fabien le mentec
+## Last update Mon Oct  4 12:15:55 2010 fabien le mentec
 ##
 
 
 CC	:=	g++
 LD	:=	g++
-CFLAGS	:=	-Wall -Werror -O3 -I../src
+CFLAGS	:=	-Wall -Werror -O3 -I../src -DCONFIG_DEBUG=1
 LFLAGS	:=	
 RM	:=	rm -f
 
@@ -16,10 +16,7 @@ RM	:=	rm -f
 BIN	:=	ss
 
 SRCS	:=	../src/main.cc		\
-		../src/conf.cc		\
-		../src/view.cc		\
-		../src/bot.cc		\
-		../src/asserv.cc
+		../src/conf.cc
 
 OBJS	:=	$(SRCS:.cc=.o)
 
