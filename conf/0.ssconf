@@ -7,14 +7,14 @@ begin object
 type red_bot
 x 0
 y 42
-end
+end object
 
 # bot1
 begin object
 type blue_bot
 x 42
 y 0
-end
+end object
 
 # object 0
 begin object
@@ -23,7 +23,7 @@ x 42
 y 42
 w 24
 h 24
-end
+end object
 
 # object 1
 begin object
@@ -32,4 +32,4 @@ x 42
 y 42
 w 24
 h 24
-end
+end object

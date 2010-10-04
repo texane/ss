@@ -210,6 +210,7 @@ int conf::load(const char* path)
 
 #if CONFIG_DEBUG
 
+#include <algorithm>
 #include <stdio.h>
 
 static string type_to_str(enum conf::object::object_type type)
@@ -229,8 +230,18 @@ static string type_to_str(enum conf::object::object_type type)
   return string("invalid");
 }
 
+typedef struct printer
+{
+  void operator()(const conf::object& o) const
+  {
+    printf("%s\n", type_to_str(o._type).c_str());
+  }
+
+} printer_t;
+
 void conf::print() const
 {
+  std::for_each(_objects.begin(), _objects.end(), printer_t());
 }
 
 #endif
