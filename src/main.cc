@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Mon Oct  4 22:15:54 2010 texane
+// Last update Mon Oct  4 22:49:16 2010 texane
 //
 
 
@@ -64,7 +64,6 @@ static void draw_object(cpShape* shape, cpSpace* space)
     break;
 
   case CP_SEGMENT_SHAPE:
-    printf("k\n"); fflush(stdout);
     draw_segment_shape(body, (cpSegmentShape*)shape, space);
     break;
 
@@ -115,8 +114,8 @@ static cpSpace* create_space(conf& conf)
 
     // shape
 
-    cpVect a = cpv(pos->_x - pos->_w / 2, pos->_y);
-    cpVect b = cpv(pos->_x + pos->_w / 2, pos->_y);
+    cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
+    cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
 
     cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
     shape->e = 1.f; // elasticity

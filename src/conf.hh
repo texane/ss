@@ -39,7 +39,7 @@ public:
 
   // members
   static const double _space_width = 3000;
-  static const double _space_height = 2000;
+  static const double _space_height = 2100;
 
   std::list<object_t> _objects;
 

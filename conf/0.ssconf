@@ -40,16 +40,34 @@ end object
 begin object
 type wall
 x 1500
-y 300
-w 2000
-h 10
+y 10
+w 2990
+h 0
+end object
+
+# right wall
+begin object
+type wall
+x 2990
+y 1000
+w 0
+h 1990
 end object
 
 # bottom wall
 begin object
 type wall
 x 1500
-y 1700
-w 2000
-h 10
+y 1990
+w 2990
+h 0
+end object
+
+# left wall
+begin object
+type wall
+x 10
+y 1000
+w 0
+h 1990
 end object
