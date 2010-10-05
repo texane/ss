@@ -2,12 +2,14 @@
 # define BOT_HH_INCLUDED
 
 
-#include "conf.hh"
+class conf;
+struct cpShape;
 
 
 void create_bots(const conf&);
-void schedule_bots();
 void delete_bots();
+void set_bot_physics(bool, cpShape*);
+void schedule_bots();
 
 
 #endif // ! BOT_HH_INCLUDED

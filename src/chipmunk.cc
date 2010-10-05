@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Tue Oct  5 22:25:21 2010 texane
+// Last update Tue Oct  5 23:19:34 2010 texane
 //
 
 
@@ -11,6 +11,7 @@
 
 #include <list>
 #include <chipmunk/chipmunk.h>
+#include "bot.hh"
 #include "x.hh"
 #include "conf.hh"
 
@@ -184,6 +185,12 @@ cpSpace* create_space(conf& conf)
 	shape->e = 1.f; // elasticity
 	shape->u = 1.f; // friction
 	cpSpaceAddShape(space, shape);
+
+	// set the bot physics
+	bool is_red = true;
+	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
+	  is_red = false;
+	set_bot_physics(is_red, shape);
 
 	break;
       }
