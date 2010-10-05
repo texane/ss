@@ -1,3 +1,6 @@
+. todos
+ . create 3 balls that falls
+
 . chipmunk physics engine
  . bodies
  . arbitrer, collision

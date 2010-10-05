@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Mon Oct  4 23:06:13 2010 texane
+// Last update Tue Oct  5 05:37:28 2010 texane
 //
 
 
@@ -91,10 +91,16 @@ static cpSpace* create_space(conf& conf)
 
   cpResetShapeIdCounter();
 
+  // instanciate a space, basic unit of physical interaction
   cpSpace* const space = cpSpaceNew();
   if (space == NULL)
     return NULL;
 
+  space->iterations = ; // iterative solver iteration count
+  space->elasticIterations = ; // idem but for elastic collisions
+  space->gravity = ; // gravity to be used for each body
+
+  // static (optimized non movable), active counts
   cpSpaceResizeStaticHash(space, 40.f, conf._static_count);
   cpSpaceResizeActiveHash(space, 40.f, conf._active_count);
 
