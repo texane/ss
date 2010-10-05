@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct  4 22:11:22 2010 texane
+## Last update Tue Oct  5 22:24:19 2010 texane
 ##
 
 
@@ -17,6 +17,7 @@ BIN	:=	ss
 
 SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
+		../src/chipmunk.cc	\
 		../src/x.cc
 
 OBJS	:=	$(SRCS:.cc=.o)
