@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Tue Oct  5 05:37:28 2010 texane
+// Last update Tue Oct  5 21:16:17 2010 texane
 //
 
 
@@ -35,6 +35,20 @@ static inline void space_to_view
 }
 
 
+static inline void space_to_view
+(cpCircleShape* shape, cpVect& pos, cpFloat& radius)
+{
+  const cpFloat wscale = (cpFloat)conf::_space_width / (cpFloat)x_get_width();
+  const cpFloat hscale = (cpFloat)conf::_space_height / (cpFloat)x_get_height();
+  const cpFloat scale = (wscale + hscale) / 2.f;
+
+  pos.x = shape->tc.x / wscale;
+  pos.y = shape->tc.y / hscale;
+
+  radius = shape->r / scale;
+}
+
+
 static void draw_segment_shape
 (cpBody* body, cpSegmentShape* shape, cpSpace* space)
 {
@@ -53,6 +67,25 @@ static void draw_segment_shape
 }
 
 
+static void draw_circle_shape
+(cpBody* body, cpCircleShape* shape, cpSpace* space)
+{
+  // allocate circle color
+  static const struct x_color* blue_color = NULL;
+  static const unsigned char blue_rgb[3] = {0, 0, 0xff};
+  if (blue_color == NULL)
+    x_alloc_color(blue_rgb, &blue_color);
+
+  // translate from space to view 
+  cpVect pos;
+  double radius;
+  space_to_view(shape, pos, radius);
+
+  // draw the circle
+  x_draw_circle((int)pos.x, (int)pos.y, (int)radius, blue_color);
+}
+
+
 static void draw_object(cpShape* shape, cpSpace* space)
 {
   cpBody* const body = shape->body;
@@ -60,7 +93,7 @@ static void draw_object(cpShape* shape, cpSpace* space)
   switch (shape->klass->type)
   {
   case CP_CIRCLE_SHAPE:
-    // draw_circle_shape(body, (cpCircleShape*)shape, space);
+    draw_circle_shape(body, (cpCircleShape*)shape, space);
     break;
 
   case CP_SEGMENT_SHAPE:
@@ -96,15 +129,18 @@ static cpSpace* create_space(conf& conf)
   if (space == NULL)
     return NULL;
 
-  space->iterations = ; // iterative solver iteration count
-  space->elasticIterations = ; // idem but for elastic collisions
-  space->gravity = ; // gravity to be used for each body
+#if 0
+  space->iterations = 10; // iterative solver iteration count
+  space->elasticIterations = 0.f; // idem but for elastic collisions
+#endif
+  space->gravity = cpv(0.f, 0.f);
 
   // static (optimized non movable), active counts
-  cpSpaceResizeStaticHash(space, 40.f, conf._static_count);
-  cpSpaceResizeActiveHash(space, 40.f, conf._active_count);
+#define AVERAGE_SIZE 40.f
+  cpSpaceResizeStaticHash(space, AVERAGE_SIZE, conf._static_count);
+  cpSpaceResizeActiveHash(space, AVERAGE_SIZE, conf._active_count);
 
-  // add walls
+  // add objects
   list<conf::object_t>::const_iterator pos = conf._objects.begin();
   list<conf::object_t>::const_iterator end = conf._objects.end();
   for (; pos != end; ++pos)
@@ -116,7 +152,6 @@ static cpSpace* create_space(conf& conf)
 	// body
 	cpBody* const body = cpBodyNew(INFINITY, INFINITY);
 	body->p = cpv(pos->_x, pos->_y); // position
-	cpSpaceAddBody(space, body);
 
 	// shape
 	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
@@ -129,25 +164,24 @@ static cpSpace* create_space(conf& conf)
 	break;
       }
 
-#if 0
     case conf::object::OBJECT_TYPE_RED_BOT:
-    case conf::object::OBJECT_TYPE_BLUE_BOT:
       {
 	// body
-	cpBody* const body = cpBodyNew(INFINITY, INFINITY);
+	const cpFloat mass = 5.f;
+	const cpFloat moment = cpMomentForCircle(mass, 0.0f, pos->_w, cpvzero);
+	cpBody* const body = cpBodyNew(mass, moment);
 	body->p = cpv(pos->_x, pos->_y); // position
+	body->v = cpv(0.f, 100.f);
 	cpSpaceAddBody(space, body);
 
 	// shape
-	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
-	cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
-	cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
+	cpVect offset = cpv(0.f, 0.f);
+	cpShape* const shape = cpCircleShapeNew(body, pos->_w, offset);
 	shape->e = 1.f; // elasticity
 	shape->u = 1.f; // friction
 	cpSpaceAddShape(space, shape);
 	break;
       }
-#endif
 
     default:
       break;
@@ -166,6 +200,15 @@ static void destroy_space(cpSpace* space)
 }
 
 
+static void next_space(cpSpace* space)
+{
+#define CONFIG_TICK_MS 40
+  static const cpFloat dt = 0.01;
+  for (size_t i = 0; i < 4; ++i)
+    cpSpaceStep(space, dt);
+}
+
+
 // event handlers
 
 static int on_event(const struct x_event* ev, void* arg)
@@ -173,8 +216,7 @@ static int on_event(const struct x_event* ev, void* arg)
   switch (x_event_get_type(ev))
   {
   case X_EVENT_TICK:
-    // sim::next();
-    // view::update();
+    next_space((cpSpace*)arg);
     draw_space((cpSpace*)arg);
     break;
 
@@ -203,7 +245,8 @@ int main(int ac, char** av)
     return -1;
   }
 
-  if (x_initialize(40) == -1)
+  // trigger every 40ms
+  if (x_initialize(CONFIG_TICK_MS) == -1)
     return -1;
 
   cpSpace* const space = create_space(conf);
