@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Tue Oct  5 22:23:59 2010 texane
+// Last update Tue Oct  5 22:42:10 2010 texane
 //
 
 
@@ -11,6 +11,7 @@
 #include "x.hh"
 #include "conf.hh"
 #include "chipmunk.hh"
+#include "bot.hh"
 
 
 // event handlers
@@ -20,6 +21,7 @@ static int on_event(const struct x_event* ev, void* arg)
   switch (x_event_get_type(ev))
   {
   case X_EVENT_TICK:
+    schedule_bots();
     next_space((cpSpace*)arg);
     draw_space((cpSpace*)arg);
     break;
@@ -48,6 +50,8 @@ int main(int ac, char** av)
     printf("invalid conf\n");
     return -1;
   }
+
+  create_bots(conf);
 
   // trigger every 40ms
   if (x_initialize(CONFIG_TICK_MS) == -1)

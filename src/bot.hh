@@ -2,16 +2,12 @@
 # define BOT_HH_INCLUDED
 
 
-#include "asserv.hh"
+#include "conf.hh"
 
 
-class bot
-{
-public:
-  asserv _asserv;
-
-  void next();
-};
+void create_bots(const conf&);
+void schedule_bots();
+void delete_bots();
 
 
 #endif // ! BOT_HH_INCLUDED
