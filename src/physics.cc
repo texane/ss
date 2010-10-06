@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Wed Oct  6 19:03:58 2010 texane
+// Last update Wed Oct  6 20:50:41 2010 texane
 //
 
 
@@ -155,6 +155,29 @@ static void draw_object(cpShape* shape, cpSpace* space)
 }
 
 
+// pawn velocity function
+
+static void pawn_velocity_func
+(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+  cpBodyUpdateVelocity(body, gravity, damping, dt);
+
+  // ground friction
+  body->v.x *= 0.9;
+  body->v.y *= 0.9;
+}
+
+
+// bot velocity function
+
+static void bot_velocity_func
+(cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+  cpBodyUpdateVelocity(body, gravity, damping, dt);
+  update_bot_velocity(body, (double)dt);
+}
+
+
 // exported
 
 void draw_space(cpSpace* space)
@@ -220,8 +243,9 @@ cpSpace* create_space(conf& conf)
 
 	const cpFloat moment = cpMomentForBox(pos->_w, pos->_w, mass);
 	cpBody* const body = cpBodyNew(mass, moment);
+	body->velocity_func = bot_velocity_func;
 	body->p = cpv(pos->_x, pos->_y); // position
-	body->v = cpv(100.f, 100.f);
+	body->v = cpvzero;
 	cpSpaceAddBody(space, body);
 
 	// shape
@@ -234,12 +258,11 @@ cpSpace* create_space(conf& conf)
 	bool is_red = true;
 	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
 	  is_red = false;
-	set_bot_physics(is_red, (cpPolyShape*)shape);
+	set_bot_physics(is_red, body, (cpPolyShape*)shape);
 
 	break;
       }
 
-#if 0
     case conf::object::OBJECT_TYPE_PAWN:
     case conf::object::OBJECT_TYPE_KING:
     case conf::object::OBJECT_TYPE_QUEEN:
@@ -248,10 +271,11 @@ cpSpace* create_space(conf& conf)
 	if (pos->_type == conf::object::OBJECT_TYPE_PAWN)
 	  mass = 500.f;
 
-	const cpFloat moment = cpMomentForCircle(mass, 0.0f, pos->_w, cpvzero);
+	// solid circles have inner diameters of 0
+	const cpFloat moment = cpMomentForCircle(mass, 0.0f, pos->_w * 2.f, cpvzero);
 	cpBody* const body = cpBodyNew(mass, moment);
+	body->velocity_func = pawn_velocity_func;
 	body->p = cpv(pos->_x, pos->_y); // position
-	body->v = cpv(100.f, 100.f);
 	cpSpaceAddBody(space, body);
 
 	// shape
@@ -263,7 +287,6 @@ cpSpace* create_space(conf& conf)
 
 	break;
       }
-#endif
 
     default:
       break;

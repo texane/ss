@@ -2,13 +2,13 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Wed Oct  6 17:38:25 2010 texane
+// Last update Wed Oct  6 21:12:34 2010 texane
 //
 
 
 #include <list>
 #include <iterator>
-#include <stdlib.h>
+#include <math.h>
 #include "physics.hh"
 #include "conf.hh"
 #include "bot.hh"
@@ -21,16 +21,42 @@ using std::list;
 class bot
 {
   // asserv _asserv;
+  cpBody* _body;
   cpPolyShape* _shape;
 
 public:
-  bot() : _shape(NULL) {}
+  bot() : _body(NULL), _shape(NULL) {}
 
-  void set_physics(cpPolyShape* shape)
-  { _shape = shape; }
+  void set_physics(cpBody* body, cpPolyShape* shape)
+  { 
+    _body = body;
+    _shape = shape;
+  }
 
-  void on_collision()
-  {}
+  bool has_physics(const cpBody* body) const
+  {
+    return body == _body;
+  }
+
+  void update_velocity(cpBody* body, cpFloat dt)
+  {
+    const cpFloat asserv_x = 1500.f;
+    const cpFloat asserv_y = 1050.f;
+    const cpFloat asserv_v = 400.f;
+
+    // simulate asservissement
+    const cpFloat dx = asserv_x - body->p.x;
+    const cpFloat dy = asserv_y - body->p.y;
+    const cpFloat d = ::sqrt(dx * dx + dy * dy);
+
+    body->v.x = 0.f;
+    if (::fabs(dx) > 20.f)
+      body->v.x = (dx * d) / asserv_v;
+
+    body->v.y = 0.f;
+    if (::fabs(dy) > 20.f)
+      body->v.y = (dy * d) / asserv_v;
+  }
 
   void next()
   {
@@ -85,15 +111,13 @@ void delete_bots()
 }
 
 
-void set_bot_physics(bool is_red, cpPolyShape* shape)
+void set_bot_physics(bool is_red, cpBody* body, cpPolyShape* shape)
 {
   // set the bot physics information
   // shape needed when dealing with chipmunk
 
-  if (is_red == true)
-    red_bot.set_physics(shape);
-  else
-    blue_bot.set_physics(shape);
+  bot& b = (is_red == true ? red_bot : blue_bot);
+  b.set_physics(body, shape);
 }
 
 
@@ -101,4 +125,12 @@ void schedule_bots()
 {
   red_bot.next();
   blue_bot.next();
+}
+
+
+void update_bot_velocity(cpBody* body, double dt)
+{
+  // todo: use private user defined pointer
+  bot& b = (red_bot.has_physics(body) == true ? red_bot : blue_bot);
+  b.update_velocity(body, dt);
 }

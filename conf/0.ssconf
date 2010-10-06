@@ -23,18 +23,27 @@ end object
 # pawn 0
 begin object
 type pawn
-x 42
-y 42
-w 950
+x 1500
+y 1050
+w 95
 end object
 
+# right distribution area
+# y pos: 400 + 170 + 340 * n
 # king
 begin object
 type king
-x 42
-y 42
-w 24
-h 24
+x 200
+y 470
+w 95
+end object
+
+# queen
+begin object
+type king
+x 200
+y 910
+w 95
 end object
 
 # top wall
