@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Tue Oct  5 23:57:36 2010 texane
+// Last update Wed Oct  6 17:45:23 2010 texane
 //
 
 
@@ -10,6 +10,7 @@
 
 
 #include <list>
+#include <stdlib.h>
 #include <chipmunk/chipmunk.h>
 #include "bot.hh"
 #include "x.hh"
@@ -19,12 +20,37 @@
 using std::list;
 
 
+// initialize
+
+static cpFloat wscale;
+static cpFloat hscale;
+
+static const struct x_color* red_color = NULL;
+static const struct x_color* blue_color = NULL;
+static const struct x_color* yellow_color = NULL;
+
+static void init_stuff(const conf& conf)
+{
+  // scaling
+  wscale = (cpFloat)conf::_space_width / (cpFloat)x_get_width();
+  hscale = (cpFloat)conf::_space_height / (cpFloat)x_get_height();
+
+  // colors
+  static const unsigned char red_rgb[3] = {0xff, 0, 0};
+  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x0};
+  static const unsigned char blue_rgb[3] = {0, 0, 0xff};
+
+  x_alloc_color(red_rgb, &red_color);
+  x_alloc_color(yellow_rgb, &yellow_color);
+  x_alloc_color(blue_rgb, &blue_color);
+}
+
+
+// world to view translation
+
 static inline void space_to_view
 (cpSegmentShape* shape, cpVect& a, cpVect& b)
 {
-  const cpFloat wscale = (cpFloat)conf::_space_width / (cpFloat)x_get_width();
-  const cpFloat hscale = (cpFloat)conf::_space_height / (cpFloat)x_get_height();
-
   a.x = shape->ta.x / wscale;
   a.y = shape->ta.y / hscale;
 
@@ -32,12 +58,9 @@ static inline void space_to_view
   b.y = shape->tb.y / hscale;
 }
 
-
 static inline void space_to_view
 (cpCircleShape* shape, cpVect& pos, cpFloat& radius)
 {
-  const cpFloat wscale = (cpFloat)conf::_space_width / (cpFloat)x_get_width();
-  const cpFloat hscale = (cpFloat)conf::_space_height / (cpFloat)x_get_height();
   const cpFloat scale = (wscale + hscale) / 2.f;
 
   pos.x = shape->tc.x / wscale;
@@ -46,16 +69,22 @@ static inline void space_to_view
   radius = shape->r / scale;
 }
 
+static inline void space_to_view
+(cpPolyShape* shape, cpVect verts[4])
+{
+  for (size_t i = 0; i < 4; ++i)
+  {
+    verts[i].x = shape->tVerts[i].x / wscale;
+    verts[i].y = shape->tVerts[i].y / hscale;
+  }
+}
 
-static void draw_segment_shape
+
+// shape drawing routines
+
+static void draw_shape
 (cpBody* body, cpSegmentShape* shape, cpSpace* space)
 {
-  // allocate segment color
-  static const struct x_color* red_color = NULL;
-  static const unsigned char red_rgb[3] = {0xff, 0, 0};
-  if (red_color == NULL)
-    x_alloc_color(red_rgb, &red_color);
-
   // translate from space to view 
   cpVect a, b;
   space_to_view(shape, a, b);
@@ -65,22 +94,40 @@ static void draw_segment_shape
 }
 
 
-static void draw_circle_shape
+static void draw_shape
 (cpBody* body, cpCircleShape* shape, cpSpace* space)
 {
-  // allocate circle color
-  static const struct x_color* blue_color = NULL;
-  static const unsigned char blue_rgb[3] = {0, 0, 0xff};
-  if (blue_color == NULL)
-    x_alloc_color(blue_rgb, &blue_color);
-
   // translate from space to view 
   cpVect pos;
   double radius;
   space_to_view(shape, pos, radius);
 
   // draw the circle
-  x_draw_circle((int)pos.x, (int)pos.y, (int)radius, blue_color);
+  x_draw_circle((int)pos.x, (int)pos.y, (int)radius, yellow_color);
+}
+
+
+static void draw_shape
+(cpBody* body, cpPolyShape* shape, cpSpace* space)
+{
+  // translate from space to view 
+  cpVect verts[4];
+  space_to_view(shape, verts);
+
+  int x0 = (int)verts[3].x;
+  int y0 = (int)verts[3].y;
+
+  // draw the circle
+  for (size_t i = 0; i < 4; ++i)
+  {
+    const int x1 = (int)verts[i].x;
+    const int y1 = (int)verts[i].y;
+
+    x_draw_line(x0, y0, x1, y1, blue_color);
+
+    x0 = x1;
+    y0 = y1;
+  }
 }
 
 
@@ -91,15 +138,15 @@ static void draw_object(cpShape* shape, cpSpace* space)
   switch (shape->klass->type)
   {
   case CP_CIRCLE_SHAPE:
-    draw_circle_shape(body, (cpCircleShape*)shape, space);
+    draw_shape(body, (cpCircleShape*)shape, space);
     break;
 
   case CP_SEGMENT_SHAPE:
-    draw_segment_shape(body, (cpSegmentShape*)shape, space);
+    draw_shape(body, (cpSegmentShape*)shape, space);
     break;
 
   case CP_POLY_SHAPE:
-    // draw_poly_shape(body, (cpPolyShape*)shape, space);
+    draw_shape(body, (cpPolyShape*)shape, space);
     break;
 
   default:
@@ -120,6 +167,8 @@ void draw_space(cpSpace* space)
 
 cpSpace* create_space(conf& conf)
 {
+  init_stuff(conf);
+
   cpInitChipmunk();
 
   cpResetShapeIdCounter();
@@ -167,11 +216,37 @@ cpSpace* create_space(conf& conf)
     case conf::object::OBJECT_TYPE_BLUE_BOT:
     case conf::object::OBJECT_TYPE_RED_BOT:
       {
-	// body
+	const cpFloat mass = 6000.f; // mass in grams
 
-	cpFloat mass = 6000.f; // mass in grams
-	if (pos->_type == conf::object::OBJECT_TYPE_RED_BOT)
-	  mass = 1000.f;
+	const cpFloat moment = cpMomentForBox(pos->_w, pos->_w, mass);
+	cpBody* const body = cpBodyNew(mass, moment);
+	body->p = cpv(pos->_x, pos->_y); // position
+	body->v = cpv(100.f, 100.f);
+	cpSpaceAddBody(space, body);
+
+	// shape
+	cpShape* const shape = cpBoxShapeNew(body, pos->_w, pos->_w);
+	shape->e = 1.f; // elasticity
+	shape->u = 1.f; // friction
+	cpSpaceAddShape(space, shape);
+
+	// set the bot physics
+	bool is_red = true;
+	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
+	  is_red = false;
+	set_bot_physics(is_red, (cpPolyShape*)shape);
+
+	break;
+      }
+
+#if 0
+    case conf::object::OBJECT_TYPE_PAWN:
+    case conf::object::OBJECT_TYPE_KING:
+    case conf::object::OBJECT_TYPE_QUEEN:
+      {
+	cpFloat mass = 700.f; // mass in grams
+	if (pos->_type == conf::object::OBJECT_TYPE_PAWN)
+	  mass = 500.f;
 
 	const cpFloat moment = cpMomentForCircle(mass, 0.0f, pos->_w, cpvzero);
 	cpBody* const body = cpBodyNew(mass, moment);
@@ -186,14 +261,9 @@ cpSpace* create_space(conf& conf)
 	shape->u = 1.f; // friction
 	cpSpaceAddShape(space, shape);
 
-	// set the bot physics
-	bool is_red = true;
-	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
-	  is_red = false;
-	set_bot_physics(is_red, (cpCircleShape*)shape);
-
 	break;
       }
+#endif
 
     default:
       break;

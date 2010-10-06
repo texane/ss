@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Wed Oct  6 00:03:17 2010 texane
+// Last update Wed Oct  6 17:38:25 2010 texane
 //
 
 
@@ -21,12 +21,12 @@ using std::list;
 class bot
 {
   // asserv _asserv;
-  cpCircleShape* _shape;
+  cpPolyShape* _shape;
 
 public:
   bot() : _shape(NULL) {}
 
-  void set_physics(cpCircleShape* shape)
+  void set_physics(cpPolyShape* shape)
   { _shape = shape; }
 
   void on_collision()
@@ -34,6 +34,7 @@ public:
 
   void next()
   {
+#if 0
     cpFloat mul = 1.f;
     if (_shape->shape.body->v.x > 0.f)
     {
@@ -47,6 +48,7 @@ public:
     }
 
     _shape->shape.body->v.x *= mul;
+#endif
   }
 };
 
@@ -83,7 +85,7 @@ void delete_bots()
 }
 
 
-void set_bot_physics(bool is_red, cpCircleShape* shape)
+void set_bot_physics(bool is_red, cpPolyShape* shape)
 {
   // set the bot physics information
   // shape needed when dealing with chipmunk
