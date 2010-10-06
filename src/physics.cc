@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Wed Oct  6 17:45:23 2010 texane
+// Last update Wed Oct  6 19:03:58 2010 texane
 //
 
 
@@ -205,7 +205,7 @@ cpSpace* create_space(conf& conf)
 	// shape
 	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
 	cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
-	cpShape* const shape = cpSegmentShapeNew(body, a, b, 10.f);
+	cpShape* const shape = cpSegmentShapeNew(body, a, b, 1.f);
 	shape->e = 1.f; // elasticity
 	shape->u = 1.f; // friction
 	cpSpaceAddStaticShape(space, shape);

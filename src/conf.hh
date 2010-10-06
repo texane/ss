@@ -38,8 +38,8 @@ public:
   } object_t;
 
   // members
-  static const double _space_width = 3000;
-  static const double _space_height = 2100;
+  static const double _space_width = 3000 + 1;
+  static const double _space_height = 2100 + 1;
 
   std::list<object_t> _objects;
 
