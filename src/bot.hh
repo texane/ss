@@ -3,12 +3,12 @@
 
 
 class conf;
-struct cpShape;
+struct cpCircleShape;
 
 
 void create_bots(const conf&);
 void delete_bots();
-void set_bot_physics(bool, cpShape*);
+void set_bot_physics(bool, cpCircleShape*);
 void schedule_bots();
 
 

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Tue Oct  5 23:19:34 2010 texane
+// Last update Tue Oct  5 23:57:36 2010 texane
 //
 
 
@@ -176,7 +176,7 @@ cpSpace* create_space(conf& conf)
 	const cpFloat moment = cpMomentForCircle(mass, 0.0f, pos->_w, cpvzero);
 	cpBody* const body = cpBodyNew(mass, moment);
 	body->p = cpv(pos->_x, pos->_y); // position
-	body->v = cpv(0.f, 100.f);
+	body->v = cpv(100.f, 100.f);
 	cpSpaceAddBody(space, body);
 
 	// shape
@@ -190,7 +190,7 @@ cpSpace* create_space(conf& conf)
 	bool is_red = true;
 	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
 	  is_red = false;
-	set_bot_physics(is_red, shape);
+	set_bot_physics(is_red, (cpCircleShape*)shape);
 
 	break;
       }
