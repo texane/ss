@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Wed Oct  6 23:46:48 2010 texane
+// Last update Thu Oct  7 06:16:26 2010 texane
 //
 
 
@@ -70,14 +70,11 @@ public:
 
     _asserv.set_velocity(400);
 
-    while (1)
-    {
-      _asserv.move_forward(1000);
-      _asserv.wait_done();
+    _asserv.move_forward(400);
+    _asserv.wait_done();
 
-      _asserv.move_forward(-1000);
-      _asserv.wait_done();
-    }
+    _asserv.move_forward(400);
+    _asserv.wait_done();
   }
 
   static void* static_entry(void* arg)

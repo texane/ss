@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Thu Oct  7 00:04:51 2010 texane
+// Last update Thu Oct  7 06:13:01 2010 texane
 //
 
 
@@ -19,10 +19,14 @@ struct cpBody;
 
 class asserv
 {
-  // state
-
+  // concurrent with bot scheduling
   atomic_int_t _lock;
 
+  // user defined values
+  atomic_int_t _conf_v;
+  atomic_int_t _conf_a;
+
+  // actual cached state from physics
   atomic_int_t _x;
   atomic_int_t _y;
   atomic_int_t _v;

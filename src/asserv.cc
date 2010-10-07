@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Thu Oct  7 00:08:25 2010 texane
+// Last update Thu Oct  7 06:16:01 2010 texane
 //
 
 
@@ -62,7 +62,7 @@ asserv::asserv()
 
 void asserv::set_velocity(int v)
 {
-  _v.write(v);
+  _conf_v.write(v);
 }
 
 void asserv::set_position(int x, int y)
@@ -79,18 +79,18 @@ void asserv::get_position(int& x, int& y)
 
 void asserv::set_angle(int a)
 {
-  _a.write(a);
+  _conf_a.write(a);
 }
 
 void asserv::move_forward(int d)
 {
   lock_command();
 
-  const double rads = _a._value * M_PI / 180.f;
+  const double rads = _a.read() + _conf_a.read() * M_PI / 180.f;
 
   const int x = _x._value + (int)(::cos(rads) * (double)d);
   const int y = _y._value + (int)(::sin(rads) * (double)d);
-  set_command(CMD_OP_MOVE_FORWARD, x, y, _v._value);
+  set_command(CMD_OP_MOVE_FORWARD, x, y, _conf_v._value);
 
   unlock_command();
 }
@@ -130,15 +130,24 @@ void asserv::next(cpBody* body)
       const cpFloat d = ::sqrt(dx * dx + dy * dy);
 
       body->v.x = 0.f;
-      if (::fabs(dx) > 30.f)
-	body->v.x = (dx * d) / consign_v;
-
       body->v.y = 0.f;
-      if (::fabs(dy) > 30.f)
-	body->v.y = (dy * d) / consign_v;
 
-      if ((body->v.x == 0.f) && (body->v.y == 0.f))
+      // asserv accuracy
+      if (d > 30.f)
+      {
+	body->v.x = (dx * consign_v) / d;
+	body->v.y = (dy * consign_v) / d;
+      }
+      else
+      {
 	complete_command(CMD_STATUS_SUCCESS);
+      }
+
+      // update state
+      _x.write((int)body->p.x);
+      _y.write((int)body->p.y);
+      _v.write((int)::sqrt(body->v.x * body->v.x + body->v.y * body->v.y));
+      _a.write((int)body->a);
 
       break;
     }
