@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Thu Oct  7 20:19:30 2010 texane
+// Last update Thu Oct  7 22:02:15 2010 texane
 //
 
 
@@ -29,6 +29,10 @@ static cpFloat hscale;
 static const struct x_color* red_color = NULL;
 static const struct x_color* blue_color = NULL;
 static const struct x_color* yellow_color = NULL;
+static const struct x_color* lred_color = NULL;
+static const struct x_color* lblue_color = NULL;
+static const struct x_color* lgreen_color = NULL;
+static const struct x_color* black_color = NULL;
 
 static void init_stuff(const conf& conf)
 {
@@ -37,13 +41,21 @@ static void init_stuff(const conf& conf)
   hscale = (cpFloat)(conf::_space_height + 1.f) / (cpFloat)x_get_height();
 
   // colors
-  static const unsigned char red_rgb[3] = {0xff, 0, 0};
-  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x0};
-  static const unsigned char blue_rgb[3] = {0, 0, 0xff};
+  static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
+  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x00};
+  static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
+  static const unsigned char lred_rgb[3] = {0xff, 0x40, 0x40};
+  static const unsigned char lblue_rgb[3] = {0x40, 0x40, 0xff};
+  static const unsigned char lgreen_rgb[3] = {0x40, 0xff, 0x40};
+  static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
 
   x_alloc_color(red_rgb, &red_color);
   x_alloc_color(yellow_rgb, &yellow_color);
   x_alloc_color(blue_rgb, &blue_color);
+  x_alloc_color(lred_rgb, &lred_color);
+  x_alloc_color(lgreen_rgb, &lgreen_color);
+  x_alloc_color(lblue_rgb, &lblue_color);
+  x_alloc_color(black_rgb, &black_color);
 }
 
 
@@ -83,7 +95,7 @@ static inline void space_to_view
 
 // shape drawing routines
 
-static void draw_shape
+static void __attribute__((unused)) draw_shape
 (cpBody* body, cpSegmentShape* shape, cpSpace* space)
 {
   // translate from space to view 
@@ -142,13 +154,15 @@ static void draw_object(cpShape* shape, cpSpace* space)
     draw_shape(body, (cpCircleShape*)shape, space);
     break;
 
-  case CP_SEGMENT_SHAPE:
-    draw_shape(body, (cpSegmentShape*)shape, space);
-    break;
-
   case CP_POLY_SHAPE:
     draw_shape(body, (cpPolyShape*)shape, space);
     break;
+
+#if 0
+  case CP_SEGMENT_SHAPE:
+    draw_shape(body, (cpSegmentShape*)shape, space);
+    break;
+#endif
 
   default:
     break;
@@ -179,10 +193,63 @@ static void bot_velocity_func
 }
 
 
+// background drawing
+
+static void fill_rectangle
+(int x, int y, int w, int h, const struct x_color* c)
+{
+  // scale values
+  x /= wscale;
+  y /= hscale;
+  w /= wscale;
+  h /= hscale;
+
+  // draw rectangle
+  for (int xx = x; xx < x + w; ++xx)
+    for (int yy = y; yy < y + h; ++yy)
+      x_draw_pixel(xx, yy, c);
+}
+
+static void draw_background()
+{
+  // player areas
+  fill_rectangle(0, 0, 400, 400, lred_color);
+  fill_rectangle(2600, 0, 400, 400, lblue_color);
+
+  // distribution areas
+  fill_rectangle(0, 400, 400, 2700, lgreen_color);
+  fill_rectangle(2600, 400, 400, 2700, lgreen_color);
+
+  // bands
+  fill_rectangle(400, 0, 50, 2100, black_color);
+  fill_rectangle(2550, 0, 50, 2100, black_color);
+
+  // tiles
+  const struct x_color* tile_color = lblue_color;
+  for (int i = 0; i < 6; ++i)
+  {
+    const int y = i * 350;
+    for (int j = 0; j < 6; ++j)
+    {
+      const int x = 450 + j * 350;
+      fill_rectangle(x, y, 350, 350, tile_color);
+      tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
+    }
+    tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
+  }
+
+  // reserved areas
+  fill_rectangle(450, 1980, 700, 120, black_color);
+  fill_rectangle(1850, 1980, 700, 120, black_color);
+}
+
+
 // exported
 
 void draw_space(cpSpace* space)
 {
+  draw_background();
+
   // iterate over static and active shapes
   cpSpaceHashEach(space->activeShapes, (cpSpaceHashIterator)draw_object, space);
   cpSpaceHashEach(space->staticShapes, (cpSpaceHashIterator)draw_object, space);

@@ -35,7 +35,7 @@ end object
 begin object
 type king
 x 200
-y 470
+y 500
 w 95
 end object
 
@@ -43,7 +43,7 @@ end object
 begin object
 type queen
 x 200
-y 770
+y 800
 w 95
 end object
 
@@ -51,7 +51,7 @@ end object
 begin object
 type pawn
 x 200
-y 1070
+y 1100
 w 95
 end object
 
@@ -59,7 +59,7 @@ end object
 begin object
 type pawn
 x 200
-y 1370
+y 1400
 w 95
 end object
 
@@ -67,7 +67,7 @@ end object
 begin object
 type pawn
 x 200
-y 1670
+y 1700
 w 95
 end object
 
