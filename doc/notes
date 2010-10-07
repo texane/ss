@@ -1,5 +1,8 @@
-. todos
- . create 3 balls that falls
+. test turn command stop condition
+ . should not be a difference
+. set w to something negative
+. should have the starting angle
+ . should have the ammount to rotate? 
 
 . chipmunk physics engine
  . bodies

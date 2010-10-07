@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Thu Oct  7 09:06:20 2010 fabien le mentec
+// Last update Thu Oct  7 11:30:30 2010 fabien le mentec
 //
 
 
@@ -64,7 +64,14 @@ public:
 
   void entry()
   {
+    if (_is_red == false) return ;
+
     _asserv.set_velocity(400);
+
+    _asserv.turn(90);
+    _asserv.wait_done();
+
+    return ;
 
     for (size_t i = 0; i < 4; ++i)
     {

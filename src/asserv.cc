@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Thu Oct  7 09:05:27 2010 fabien le mentec
+// Last update Thu Oct  7 11:31:56 2010 fabien le mentec
 //
 
 
@@ -164,12 +164,14 @@ void asserv::next(cpBody* body)
       const cpFloat consign_a = (cpFloat)_cmd._args[0];
       const cpFloat body_a = (cpFloat)((int)body->a % 360);
 
+      printf("a: %lf\n", body_a);
+
       body->w = 0;
 
       if (::fabs(consign_a - body_a) > 0.1f)
       {
 	// angular speed, degrees per second
-	body->w = 360;
+	body->w = 200;
       }
       else
       {
