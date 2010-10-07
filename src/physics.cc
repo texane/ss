@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Wed Oct  6 22:03:37 2010 texane
+// Last update Thu Oct  7 08:56:04 2010 fabien le mentec
 //
 
 
@@ -246,6 +246,7 @@ cpSpace* create_space(conf& conf)
 	body->velocity_func = bot_velocity_func;
 	body->p = cpv(pos->_x, pos->_y); // position
 	body->v = cpvzero;
+	body->a = pos->_a;
 	cpSpaceAddBody(space, body);
 
 	// shape

@@ -11,7 +11,7 @@ w 200
 a 0
 end object
 
-# blue
+# blue bot
 begin object
 type blue_bot
 x 2800

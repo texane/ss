@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Thu Oct  7 06:16:26 2010 texane
+// Last update Thu Oct  7 09:06:20 2010 fabien le mentec
 //
 
 
@@ -48,6 +48,7 @@ public:
     _shape = shape;
 
     _asserv.set_position((int)body->p.x, (int)body->p.y);
+    _asserv.set_angle((int)body->a);
   }
 
   bool has_physics(const cpBody* body) const
@@ -63,18 +64,16 @@ public:
 
   void entry()
   {
-    if (_is_red == true)
-      _asserv.set_angle(0);
-    else
-      _asserv.set_angle(-180);
-
     _asserv.set_velocity(400);
 
-    _asserv.move_forward(400);
-    _asserv.wait_done();
+    for (size_t i = 0; i < 4; ++i)
+    {
+      _asserv.move_forward(400);
+      _asserv.wait_done();
 
-    _asserv.move_forward(400);
-    _asserv.wait_done();
+      _asserv.turn(90);
+      _asserv.wait_done();
+    }
   }
 
   static void* static_entry(void* arg)
@@ -123,6 +122,9 @@ void create_bots(const conf& conf)
 
     b._is_valid = true;
     b._is_red = (pos->_type == conf::object::OBJECT_TYPE_RED_BOT);
+
+    // configure asserv
+    b._asserv.set_angle(pos->_a);
 
     // create bot thread
     b._status = BOT_STATUS_WAIT;

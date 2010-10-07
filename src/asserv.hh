@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Thu Oct  7 06:13:01 2010 texane
+// Last update Thu Oct  7 08:56:39 2010 fabien le mentec
 //
 
 
@@ -24,7 +24,6 @@ class asserv
 
   // user defined values
   atomic_int_t _conf_v;
-  atomic_int_t _conf_a;
 
   // actual cached state from physics
   atomic_int_t _x;
@@ -72,6 +71,7 @@ public:
   void set_velocity(int);
   void set_position(int, int);
   void get_position(int&, int&);
+  int get_angle();
   void set_angle(int);
 
   // commands

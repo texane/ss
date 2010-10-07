@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Thu Oct  7 06:16:01 2010 texane
+// Last update Thu Oct  7 09:05:27 2010 fabien le mentec
 //
 
 
@@ -77,16 +77,21 @@ void asserv::get_position(int& x, int& y)
   y = _y.read();
 }
 
+int asserv::get_angle()
+{
+  return _a.read();
+}
+
 void asserv::set_angle(int a)
 {
-  _conf_a.write(a);
+  _a.write(a);
 }
 
 void asserv::move_forward(int d)
 {
   lock_command();
 
-  const double rads = _a.read() + _conf_a.read() * M_PI / 180.f;
+  const double rads = _a.read() * M_PI / 180.f;
 
   const int x = _x._value + (int)(::cos(rads) * (double)d);
   const int y = _y._value + (int)(::sin(rads) * (double)d);
@@ -97,7 +102,9 @@ void asserv::move_forward(int d)
 
 void asserv::turn(int a)
 {
-  set_command(LOCKED_TAG, CMD_OP_TURN, _a.read() + a);
+  lock_command();
+  set_command(CMD_OP_TURN, (_a._value + a) % 360);
+  unlock_command();
 }
 
 void asserv::wait_done()
@@ -148,6 +155,29 @@ void asserv::next(cpBody* body)
       _y.write((int)body->p.y);
       _v.write((int)::sqrt(body->v.x * body->v.x + body->v.y * body->v.y));
       _a.write((int)body->a);
+
+      break;
+    }
+
+  case CMD_OP_TURN:
+    {
+      const cpFloat consign_a = (cpFloat)_cmd._args[0];
+      const cpFloat body_a = (cpFloat)((int)body->a % 360);
+
+      body->w = 0;
+
+      if (::fabs(consign_a - body_a) > 0.1f)
+      {
+	// angular speed, degrees per second
+	body->w = 360;
+      }
+      else
+      {
+	complete_command(CMD_STATUS_SUCCESS);
+      }
+
+      // update state
+      _a.write((int)body_a);
 
       break;
     }
