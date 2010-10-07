@@ -28,8 +28,9 @@ y 1050
 w 95
 end object
 
-# right distribution area
-# y pos: 400 + 170 + 340 * n
+# left distribution area
+# y pos: 400 + 170 + 300 * n
+
 # king
 begin object
 type king
@@ -40,9 +41,33 @@ end object
 
 # queen
 begin object
-type king
+type queen
 x 200
-y 910
+y 770
+w 95
+end object
+
+# pawn 0
+begin object
+type pawn
+x 200
+y 1070
+w 95
+end object
+
+# pawn 1
+begin object
+type pawn
+x 200
+y 1370
+w 95
+end object
+
+# pawn 2
+begin object
+type pawn
+x 200
+y 1670
 w 95
 end object
 
