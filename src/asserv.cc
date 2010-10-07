@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Thu Oct  7 11:31:56 2010 fabien le mentec
+// Last update Thu Oct  7 21:03:51 2010 texane
 //
 
 
@@ -11,6 +11,8 @@
 #include <math.h>
 #include "physics.hh"
 #include "asserv.hh"
+#include "dtor.hh"
+#include "rtod.hh"
 
 
 // private
@@ -91,10 +93,11 @@ void asserv::move_forward(int d)
 {
   lock_command();
 
-  const double rads = _a.read() * M_PI / 180.f;
+  const double rads = dtor((double)_a._value);
 
   const int x = _x._value + (int)(::cos(rads) * (double)d);
   const int y = _y._value + (int)(::sin(rads) * (double)d);
+
   set_command(CMD_OP_MOVE_FORWARD, x, y, _conf_v._value);
 
   unlock_command();
@@ -103,7 +106,7 @@ void asserv::move_forward(int d)
 void asserv::turn(int a)
 {
   lock_command();
-  set_command(CMD_OP_TURN, (_a._value + a) % 360);
+  set_command(CMD_OP_TURN, _a._value + a);
   unlock_command();
 }
 
@@ -140,7 +143,7 @@ void asserv::next(cpBody* body)
       body->v.y = 0.f;
 
       // asserv accuracy
-      if (d > 30.f)
+      if (d > 10.f)
       {
 	body->v.x = (dx * consign_v) / d;
 	body->v.y = (dy * consign_v) / d;
@@ -154,32 +157,27 @@ void asserv::next(cpBody* body)
       _x.write((int)body->p.x);
       _y.write((int)body->p.y);
       _v.write((int)::sqrt(body->v.x * body->v.x + body->v.y * body->v.y));
-      _a.write((int)body->a);
 
       break;
     }
 
   case CMD_OP_TURN:
     {
-      const cpFloat consign_a = (cpFloat)_cmd._args[0];
-      const cpFloat body_a = (cpFloat)((int)body->a % 360);
+      // in radians
+      const cpFloat consign_a = (cpFloat)dtor((double)_cmd._args[0]);
+      cpFloat w = 2.f * M_PI;
 
-      printf("a: %lf\n", body_a);
-
-      body->w = 0;
-
-      if (::fabs(consign_a - body_a) > 0.1f)
-      {
-	// angular speed, degrees per second
-	body->w = 200;
-      }
-      else
+      if (::fabs(consign_a - body->a) <= dtor(3.f))
       {
 	complete_command(CMD_STATUS_SUCCESS);
+	w = 0.f;
       }
 
-      // update state
-      _a.write((int)body_a);
+      // update asserv state
+      _a.write((int)rtod(body->a));
+
+      // update body angular velocty
+      body->w = w;
 
       break;
     }
