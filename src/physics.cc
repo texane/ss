@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Thu Oct  7 08:56:04 2010 fabien le mentec
+// Last update Thu Oct  7 11:28:12 2010 fabien le mentec
 //
 
 
@@ -32,8 +32,8 @@ static const struct x_color* yellow_color = NULL;
 static void init_stuff(const conf& conf)
 {
   // scaling
-  wscale = (cpFloat)conf::_space_width / (cpFloat)x_get_width();
-  hscale = (cpFloat)conf::_space_height / (cpFloat)x_get_height();
+  wscale = (cpFloat)(conf::_space_width + 1.f) / (cpFloat)x_get_width();
+  hscale = (cpFloat)(conf::_space_height + 1.f) / (cpFloat)x_get_height();
 
   // colors
   static const unsigned char red_rgb[3] = {0xff, 0, 0};
