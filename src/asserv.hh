@@ -1,47 +1,84 @@
+//
+// Made by fabien le mentec <texane@gmail.com>
+// 
+// Started on  Wed Oct  6 22:56:41 2010 texane
+// Last update Thu Oct  7 00:04:51 2010 texane
+//
+
+
 #ifndef ASSERV_HH_INCLUDED
 # define ASSERV_HH_INCLUDED
 
 
+#include "atomic.hh"
+
+
 // forward decl
-class bot;
+struct cpBody;
 
 
 class asserv
 {
-  // physics engine backlink
-  bot* _bot;
+  // state
+
+  atomic_int_t _lock;
+
+  atomic_int_t _x;
+  atomic_int_t _y;
+  atomic_int_t _v;
+  atomic_int_t _a;
 
   // last issued command
-
   enum cmd_op
   {
     CMD_OP_NONE = 0,
     CMD_OP_MOVE_FORWARD,
-    CMD_OP_ROTATE,
+    CMD_OP_TURN,
     CMD_OP_INVALID
+  };
+
+  enum cmd_status
+  {
+    CMD_STATUS_SUCCESS = 0,
+    CMD_STATUS_INPROGRESS,
+    CMD_STATUS_FAILURE
   };
 
   typedef struct cmd
   {
-    enum cmd_op _op;
-    double _args[3];
+    unsigned char _status;
+    unsigned char _op;
+    int _args[4];
   } cmd_t;
 
-  cmd_t _cmd;
+  volatile cmd_t _cmd;
 
-  void set_cmd(enum cmd_op, double = 0.f, double = 0.f, double = 0.f);
+  enum locked_tag { LOCKED_TAG = 0 };
+  void set_command(enum cmd_op, int = 0, int = 0, int = 0);
+  void set_command(enum locked_tag, enum cmd_op, int = 0, int = 0, int = 0);
+  void complete_command(enum cmd_status);
+  void lock_command();
+  void unlock_command();
+  enum cmd_status read_status();
 
 public:
   asserv();
 
-  void move_forward(double);
-  void rotate(double);
-  void set_pos(double, double);
-  void get_pos(double, double);
-  void set_power(bool);
-  bool is_done();
+  // accessors
+  void set_velocity(int);
+  void set_position(int, int);
+  void get_position(int&, int&);
+  void set_angle(int);
 
-  void next();
+  // commands
+  void move_forward(int);
+  void turn(int);
+
+  // command completion
+  void wait_done();
+
+  // schedule asserv
+  void next(struct cpBody*);
 };
 
 

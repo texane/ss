@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Wed Oct  6 20:50:41 2010 texane
+// Last update Wed Oct  6 22:03:37 2010 texane
 //
 
 
@@ -174,7 +174,7 @@ static void bot_velocity_func
 (cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
   cpBodyUpdateVelocity(body, gravity, damping, dt);
-  update_bot_velocity(body, (double)dt);
+  update_bot_velocity(body);
 }
 
 

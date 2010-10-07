@@ -2,14 +2,14 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Tue Oct  5 23:21:56 2010 texane
+## Last update Wed Oct  6 23:16:59 2010 texane
 ##
 
 
 CC	:=	g++
 LD	:=	g++
 CFLAGS	:=	-Wall -O3 `pkg-config --cflags sdl` -I../src
-LFLAGS	:=	`pkg-config --libs sdl` -lchipmunk
+LFLAGS	:=	`pkg-config --libs sdl` -lchipmunk -lpthread -lm
 RM	:=	rm -f
 
 
@@ -19,6 +19,7 @@ SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
 		../src/physics.cc	\
 		../src/bot.cc		\
+		../src/asserv.cc	\
 		../src/x.cc
 
 OBJS	:=	$(SRCS:.cc=.o)

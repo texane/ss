@@ -2,13 +2,14 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Wed Oct  6 21:12:34 2010 texane
+// Last update Wed Oct  6 23:46:48 2010 texane
 //
 
 
 #include <list>
 #include <iterator>
-#include <math.h>
+#include <pthread.h>
+#include "asserv.hh"
 #include "physics.hh"
 #include "conf.hh"
 #include "bot.hh"
@@ -20,17 +21,33 @@ using std::list;
 // internal bot implementation
 class bot
 {
-  // asserv _asserv;
+public:
+
+  // physics
   cpBody* _body;
   cpPolyShape* _shape;
 
-public:
-  bot() : _body(NULL), _shape(NULL) {}
+  // threading
+  pthread_t _thread;
+
+  // bot info
+  bool _is_valid;
+  bool _is_red;
+  asserv _asserv;
+
+#define BOT_STATUS_WAIT 0
+#define BOT_STATUS_RUN 1
+#define BOT_STATUS_DONE 2
+  volatile long _status  __attribute__((aligned));
+
+  bot() : _body(NULL), _shape(NULL), _is_valid(false) {}
 
   void set_physics(cpBody* body, cpPolyShape* shape)
   { 
     _body = body;
     _shape = shape;
+
+    _asserv.set_position((int)body->p.x, (int)body->p.y);
   }
 
   bool has_physics(const cpBody* body) const
@@ -38,55 +55,57 @@ public:
     return body == _body;
   }
 
-  void update_velocity(cpBody* body, cpFloat dt)
+  void update_velocity(cpBody* body)
   {
-    const cpFloat asserv_x = 1500.f;
-    const cpFloat asserv_y = 1050.f;
-    const cpFloat asserv_v = 400.f;
-
-    // simulate asservissement
-    const cpFloat dx = asserv_x - body->p.x;
-    const cpFloat dy = asserv_y - body->p.y;
-    const cpFloat d = ::sqrt(dx * dx + dy * dy);
-
-    body->v.x = 0.f;
-    if (::fabs(dx) > 20.f)
-      body->v.x = (dx * d) / asserv_v;
-
-    body->v.y = 0.f;
-    if (::fabs(dy) > 20.f)
-      body->v.y = (dy * d) / asserv_v;
+    _asserv.next(body);
+    // _grabber.next(body);
   }
 
-  void next()
+  void entry()
   {
-#if 0
-    cpFloat mul = 1.f;
-    if (_shape->shape.body->v.x > 0.f)
-    {
-      if (_shape->tc.x == 1000.f)
-	mul = -1.f;
-    }
+    if (_is_red == true)
+      _asserv.set_angle(0);
     else
-    {
-      if (_shape->tc.x == 1000.f)
-	mul = -1.f;
-    }
+      _asserv.set_angle(-180);
 
-    _shape->shape.body->v.x *= mul;
-#endif
+    _asserv.set_velocity(400);
+
+    while (1)
+    {
+      _asserv.move_forward(1000);
+      _asserv.wait_done();
+
+      _asserv.move_forward(-1000);
+      _asserv.wait_done();
+    }
+  }
+
+  static void* static_entry(void* arg)
+  {
+    bot* const b = static_cast<bot*>(arg);
+
+    while (b->_status == BOT_STATUS_WAIT) 
+      ;
+
+    if (b->_status == BOT_STATUS_RUN)
+      b->entry();
+
+    return NULL;
   }
 };
 
 
-// global bot list
+// create bots from conf
+
 static bot blue_bot;
 static bot red_bot;
 
+static inline bot& get_bot(enum conf::object::object_type t)
+{
+  return (t == conf::object::OBJECT_TYPE_BLUE_BOT ? blue_bot : red_bot);
+}
 
-// exported
-
-static inline bool is_bot_type(enum conf::object::object_type t)
+static inline bool is_bot(enum conf::object::object_type t)
 {
   return
     (t == conf::object::OBJECT_TYPE_BLUE_BOT) ||
@@ -100,8 +119,17 @@ void create_bots(const conf& conf)
 
   for (; pos != end; ++pos)
   {
-    if (is_bot_type(pos->_type) == false)
+    if (is_bot(pos->_type) == false)
       continue ;
+
+    bot& b = get_bot(pos->_type);
+
+    b._is_valid = true;
+    b._is_red = (pos->_type == conf::object::OBJECT_TYPE_RED_BOT);
+
+    // create bot thread
+    b._status = BOT_STATUS_WAIT;
+    pthread_create(&b._thread, NULL, bot::static_entry, (void*)&b);
   }
 }
 
@@ -121,16 +149,19 @@ void set_bot_physics(bool is_red, cpBody* body, cpPolyShape* shape)
 }
 
 
-void schedule_bots()
+void start_bots()
 {
-  red_bot.next();
-  blue_bot.next();
+  if (red_bot._is_valid == true)
+    red_bot._status = BOT_STATUS_RUN;
+
+  if (blue_bot._is_valid == true)
+    blue_bot._status = BOT_STATUS_RUN;
 }
 
 
-void update_bot_velocity(cpBody* body, double dt)
+void update_bot_velocity(cpBody* body)
 {
   // todo: use private user defined pointer
   bot& b = (red_bot.has_physics(body) == true ? red_bot : blue_bot);
-  b.update_velocity(body, dt);
+  b.update_velocity(body);
 }

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Tue Oct  5 23:22:09 2010 texane
+// Last update Wed Oct  6 21:50:02 2010 texane
 //
 
 
@@ -21,7 +21,6 @@ static int on_event(const struct x_event* ev, void* arg)
   switch (x_event_get_type(ev))
   {
   case X_EVENT_TICK:
-    schedule_bots();
     next_space((cpSpace*)arg);
     draw_space((cpSpace*)arg);
     break;
@@ -57,7 +56,13 @@ int main(int ac, char** av)
   if (x_initialize(CONFIG_TICK_MS) == -1)
     return -1;
 
+  // create the physics
   cpSpace* const space = create_space(conf);
+
+  // start bots
+  start_bots();
+
+  // loop until done
   x_loop(on_event, (void*)space);
 
 #if CONFIG_DEBUG
