@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Thu Oct  7 22:02:15 2010 texane
+// Last update Thu Oct  7 22:07:50 2010 texane
 //
 
 
@@ -44,9 +44,9 @@ static void init_stuff(const conf& conf)
   static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
   static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x00};
   static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
-  static const unsigned char lred_rgb[3] = {0xff, 0x40, 0x40};
-  static const unsigned char lblue_rgb[3] = {0x40, 0x40, 0xff};
-  static const unsigned char lgreen_rgb[3] = {0x40, 0xff, 0x40};
+  static const unsigned char lred_rgb[3] = {0xff, 0x80, 0x80};
+  static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};
+  static const unsigned char lgreen_rgb[3] = {0x70, 0xff, 0x70};
   static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
 
   x_alloc_color(red_rgb, &red_color);
