@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Thu Oct  7 22:07:50 2010 texane
+// Last update Fri Oct  8 09:31:27 2010 texane
 //
 
 
@@ -21,42 +21,21 @@
 using std::list;
 
 
-// initialize
+// internal globals
 
 static cpFloat wscale;
 static cpFloat hscale;
 
-static const struct x_color* red_color = NULL;
-static const struct x_color* blue_color = NULL;
-static const struct x_color* yellow_color = NULL;
-static const struct x_color* lred_color = NULL;
-static const struct x_color* lblue_color = NULL;
-static const struct x_color* lgreen_color = NULL;
-static const struct x_color* black_color = NULL;
+static const x_color_t* red_color = NULL;
+static const x_color_t* blue_color = NULL;
+static const x_color_t* yellow_color = NULL;
+static const x_color_t* lred_color = NULL;
+static const x_color_t* lblue_color = NULL;
+static const x_color_t* lgreen_color = NULL;
+static const x_color_t* black_color = NULL;
 
-static void init_stuff(const conf& conf)
-{
-  // scaling
-  wscale = (cpFloat)(conf::_space_width + 1.f) / (cpFloat)x_get_width();
-  hscale = (cpFloat)(conf::_space_height + 1.f) / (cpFloat)x_get_height();
-
-  // colors
-  static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
-  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x00};
-  static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
-  static const unsigned char lred_rgb[3] = {0xff, 0x80, 0x80};
-  static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};
-  static const unsigned char lgreen_rgb[3] = {0x70, 0xff, 0x70};
-  static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
-
-  x_alloc_color(red_rgb, &red_color);
-  x_alloc_color(yellow_rgb, &yellow_color);
-  x_alloc_color(blue_rgb, &blue_color);
-  x_alloc_color(lred_rgb, &lred_color);
-  x_alloc_color(lgreen_rgb, &lgreen_color);
-  x_alloc_color(lblue_rgb, &lblue_color);
-  x_alloc_color(black_rgb, &black_color);
-}
+static x_surface_t* pawn_surface = NULL;
+static x_surface_t* back_surface = NULL;
 
 
 // world to view translation
@@ -71,7 +50,7 @@ static inline void space_to_view
   b.y = shape->tb.y / hscale;
 }
 
-static inline void space_to_view
+static inline void __attribute__((unused)) space_to_view
 (cpCircleShape* shape, cpVect& pos, cpFloat& radius)
 {
   const cpFloat scale = (wscale + hscale) / 2.f;
@@ -110,13 +89,10 @@ static void __attribute__((unused)) draw_shape
 static void draw_shape
 (cpBody* body, cpCircleShape* shape, cpSpace* space)
 {
-  // translate from space to view 
-  cpVect pos;
-  double radius;
-  space_to_view(shape, pos, radius);
+  const int x = (int)(shape->tc.x / wscale) - pawn_surface->w / 2;
+  const int y = (int)(shape->tc.y / hscale) - pawn_surface->h / 2;
 
-  // draw the circle
-  x_draw_circle((int)pos.x, (int)pos.y, (int)radius, yellow_color);
+  x_blit_surface(pawn_surface, x, y);
 }
 
 
@@ -196,7 +172,7 @@ static void bot_velocity_func
 // background drawing
 
 static void fill_rectangle
-(int x, int y, int w, int h, const struct x_color* c)
+(x_surface_t* s, int x, int y, int w, int h, const x_color_t* c)
 {
   // scale values
   x /= wscale;
@@ -207,40 +183,77 @@ static void fill_rectangle
   // draw rectangle
   for (int xx = x; xx < x + w; ++xx)
     for (int yy = y; yy < y + h; ++yy)
-      x_draw_pixel(xx, yy, c);
+      x_draw_pixel(s, xx, yy, c);
 }
 
-static void draw_background()
+static void draw_background(x_surface_t* s)
 {
   // player areas
-  fill_rectangle(0, 0, 400, 400, lred_color);
-  fill_rectangle(2600, 0, 400, 400, lblue_color);
+  fill_rectangle(s, 0, 0, 400, 400, lred_color);
+  fill_rectangle(s, 2600, 0, 400, 400, lblue_color);
 
   // distribution areas
-  fill_rectangle(0, 400, 400, 2700, lgreen_color);
-  fill_rectangle(2600, 400, 400, 2700, lgreen_color);
+  fill_rectangle(s, 0, 400, 400, 2700, lgreen_color);
+  fill_rectangle(s, 2600, 400, 400, 2700, lgreen_color);
 
   // bands
-  fill_rectangle(400, 0, 50, 2100, black_color);
-  fill_rectangle(2550, 0, 50, 2100, black_color);
+  fill_rectangle(s, 400, 0, 50, 2100, black_color);
+  fill_rectangle(s, 2550, 0, 50, 2100, black_color);
 
   // tiles
-  const struct x_color* tile_color = lblue_color;
+  const x_color_t* tile_color = lblue_color;
   for (int i = 0; i < 6; ++i)
   {
     const int y = i * 350;
     for (int j = 0; j < 6; ++j)
     {
       const int x = 450 + j * 350;
-      fill_rectangle(x, y, 350, 350, tile_color);
+      fill_rectangle(s, x, y, 350, 350, tile_color);
       tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
     }
     tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
   }
 
   // reserved areas
-  fill_rectangle(450, 1980, 700, 120, black_color);
-  fill_rectangle(1850, 1980, 700, 120, black_color);
+  fill_rectangle(s, 450, 1980, 700, 120, black_color);
+  fill_rectangle(s, 1850, 1980, 700, 120, black_color);
+}
+
+
+// initialize
+
+static void init_graphics_stuff(const conf& conf)
+{
+  // scaling
+  wscale = (cpFloat)(conf::_space_width + 1.f) / (cpFloat)x_get_width();
+  hscale = (cpFloat)(conf::_space_height + 1.f) / (cpFloat)x_get_height();
+
+  // colors
+  static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
+  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x00};
+  static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
+  static const unsigned char lred_rgb[3] = {0xff, 0x80, 0x80};
+  static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};
+  static const unsigned char lgreen_rgb[3] = {0x70, 0xff, 0x70};
+  static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
+
+  x_alloc_color(red_rgb, &red_color);
+  x_alloc_color(yellow_rgb, &yellow_color);
+  x_alloc_color(blue_rgb, &blue_color);
+  x_alloc_color(lred_rgb, &lred_color);
+  x_alloc_color(lgreen_rgb, &lgreen_color);
+  x_alloc_color(lblue_rgb, &lblue_color);
+  x_alloc_color(black_rgb, &black_color);
+
+  // create background surface
+  back_surface = x_create_surface(x_get_width(), x_get_height());
+  draw_background(back_surface);
+
+  // create pawn, queen, king surfaces
+  const int radius = (int)(95.f / ((wscale + hscale) / 2.f));
+  pawn_surface = x_create_surface(radius * 2, radius * 2);
+  x_fill_surface(pawn_surface, x_get_transparency_color());
+  x_draw_disk(pawn_surface, radius, radius, radius - 1, yellow_color);
 }
 
 
@@ -248,7 +261,7 @@ static void draw_background()
 
 void draw_space(cpSpace* space)
 {
-  draw_background();
+  x_blit_surface(back_surface, 0, 0);
 
   // iterate over static and active shapes
   cpSpaceHashEach(space->activeShapes, (cpSpaceHashIterator)draw_object, space);
@@ -258,7 +271,7 @@ void draw_space(cpSpace* space)
 
 cpSpace* create_space(conf& conf)
 {
-  init_stuff(conf);
+  init_graphics_stuff(conf);
 
   cpInitChipmunk();
 

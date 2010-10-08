@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Jun 29 15:50:24 2009 texane
-// Last update Mon Oct  4 19:52:41 2010 texane
+// Last update Fri Oct  8 09:28:46 2010 texane
 //
 
 
@@ -34,6 +34,8 @@ struct x_event
 
 static SDL_Surface* g_screen = NULL;
 static SDL_TimerID g_timer = NULL;
+static const x_color_t* pink_color = NULL;
+static const unsigned char pink_rgb[3] = {0xf2, 0, 0xf2};
 
 
 
@@ -68,6 +70,9 @@ int x_initialize(unsigned int msecs)
       SDL_Quit();
       return -1;
     }
+
+  x_alloc_color(pink_rgb, &pink_color);
+  SDL_SetColorKey(g_screen, SDL_SRCCOLORKEY, pink_color->value);
 
   g_timer = SDL_AddTimer(msecs, on_timer, NULL);
   if (g_timer == NULL)
@@ -240,50 +245,59 @@ void x_free_color(const struct x_color* color)
 }
 
 
-
-void x_draw_pixel(int x, int y, const struct x_color* color)
+void x_draw_pixel
+(x_surface_t* s, int x, int y, const struct x_color* c)
 {
-  switch (g_screen->format->BytesPerPixel)
+  switch (s->format->BytesPerPixel)
+  {
+  case 1:
     {
-    case 1:
-      {
-	Uint8 *bufp;
-	bufp = (Uint8 *)g_screen->pixels + y*g_screen->pitch + x;
-	*bufp = color->value;
-      }
-      break;
-
-    case 2:
-      {
-	Uint16 *bufp;
-	bufp = (Uint16 *)g_screen->pixels + y*g_screen->pitch/2 + x;
-	*bufp = color->value;
-      }
-      break;
-
-    case 3:
-      {
-	Uint8 *bufp;
-	bufp = (Uint8 *)g_screen->pixels + y*g_screen->pitch + x;
-	*(bufp+g_screen->format->Rshift/8) = color->rgb[0];
-	*(bufp+g_screen->format->Gshift/8) = color->rgb[1];
-	*(bufp+g_screen->format->Bshift/8) = color->rgb[2];
-      }
-      break;
-
-    case 4:
-      {
-	Uint32 *bufp;
-	bufp = (Uint32 *)g_screen->pixels + y*g_screen->pitch/4 + x;
-	*bufp = color->value;
-      }
+      Uint8 *bufp;
+      bufp = (Uint8 *)s->pixels + y * s->pitch + x;
+      *bufp = c->value;
       break;
     }
+
+  case 2:
+    {
+      Uint16 *bufp;
+      bufp = (Uint16 *)s->pixels + y * s->pitch /  2 + x;
+      *bufp = c->value;
+      break;
+    }
+
+  case 3:
+    {
+      Uint8 *bufp;
+      bufp = (Uint8 *)s->pixels + y * s->pitch + x;
+      *(bufp + s->format->Rshift / 8) = c->rgb[0];
+      *(bufp + s->format->Gshift / 8) = c->rgb[1];
+      *(bufp + s->format->Bshift / 8) = c->rgb[2];
+      break;
+    }
+
+  case 4:
+    {
+      Uint32 *bufp;
+      bufp = (Uint32 *)s->pixels + y * s->pitch / 4 + x;
+      *bufp = c->value;
+      break;
+    }
+
+  default: break;
+  }
 }
 
 
+void x_draw_pixel
+(int x, int y, const struct x_color* c)
+{
+  x_draw_pixel(g_screen, x, y, c);
+}
 
-void x_draw_line(int x0, int y0, int x1, int y1, const struct x_color* color)
+
+void x_draw_line
+(int x0, int y0, int x1, int y1, const struct x_color* color)
 {
   int dx;
   int dy;
@@ -427,60 +441,79 @@ void x_draw_square(int x0, int y0, int w, const struct x_color* color)
 
 
 
-static void draw_circle_points(int cx, int cy, int x, int y, const struct x_color* color)
+static void draw_circle_points
+(x_surface_t* s, int cx, int cy, int x, int y, const x_color_t* c)
 {
   if (x == 0)
-    {
-      x_draw_pixel(cx, cy + y, color);
-      x_draw_pixel(cx, cy - y, color);
-      x_draw_pixel(cx + y, cy, color);
-      x_draw_pixel(cx - y, cy, color);
-    }
+  {
+    x_draw_pixel(s, cx, cy + y, c);
+    x_draw_pixel(s, cx, cy - y, c);
+    x_draw_pixel(s, cx + y, cy, c);
+    x_draw_pixel(s, cx - y, cy, c);
+  }
   else if (x == y)
-    {
-      x_draw_pixel(cx + x, cy + y, color);
-      x_draw_pixel(cx - x, cy + y, color);
-      x_draw_pixel(cx + x, cy - y, color);
-      x_draw_pixel(cx - x, cy - y, color);
-    }
+  {
+    x_draw_pixel(s, cx + x, cy + y, c);
+    x_draw_pixel(s, cx - x, cy + y, c);
+    x_draw_pixel(s, cx + x, cy - y, c);
+    x_draw_pixel(s, cx - x, cy - y, c);
+  }
   else if (x < y)
-    {
-      x_draw_pixel(cx + x, cy + y, color);
-      x_draw_pixel(cx - x, cy + y, color);
-      x_draw_pixel(cx + x, cy - y, color);
-      x_draw_pixel(cx - x, cy - y, color);
-      x_draw_pixel(cx + y, cy + x, color);
-      x_draw_pixel(cx - y, cy + x, color);
-      x_draw_pixel(cx + y, cy - x, color);
-      x_draw_pixel(cx - y, cy - x, color);
-    }
+  {
+    x_draw_pixel(s, cx + x, cy + y, c);
+    x_draw_pixel(s, cx - x, cy + y, c);
+    x_draw_pixel(s, cx + x, cy - y, c);
+    x_draw_pixel(s, cx - x, cy - y, c);
+    x_draw_pixel(s, cx + y, cy + x, c);
+    x_draw_pixel(s, cx - y, cy + x, c);
+    x_draw_pixel(s, cx + y, cy - x, c);
+    x_draw_pixel(s, cx - y, cy - x, c);
+  }
 }
 
 
-void x_draw_circle(int x_center, int y_center, int radius, const struct x_color* color)
+static void x_draw_circle
+(x_surface_t* s, int cx, int cy, int r, const struct x_color* c)
 {
-  int x = 0;
-  int y = radius;
-  int p = (5 - radius * 4) / 4;
+  // xc, yc the center x,y
 
-  draw_circle_points(x_center, y_center, x, y, color);
+  int x = 0;
+  int y = r;
+  int p = (5 - r * 4) / 4;
+
+  draw_circle_points(s, cx, cy, x, y, c);
 
   while (x < y)
+  {
+    ++x;
+
+    if (p < 0)
     {
-      ++x;
-
-      if (p < 0)
-	{
-	  p += 2 * x + 1;
-	}
-      else
-	{
-	  --y;
-	  p += 2 * (x - y) + 1;
-	}
-
-      draw_circle_points(x_center, y_center, x, y, color);
+      p += 2 * x + 1;
     }
+    else
+    {
+      --y;
+      p += 2 * (x - y) + 1;
+    }
+
+    draw_circle_points(s, cx, cy, x, y, c);
+  }
+}
+
+
+void x_draw_circle
+(int x, int y, int r, const x_color_t* c)
+{
+  x_draw_circle(g_screen, x, y, r, c);
+}
+
+
+void x_draw_disk
+(x_surface_t* s, int x, int y, int r, const x_color_t* c)
+{
+  for (; r; --r)
+    x_draw_circle(s, x, y, r, c);
 }
 
 
@@ -499,4 +532,48 @@ int x_get_width(void)
 int x_get_height(void)
 {
   return X_HEIGHT;
+}
+
+
+x_surface_t* x_create_surface(int w, int h)
+{
+  x_surface_t* const s = SDL_CreateRGBSurface
+    (SDL_SWSURFACE, w, h, 16, 0, 0, 0, 0);
+
+  if (s == NULL)
+    return NULL;
+
+  SDL_SetColorKey(s, SDL_SRCCOLORKEY, pink_color->value);
+
+  return s;
+}
+
+
+void x_free_surface(x_surface_t* surface)
+{
+  SDL_FreeSurface(surface);
+}
+
+
+void x_blit_surface(x_surface_t* s, int x, int y)
+{
+  // dest rectangle
+  SDL_Rect dr;
+
+  dr.x = x;
+  dr.y = y;
+
+  SDL_BlitSurface(s, NULL, g_screen, &dr);
+}
+
+
+const x_color_t* x_get_transparency_color(void)
+{
+  return pink_color;
+}
+
+
+void x_fill_surface(x_surface_t* s, const x_color_t* c)
+{
+  SDL_FillRect(s, NULL, c->value);
 }

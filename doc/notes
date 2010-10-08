@@ -1,2 +1,11 @@
+. create graphics.cc, graphics.hh
+
+. precomputed pawn, qween and king graphics
+ . scale a first time then memcpy
+ . pseudo code
+  . get pos
+  . const* sub_image = get_rect(background_image);
+  . or_images(pawn, sub_image, pawn_mask);
+
 . state snapshot
  . snap::load, snap::store
