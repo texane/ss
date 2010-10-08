@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 13:45:14 2010 texane
+// Last update Fri Oct  8 14:22:06 2010 texane
 //
 
 
@@ -34,6 +34,7 @@ static const x_color_t* lred_color = NULL;
 static const x_color_t* lblue_color = NULL;
 static const x_color_t* lgreen_color = NULL;
 static const x_color_t* black_color = NULL;
+static const x_color_t* grey_color = NULL;
 
 static x_surface_t* pawn_surface = NULL;
 static x_surface_t* king_surface = NULL;
@@ -200,8 +201,25 @@ static void fill_rectangle
       x_draw_pixel(s, xx, yy, c);
 }
 
-static void draw_background(x_surface_t* s)
+static inline bool is_bonus_tile(int i, int j)
 {
+  if (i == 1)
+    return (j == 1) || (j == 4);
+  else if (i == 3)
+    return (j == 1) || (j == 4);
+  else if (i == 5)
+    return (j == 2) || (j == 3);
+  return false;
+}
+
+static x_surface_t* create_background_surface(void)
+{
+  x_surface_t* const s = x_create_surface
+    (x_get_width(), x_get_height());
+
+  if (s == NULL)
+    return NULL;
+
   // player areas
   fill_rectangle(s, 0, 0, 400, 400, lred_color);
   fill_rectangle(s, 2600, 0, 400, 400, lblue_color);
@@ -222,7 +240,15 @@ static void draw_background(x_surface_t* s)
     for (int j = 0; j < 6; ++j)
     {
       const int x = 450 + j * 350;
+
       fill_rectangle(s, x, y, 350, 350, tile_color);
+
+      if (is_bonus_tile(i, j))
+      {
+	const int offset = (350 / 2) - 50;
+	fill_rectangle(s, x + offset, y + offset, 100, 100, grey_color);
+      }
+
       tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
     }
     tile_color = (tile_color == lblue_color ? lred_color : lblue_color);
@@ -231,6 +257,8 @@ static void draw_background(x_surface_t* s)
   // reserved areas
   fill_rectangle(s, 450, 1980, 700, 120, black_color);
   fill_rectangle(s, 1850, 1980, 700, 120, black_color);
+
+  return s;
 }
 
 
@@ -251,6 +279,7 @@ static void init_graphics_stuff(const conf& conf)
   static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};
   static const unsigned char lgreen_rgb[3] = {0x70, 0xff, 0x70};
   static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
+  static const unsigned char grey_rgb[3] = {0x80, 0x80, 0x80};
 
   x_alloc_color(red_rgb, &red_color);
   x_alloc_color(yellow_rgb, &yellow_color);
@@ -260,10 +289,10 @@ static void init_graphics_stuff(const conf& conf)
   x_alloc_color(lgreen_rgb, &lgreen_color);
   x_alloc_color(lblue_rgb, &lblue_color);
   x_alloc_color(black_rgb, &black_color);
+  x_alloc_color(grey_rgb, &grey_color);
 
   // create background surface
-  back_surface = x_create_surface(x_get_width(), x_get_height());
-  draw_background(back_surface);
+  back_surface = create_background_surface();
 
   // create pawn surface
   const int radius = (int)(95.f / ((wscale + hscale) / 2.f));
