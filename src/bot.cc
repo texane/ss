@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Thu Oct  7 21:12:40 2010 texane
+// Last update Fri Oct  8 11:53:00 2010 texane
 //
 
 
@@ -169,4 +169,16 @@ void update_bot_velocity(cpBody* body)
   // todo: use private user defined pointer
   bot& b = (red_bot.has_physics(body) == true ? red_bot : blue_bot);
   b.update_velocity(body);
+}
+
+
+bool is_red_bot(const void* p)
+{
+  return p == (const void*)&red_bot;
+}
+
+
+void* get_bot_context(bool is_red)
+{
+  return (void*)(is_red == true ? &red_bot : &blue_bot);
 }

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 09:54:36 2010 texane
+// Last update Fri Oct  8 11:55:09 2010 texane
 //
 
 
@@ -97,7 +97,7 @@ static void draw_shape
 
 
 static void draw_shape
-(cpBody* body, cpPolyShape* shape, cpSpace* space)
+(cpBody* body, cpPolyShape* shape, cpSpace* space, const x_color_t* c)
 {
   // translate from space to view 
   cpVect verts[4];
@@ -106,13 +106,13 @@ static void draw_shape
   int x0 = (int)verts[3].x;
   int y0 = (int)verts[3].y;
 
-  // draw the circle
+  // draw the polygon
   for (size_t i = 0; i < 4; ++i)
   {
     const int x1 = (int)verts[i].x;
     const int y1 = (int)verts[i].y;
 
-    x_draw_line(x0, y0, x1, y1, blue_color);
+    x_draw_line(x0, y0, x1, y1, c);
 
     x0 = x1;
     y0 = y1;
@@ -127,21 +127,31 @@ static void draw_object(cpShape* shape, cpSpace* space)
   switch (shape->klass->type)
   {
   case CP_CIRCLE_SHAPE:
-    draw_shape(body, (cpCircleShape*)shape, space);
-    break;
+    {
+      draw_shape(body, (cpCircleShape*)shape, space);
+      break;
+    }
 
   case CP_POLY_SHAPE:
-    draw_shape(body, (cpPolyShape*)shape, space);
-    break;
+    {
+      const x_color_t* const color =
+	is_red_bot(body->data) ? red_color : blue_color;
+      draw_shape(body, (cpPolyShape*)shape, space, color);
+      break;
+    }
 
 #if 0
   case CP_SEGMENT_SHAPE:
-    draw_shape(body, (cpSegmentShape*)shape, space);
-    break;
+    {
+      draw_shape(body, (cpSegmentShape*)shape, space);
+      break;
+    }
 #endif
 
   default:
-    break;
+    {
+      break;
+    }
   }
 }
 
@@ -341,6 +351,9 @@ cpSpace* create_space(conf& conf)
 	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
 	  is_red = false;
 	set_bot_physics(is_red, body, (cpPolyShape*)shape);
+
+	// set bot pointer as user data
+	body->data = get_bot_context(is_red);
 
 	break;
       }
