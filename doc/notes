@@ -1,4 +1,8 @@
 . todo
+ . specifier les repere
+  . 0 degree points on the right
+  . 90 degree points on the bottom 
+
  . implement friction ?
   . -> at least the robot should not bounce indefinitly like a ball...
  . implement absolute functions, check if aversive ok

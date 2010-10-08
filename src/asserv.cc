@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Fri Oct  8 17:40:40 2010 texane
+// Last update Fri Oct  8 23:38:15 2010 texane
 //
 
 
@@ -103,6 +103,11 @@ void asserv::move_forward(int d)
   unlock_command();
 }
 
+void asserv::move_to(unsigned int x, unsigned int y)
+{
+  
+}
+
 void asserv::turn(unsigned int a, int w)
 {
   lock_command();
@@ -118,6 +123,38 @@ void asserv::turn_left(unsigned int a)
 void asserv::turn_right(unsigned int a)
 {
   turn(a, 360);
+}
+
+void asserv::turn_to(unsigned int a)
+{
+  // compute how much to turn from the current angle
+
+  lock_command();
+
+  const int curr_a = _a._value;
+
+  int w = 360;
+
+  int diff_a = ((int)a - curr_a) % 360;
+
+  if (diff_a < -180)
+  {
+    diff_a = 360 + diff_a;
+  }
+  else if (diff_a < 0)
+  {
+    diff_a *= -1;
+    w = -360;
+  }
+  else if (diff_a > 180)
+  {
+    diff_a = 360 - diff_a;
+    w = -360;
+  }
+
+  set_command(CMD_OP_TURN, diff_a, curr_a, w);
+
+  unlock_command();
 }
 
 void asserv::wait_done()

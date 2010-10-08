@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 14:22:06 2010 texane
+// Last update Fri Oct  8 23:44:06 2010 texane
 //
 
 
@@ -120,6 +120,13 @@ static void draw_shape
     x0 = x1;
     y0 = y1;
   }
+
+  // orientation
+  x0 = (int)(body->p.x / wscale);
+  y0 = (int)(body->p.y / hscale);
+  const int x1 = x0 + (int)(::cos(body->a) * (70.f / wscale));
+  const int y1 = y0 + (int)(::sin(body->a) * (70.f / hscale));
+  x_draw_line(x0, y0, x1, y1, c);
 }
 
 

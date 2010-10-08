@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Fri Oct  8 13:12:39 2010 texane
+// Last update Fri Oct  8 23:42:12 2010 texane
 //
 
 
@@ -137,7 +137,7 @@ void* bot::static_entry(void* arg)
     ;
 
   if (b->_status == THREAD_STATUS_RUN)
-    b->square_strategy();
+    b->debug_strategy();
   b->_status = THREAD_STATUS_DONE;
 
   return NULL;

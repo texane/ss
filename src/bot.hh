@@ -39,7 +39,7 @@ private:
 
   // strategies
   void wandering_strategy();
-  void square_strategy();
+  void debug_strategy();
 
 public:
   // physics
