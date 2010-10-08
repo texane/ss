@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Jun 29 15:50:24 2009 texane
-// Last update Fri Oct  8 13:41:09 2010 texane
+// Last update Fri Oct  8 13:48:40 2010 texane
 //
 
 
@@ -308,8 +308,7 @@ void x_draw_line
 
 #define swap_ints(a, b)	\
   do {			\
-    int __tmp;		\
-    __tmp = a;		\
+    const int __tmp = a;\
     a = b;		\
     b = __tmp;		\
   } while (0)

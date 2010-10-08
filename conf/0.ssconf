@@ -20,7 +20,42 @@ w 200
 a 180
 end object
 
-# pawn 0
+
+# startof on area pawns
+
+# left 0 0 pawn
+begin object
+type pawn
+x 800
+y 700
+w 95
+end object
+
+# left 1 0 pawn
+begin object
+type pawn
+x 800
+y 1050
+w 95
+end object
+
+# left 0 1 pawn
+begin object
+type pawn
+x 1150
+y 350
+w 95
+end object
+
+# left 1 1 pawn
+begin object
+type pawn
+x 1150
+y 1750
+w 95
+end object
+
+# central pawn
 begin object
 type pawn
 x 1500
@@ -28,7 +63,42 @@ y 1050
 w 95
 end object
 
-# left distribution area
+# right 0 1 pawn
+begin object
+type pawn
+x 2200
+y 700
+w 95
+end object
+
+# right 1 1 pawn
+begin object
+type pawn
+x 2200
+y 1050
+w 95
+end object
+
+# right 1 0 pawn
+begin object
+type pawn
+x 1850
+y 350
+w 95
+end object
+
+# right 0 0 pawn
+begin object
+type pawn
+x 1850
+y 1750
+w 95
+end object
+
+# endof on area pawns
+
+
+# startof left distribution area
 # y pos: 400 + 170 + 300 * n
 
 # king
@@ -70,6 +140,54 @@ x 200
 y 1700
 w 95
 end object
+
+# endof left distribution area
+
+
+# startof right distribution area
+
+# king
+begin object
+type king
+x 2800
+y 500
+w 95
+end object
+
+# queen
+begin object
+type queen
+x 2800
+y 800
+w 95
+end object
+
+# pawn 0
+begin object
+type pawn
+x 2800
+y 1100
+w 95
+end object
+
+# pawn 1
+begin object
+type pawn
+x 2800
+y 1400
+w 95
+end object
+
+# pawn 2
+begin object
+type pawn
+x 2800
+y 1700
+w 95
+end object
+
+# endof right distribution area
+
 
 # top wall
 begin object
