@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Thu Oct  7 21:25:31 2010 texane
+// Last update Fri Oct  8 13:12:01 2010 texane
 //
 
 
@@ -50,7 +50,7 @@ int main(int ac, char** av)
     return -1;
   }
 
-  create_bots(conf);
+  bot::create_bots(conf);
 
   // trigger every 40ms
   if (x_initialize(CONFIG_TICK_MS) == -1)
@@ -60,7 +60,7 @@ int main(int ac, char** av)
   cpSpace* const space = create_space(conf);
 
   // start bots
-  start_bots();
+  bot::start_bots();
 
   // loop until done
   x_loop(on_event, (void*)space);
@@ -68,6 +68,8 @@ int main(int ac, char** av)
 #if CONFIG_DEBUG
   conf.print();
 #endif
+
+  bot::destroy_bots();
 
   destroy_space(space);
 

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 11:55:09 2010 texane
+// Last update Fri Oct  8 12:57:57 2010 texane
 //
 
 
@@ -135,7 +135,7 @@ static void draw_object(cpShape* shape, cpSpace* space)
   case CP_POLY_SHAPE:
     {
       const x_color_t* const color =
-	is_red_bot(body->data) ? red_color : blue_color;
+	((bot*)body->data)->is_red() ? red_color : blue_color;
       draw_shape(body, (cpPolyShape*)shape, space, color);
       break;
     }
@@ -175,7 +175,7 @@ static void bot_velocity_func
 (cpBody* body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
   cpBodyUpdateVelocity(body, gravity, damping, dt);
-  update_bot_velocity(body);
+  ((bot*)body->data)->update_physics();
 }
 
 
@@ -347,13 +347,11 @@ cpSpace* create_space(conf& conf)
 	cpSpaceAddShape(space, shape);
 
 	// set the bot physics
-	bool is_red = true;
-	if (pos->_type == conf::object::OBJECT_TYPE_BLUE_BOT)
-	  is_red = false;
-	set_bot_physics(is_red, body, (cpPolyShape*)shape);
+	bot* const b = bot::get_bot_by_type(pos->_type);
+	b->set_physics(body, (cpPolyShape*)shape);
 
 	// set bot pointer as user data
-	body->data = get_bot_context(is_red);
+	body->data = (cpDataPointer)b;
 
 	break;
       }

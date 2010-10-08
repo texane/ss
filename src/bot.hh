@@ -2,10 +2,61 @@
 # define BOT_HH_INCLUDED
 
 
-class conf;
+#include "asserv.hh"
+#include "conf.hh"
+#include "physics.hh"
 
-struct cpPolyShape;
-struct cpBody;
+
+class bot
+{
+private:
+  // physics
+  cpBody* _body;
+  cpPolyShape* _shape;
+
+  // devices
+  asserv _asserv;
+
+  // instances
+  static bot _red_bot;
+  static bot _blue_bot;
+
+  // threading
+#define THREAD_STATUS_WAIT 0L
+#define THREAD_STATUS_RUN 1L
+#define THREAD_STATUS_DONE 2L
+  volatile long _status  __attribute__((aligned));
+  pthread_t _thread;
+
+  // is the bot valid
+  bool is_valid() const;
+
+  // thread entry
+  static void* static_entry(void*);
+
+  // constructor
+  bot();
+
+  // strategies
+  void wandering_strategy();
+  void square_strategy();
+
+public:
+  // physics
+  void set_physics(cpBody*, cpPolyShape*);
+  void update_physics();
+
+  // is thre red bot
+  bool is_red() const;
+
+  // instances accessor
+  static bot* get_bot_by_type(enum conf::object::object_type);
+
+  // bot subsystem
+  static int create_bots(const conf&);
+  static void destroy_bots();
+  static void start_bots();
+};
 
 
 void create_bots(const conf&);
@@ -13,6 +64,7 @@ void delete_bots();
 void start_bots();
 bool is_red_bot(const void*);
 void* get_bot_context(bool);
+bot* get_by_type(enum conf::object::object_type);
 void set_bot_physics(bool, struct cpBody*, struct cpPolyShape*);
 void update_bot_velocity(struct cpBody*);
 

@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Fri Oct  8 07:21:21 2010 texane
+## Last update Fri Oct  8 12:54:37 2010 texane
 ##
 
 
@@ -18,6 +18,7 @@ BIN	:=	ss
 SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
 		../src/physics.cc	\
+		../src/strategy.cc	\
 		../src/bot.cc		\
 		../src/asserv.cc	\
 		../src/x.cc
