@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Thu Oct  7 21:03:51 2010 texane
+// Last update Fri Oct  8 17:40:40 2010 texane
 //
 
 
@@ -103,11 +103,21 @@ void asserv::move_forward(int d)
   unlock_command();
 }
 
-void asserv::turn(int a)
+void asserv::turn(unsigned int a, int w)
 {
   lock_command();
-  set_command(CMD_OP_TURN, _a._value + a);
+  set_command(CMD_OP_TURN, a, _a._value, w);
   unlock_command();
+}
+
+void asserv::turn_left(unsigned int a)
+{
+  turn(a, -360);
+}
+
+void asserv::turn_right(unsigned int a)
+{
+  turn(a, 360);
 }
 
 void asserv::wait_done()
@@ -163,18 +173,23 @@ void asserv::next(cpBody* body)
 
   case CMD_OP_TURN:
     {
-      // in radians
-      const cpFloat consign_a = (cpFloat)dtor((double)_cmd._args[0]);
-      cpFloat w = 2.f * M_PI;
+      // in degrees
+      const cpFloat cons_a = (cpFloat)_cmd._args[0];
+      const cpFloat orig_a = (cpFloat)_cmd._args[1];
+      const cpFloat curr_a = (cpFloat)rtod(body->a);
 
-      if (::fabs(consign_a - body->a) <= dtor(3.f))
+      // angular speed, degrees per second      
+      cpFloat w = (cpFloat)dtor((cpFloat)_cmd._args[2]);
+
+      const int diff = (int)::fabs(curr_a - orig_a);
+      if (diff >= cons_a)
       {
 	complete_command(CMD_STATUS_SUCCESS);
 	w = 0.f;
       }
 
       // update asserv state
-      _a.write((int)rtod(body->a));
+      _a.write((int)curr_a);
 
       // update body angular velocty
       body->w = w;

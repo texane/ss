@@ -1,7 +1,15 @@
 . todo
+ . implement friction ?
+  . -> at least the robot should not bounce indefinitly like a ball...
+ . implement absolute functions, check if aversive ok
+  . goto_xy()
+  . goto_a()
+
  . cache a surface for bot, update only when angle changes
   . in asserv.next(), set body->flags | NEED_GRAPHICS_UPDATE;
   . in draw_shape, recompute the surface
+
+ . angular velocity should be a function of velocity and wheels circumference
 
  . create graphics.cc, graphics.hh
 

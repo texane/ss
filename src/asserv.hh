@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Thu Oct  7 20:34:41 2010 texane
+// Last update Fri Oct  8 17:37:31 2010 texane
 //
 
 
@@ -78,7 +78,9 @@ public:
 
   // commands
   void move_forward(int);
-  void turn(int);
+  void turn(unsigned int, int = 360);
+  void turn_left(unsigned int);
+  void turn_right(unsigned int);
 
   // command completion
   void wait_done();
