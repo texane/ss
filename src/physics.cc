@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 09:31:27 2010 texane
+// Last update Fri Oct  8 09:54:36 2010 texane
 //
 
 
@@ -230,7 +230,7 @@ static void init_graphics_stuff(const conf& conf)
 
   // colors
   static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
-  static const unsigned char yellow_rgb[3] = {0x80, 0x80, 0x00};
+  static const unsigned char yellow_rgb[3] = {0xd0, 0xd0, 0x20};
   static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
   static const unsigned char lred_rgb[3] = {0xff, 0x80, 0x80};
   static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};

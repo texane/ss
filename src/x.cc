@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Jun 29 15:50:24 2009 texane
-// Last update Fri Oct  8 09:28:46 2010 texane
+// Last update Fri Oct  8 09:50:20 2010 texane
 //
 
 
@@ -297,7 +297,7 @@ void x_draw_pixel
 
 
 void x_draw_line
-(int x0, int y0, int x1, int y1, const struct x_color* color)
+(x_surface_t* s, int x0, int y0, int x1, int y1, const x_color_t* c)
 {
   int dx;
   int dy;
@@ -315,25 +315,25 @@ void x_draw_line
   } while (0)
 
   if (x0 == x1)
-    {
-      if (y0 > y1)
-	swap_ints(y0, y1);
+  {
+    if (y0 > y1)
+      swap_ints(y0, y1);
 
-      for (y = y0; y < y1; ++y)
-	x_draw_pixel(x0, y, color);
+    for (y = y0; y < y1; ++y)
+      x_draw_pixel(s, x0, y, c);
 
-      return ;
-    }
+    return ;
+  }
   else if (y0 == y1)
-    {
-      if (x0 > x1)
-	swap_ints(x0, x1);
+  {
+    if (x0 > x1)
+      swap_ints(x0, x1);
 
-      for (x = x0; x < x1; ++x)
-	x_draw_pixel(x, y0, color);
+    for (x = x0; x < x1; ++x)
+      x_draw_pixel(s, x, y0, c);
 
-      return ;
-    }
+    return ;
+  }
 
   dx = x1 - x0;
   if (dx < 0)
@@ -344,71 +344,77 @@ void x_draw_line
     dy *= -1;
 
   if (dx > dy)
+  {
+    if (x0 > x1)
     {
-      if (x0 > x1)
-	{
-	  swap_ints(x0, x1);
-	  swap_ints(y0, y1);
-	}
-
-      if (y0 > y1)
-	step = -1;
-      else
-	step = 1;
-
-      e = 0;
-      x = x0;
-      y = y0;
-
-      while (x <= x1)
-	{
-	  x_draw_pixel(x, y, color);
-
-	  e += dy;
-
-	  if ((2 * e) >= dx)
-	    {
-	      y += step;
-	      e -= dx;
-	    }
-
-	  ++x;
-	}
+      swap_ints(x0, x1);
+      swap_ints(y0, y1);
     }
+
+    if (y0 > y1)
+      step = -1;
+    else
+      step = 1;
+
+    e = 0;
+    x = x0;
+    y = y0;
+
+    while (x <= x1)
+    {
+      x_draw_pixel(s, x, y, c);
+
+      e += dy;
+
+      if ((2 * e) >= dx)
+      {
+	y += step;
+	e -= dx;
+      }
+
+      ++x;
+    }
+  }
   else
+  {
+    if (y0 > y1)
     {
-      if (y0 > y1)
-	{
-	  swap_ints(x0, x1);
-	  swap_ints(y0, y1);
-	}
-
-      if (x0 > x1)
-	step = -1;
-      else
-	step = 1;
-
-      e = 0;
-      x = x0;
-      y = y0;
-
-      while (y <= y1)
-	{
-	  x_draw_pixel(x, y, color);
-
-	  e += dx;
-
-	  if ((2 * e) >= dy)
-	    {
-	      x += step;
-	      e -= dy;
-	    }
-
-	  ++y;
-	}
+      swap_ints(x0, x1);
+      swap_ints(y0, y1);
     }
+
+    if (x0 > x1)
+      step = -1;
+    else
+      step = 1;
+
+    e = 0;
+    x = x0;
+    y = y0;
+
+    while (y <= y1)
+    {
+      x_draw_pixel(s, x, y, c);
+
+      e += dx;
+
+      if ((2 * e) >= dy)
+      {
+	x += step;
+	e -= dy;
+      }
+
+      ++y;
+    }
+  }
 }
 
+
+void x_draw_line
+(int x0, int y0, int x1, int y1, const x_color_t* c)
+{
+  x_draw_line(g_screen, x0, y0, x1, y1, c);
+}
 
 
 void x_draw_square(int x0, int y0, int w, const struct x_color* color)
@@ -509,11 +515,56 @@ void x_draw_circle
 }
 
 
-void x_draw_disk
-(x_surface_t* s, int x, int y, int r, const x_color_t* c)
+static void x_draw_disk_lines
+(x_surface_t* s, int cx, int cy, int x, int y, const x_color_t* c)
 {
-  for (; r; --r)
-    x_draw_circle(s, x, y, r, c);
+  if (x == 0)
+  {
+    x_draw_line(s, cx, cy - y, cx, cy + y, c);
+    x_draw_line(s, cx - y, cy, cx + y, cy, c);
+  }
+  else if (x == y)
+  {
+    x_draw_line(s, cx - x, cy + y, cx + x, cy + y, c);
+    x_draw_line(s, cx - x, cy - y, cx + x, cy - y, c);
+  }
+  else if (x < y)
+  {
+    x_draw_line(s, cx - x, cy - y, cx - x, cy + y, c);
+    x_draw_line(s, cx + x, cy - y, cx + x, cy + y, c);
+    x_draw_line(s, cx - y, cy + x, cx + y, cy + x, c);
+    x_draw_line(s, cx - y, cy - x, cx + y, cy - x, c);
+  }
+}
+
+
+void x_draw_disk
+(x_surface_t* s, int cx, int cy, int r, const x_color_t* c)
+{
+  // xc, yc the center x,y
+
+  int x = 0;
+  int y = r;
+  int p = (5 - r * 4) / 4;
+
+  x_draw_disk_lines(s, cx, cy, x, y, c);
+
+  while (x < y)
+  {
+    ++x;
+
+    if (p < 0)
+    {
+      p += 2 * x + 1;
+    }
+    else
+    {
+      --y;
+      p += 2 * (x - y) + 1;
+    }
+
+    x_draw_disk_lines(s, cx, cy, x, y, c);
+  }
 }
 
 
