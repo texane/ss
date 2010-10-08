@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Jun 29 15:50:24 2009 texane
-// Last update Fri Oct  8 09:50:20 2010 texane
+// Last update Fri Oct  8 13:41:09 2010 texane
 //
 
 
@@ -478,7 +478,7 @@ static void draw_circle_points
 }
 
 
-static void x_draw_circle
+void x_draw_circle
 (x_surface_t* s, int cx, int cy, int r, const struct x_color* c)
 {
   // xc, yc the center x,y
@@ -603,6 +603,13 @@ x_surface_t* x_create_surface(int w, int h)
 void x_free_surface(x_surface_t* surface)
 {
   SDL_FreeSurface(surface);
+}
+
+
+void x_blit_surface(x_surface_t* ds, x_surface_t* ss)
+{
+  // ss the source surface
+  SDL_BlitSurface(ss, NULL, ds, NULL);
 }
 
 

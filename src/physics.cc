@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 12:57:57 2010 texane
+// Last update Fri Oct  8 13:45:14 2010 texane
 //
 
 
@@ -29,12 +29,14 @@ static cpFloat hscale;
 static const x_color_t* red_color = NULL;
 static const x_color_t* blue_color = NULL;
 static const x_color_t* yellow_color = NULL;
+static const x_color_t* orange_color = NULL;
 static const x_color_t* lred_color = NULL;
 static const x_color_t* lblue_color = NULL;
 static const x_color_t* lgreen_color = NULL;
 static const x_color_t* black_color = NULL;
 
 static x_surface_t* pawn_surface = NULL;
+static x_surface_t* king_surface = NULL;
 static x_surface_t* back_surface = NULL;
 
 
@@ -87,12 +89,12 @@ static void __attribute__((unused)) draw_shape
 
 
 static void draw_shape
-(cpBody* body, cpCircleShape* shape, cpSpace* space)
+(cpBody* body, cpCircleShape* shape, cpSpace* space, x_surface_t* s)
 {
-  const int x = (int)(shape->tc.x / wscale) - pawn_surface->w / 2;
-  const int y = (int)(shape->tc.y / hscale) - pawn_surface->h / 2;
+  const int x = (int)(shape->tc.x / wscale) - s->w / 2;
+  const int y = (int)(shape->tc.y / hscale) - s->h / 2;
 
-  x_blit_surface(pawn_surface, x, y);
+  x_blit_surface(s, x, y);
 }
 
 
@@ -128,7 +130,9 @@ static void draw_object(cpShape* shape, cpSpace* space)
   {
   case CP_CIRCLE_SHAPE:
     {
-      draw_shape(body, (cpCircleShape*)shape, space);
+      x_surface_t* const surface =
+	(body->m == 500.f) ? pawn_surface : king_surface;
+      draw_shape(body, (cpCircleShape*)shape, space, surface);
       break;
     }
 
@@ -241,6 +245,7 @@ static void init_graphics_stuff(const conf& conf)
   // colors
   static const unsigned char red_rgb[3] = {0xff, 0x00, 0x00};
   static const unsigned char yellow_rgb[3] = {0xd0, 0xd0, 0x20};
+  static const unsigned char orange_rgb[3] = {0xf0, 0xb0, 0x20};
   static const unsigned char blue_rgb[3] = {0x00, 0x00, 0xff};
   static const unsigned char lred_rgb[3] = {0xff, 0x80, 0x80};
   static const unsigned char lblue_rgb[3] = {0x80, 0x80, 0xff};
@@ -249,6 +254,7 @@ static void init_graphics_stuff(const conf& conf)
 
   x_alloc_color(red_rgb, &red_color);
   x_alloc_color(yellow_rgb, &yellow_color);
+  x_alloc_color(orange_rgb, &orange_color);
   x_alloc_color(blue_rgb, &blue_color);
   x_alloc_color(lred_rgb, &lred_color);
   x_alloc_color(lgreen_rgb, &lgreen_color);
@@ -259,11 +265,19 @@ static void init_graphics_stuff(const conf& conf)
   back_surface = x_create_surface(x_get_width(), x_get_height());
   draw_background(back_surface);
 
-  // create pawn, queen, king surfaces
+  // create pawn surface
   const int radius = (int)(95.f / ((wscale + hscale) / 2.f));
   pawn_surface = x_create_surface(radius * 2, radius * 2);
   x_fill_surface(pawn_surface, x_get_transparency_color());
   x_draw_disk(pawn_surface, radius, radius, radius - 1, yellow_color);
+  x_draw_circle(pawn_surface, radius, radius, radius - 1, black_color);
+
+  // create king surface
+  king_surface = x_create_surface(radius * 2, radius * 2);
+  x_fill_surface(king_surface, x_get_transparency_color());
+  x_draw_disk(king_surface, radius, radius, radius - 1, orange_color);
+  x_draw_circle(king_surface, radius, radius, radius - 1, black_color);
+  x_draw_line(king_surface, radius, 1, radius, radius * 2, black_color);
 }
 
 

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Aug 17 17:06:48 2009 texane
-// Last update Fri Oct  8 09:10:50 2010 texane
+// Last update Fri Oct  8 13:44:40 2010 texane
 //
 
 
@@ -42,9 +42,11 @@ int x_alloc_color(const unsigned char*, const x_color_t**);
 void x_free_color(const x_color_t*);
 void x_draw_pixel(int, int, const x_color_t*);
 void x_draw_pixel(x_surface_t*, int, int, const x_color_t*);
+void x_draw_line(x_surface_t*, int, int, int, int, const x_color_t*);
 void x_draw_line(int, int, int, int, const x_color_t*);
 void x_draw_square(int, int, int, const x_color_t*);
 void x_draw_circle(int, int, int, const x_color_t*);
+void x_draw_circle(x_surface_t*, int, int, int, const x_color_t*);
 void x_draw_disk(x_surface_t*, int, int, int, const x_color_t*);
 int x_event_get_type(const struct x_event*);
 int x_get_width(void);
@@ -53,6 +55,7 @@ const x_color_t* x_get_transparency_color(void);
 x_surface_t* x_create_surface(int, int);
 void x_free_surface(x_surface_t*);
 void x_blit_surface(x_surface_t*, int, int);
+void x_blit_surface(x_surface_t*, x_surface_t*);
 void x_fill_surface(x_surface_t*, const x_color_t*);
 
 
