@@ -11,6 +11,7 @@ class bot
 {
 private:
   // physics
+  cpSpace* _space;
   cpBody* _body;
   cpPolyShape* _shape;
 
@@ -43,7 +44,7 @@ private:
 
 public:
   // physics
-  void set_physics(cpBody*, cpPolyShape*);
+  void set_physics(cpSpace*, cpBody*, cpPolyShape*);
   void update_physics();
 
   // is thre red bot

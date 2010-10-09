@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Sat Oct  9 06:51:44 2010 texane
+// Last update Sat Oct  9 08:06:14 2010 texane
 //
 
 
@@ -88,8 +88,8 @@ public:
   // command completion
   void wait_done();
 
-  // schedule asserv
-  void next(struct cpBody*);
+  // update asserv state
+  void update(struct cpBody*);
 };
 
 

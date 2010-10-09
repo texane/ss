@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Sat Oct  9 07:50:31 2010 texane
+// Last update Sat Oct  9 08:06:42 2010 texane
 //
 
 
@@ -189,7 +189,7 @@ void asserv::wait_done()
   }
 }
 
-void asserv::next(cpBody* body)
+void asserv::update(cpBody* body)
 {
   // concurrent with bot scheduling
   lock_command();

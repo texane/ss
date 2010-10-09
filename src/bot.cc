@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Fri Oct  8 23:42:12 2010 texane
+// Last update Sat Oct  9 08:09:04 2010 texane
 //
 
 
@@ -43,8 +43,9 @@ bool bot::is_red() const
 }
 
 
-void bot::set_physics(cpBody* body, cpPolyShape* shape)
+void bot::set_physics(cpSpace* space, cpBody* body, cpPolyShape* shape)
 { 
+  _space = space;
   _body = body;
   _shape = shape;
 
@@ -55,7 +56,11 @@ void bot::set_physics(cpBody* body, cpPolyShape* shape)
 
 void bot::update_physics()
 {
-  _asserv.next(_body);
+  _asserv.update(_body);
+
+//   for (pos = _sharps.begin(); pos != end; ++pos)
+//     pos->update(_space);
+
   // _grabber.next(_body);
 }
 

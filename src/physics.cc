@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Fri Oct  8 23:44:06 2010 texane
+// Last update Sat Oct  9 08:08:25 2010 texane
 //
 
 
@@ -398,7 +398,7 @@ cpSpace* create_space(conf& conf)
 
 	// set the bot physics
 	bot* const b = bot::get_bot_by_type(pos->_type);
-	b->set_physics(body, (cpPolyShape*)shape);
+	b->set_physics(space, body, (cpPolyShape*)shape);
 
 	// set bot pointer as user data
 	body->data = (cpDataPointer)b;
