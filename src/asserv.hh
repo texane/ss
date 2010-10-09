@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Fri Oct  8 22:38:02 2010 texane
+// Last update Sat Oct  9 06:51:44 2010 texane
 //
 
 
@@ -37,6 +37,7 @@ class asserv
     CMD_OP_NONE = 0,
     CMD_OP_MOVE_FORWARD,
     CMD_OP_TURN,
+    CMD_OP_MOVE_TO,
     CMD_OP_INVALID
   };
 

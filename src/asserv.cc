@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Fri Oct  8 23:38:15 2010 texane
+// Last update Sat Oct  9 07:50:31 2010 texane
 //
 
 
@@ -105,7 +105,29 @@ void asserv::move_forward(int d)
 
 void asserv::move_to(unsigned int x, unsigned int y)
 {
-  
+  // casting to int important since x,y unsigneds
+  const double dx = (double)((int)x - _x.read());
+  const double dy = (double)((int)y - _y.read());
+
+  const double d = ::sqrt(dx * dx + dy * dy);
+  if (d == 0.f)
+    return ;
+
+  double a = rtod(::acos(dx / d));
+
+  // quadrants test
+  if (dy < 0.f)
+  {
+    if (dx < 0.f)
+      a = 270.f - (a - 90.f);
+    else
+      a = 360.f - a;
+  }
+
+  turn_to(a);
+  wait_done();
+
+  move_forward((int)d);
 }
 
 void asserv::turn(unsigned int a, int w)
@@ -135,6 +157,7 @@ void asserv::turn_to(unsigned int a)
 
   int w = 360;
 
+  // casting important since a unsigned
   int diff_a = ((int)a - curr_a) % 360;
 
   if (diff_a < -180)

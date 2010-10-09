@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Fri Oct  8 23:45:50 2010 texane
+// Last update Sat Oct  9 07:33:04 2010 texane
 //
 
 
@@ -18,9 +18,9 @@ void bot::debug_strategy()
 {
   _asserv.set_velocity(400);
 
-#if 1 // turn_to
+#if 0 // turn_to
 
-  _asserv.turn_to(33);
+  _asserv.turn_to(313);
   _asserv.wait_done();
   ::usleep(1000000);
 
@@ -32,10 +32,22 @@ void bot::debug_strategy()
   _asserv.wait_done();
   ::usleep(1000000);
 
-#elif 0 // move_to
+#elif 1 // move_to
 
-  _asserv.move_to(1500, 500);
+  int x, y;
+  _asserv.get_position(x, y);
+
+  _asserv.move_to(500, 500);
   _asserv.wait_done();
+
+//   _asserv.move_to(400, 400);
+//   _asserv.wait_done();
+
+  _asserv.move_to(x, y);
+  _asserv.wait_done();
+
+//   _asserv.move_to(200, 200);
+//   _asserv.wait_done();
 
 #elif 0 // square
 
