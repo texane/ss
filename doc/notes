@@ -27,3 +27,6 @@
 . wanted features
  . state snapshot
   . snap::load, snap::store
+
+. line intersection
+ . http://alienryderflex.com/intersect/

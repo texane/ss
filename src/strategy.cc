@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sat Oct  9 15:35:27 2010 texane
+// Last update Sat Oct  9 22:42:22 2010 texane
 //
 
 
@@ -29,14 +29,27 @@ void bot::debug_strategy()
 
 #elif 1 // sensor
 
-  if (is_red() == false) return ;
+  if (is_red() == true) return ;
 
-//   _asserv.turn_to(90);
-//   _asserv.wait_done();
+  _asserv.move_to(1500, 200);
+  _asserv.wait_done();
+
+  _asserv.turn_to(90);
+  _asserv.wait_done();
+  printf("d == %u\n", _lsharp.sense());
+  return ;
+
+  _asserv.move_to(1500, 200);
+  _asserv.wait_done();
 
   printf("d == %u\n", _lsharp.sense());
 
-  _asserv.move_forward(-50);
+  _asserv.turn_to(90);
+  _asserv.wait_done();
+
+  printf("d == %u\n", _lsharp.sense());
+
+  _asserv.move_forward(400);
   _asserv.wait_done();
 
   printf("d == %u\n", _lsharp.sense());
@@ -79,7 +92,7 @@ void bot::debug_strategy()
 
 void bot::wandering_strategy()
 {
-#define MIN_DIST 300 // 30 cms
+#define MIN_DIST 400 // 30 cms
 
   _asserv.set_velocity(400);
 
@@ -96,7 +109,7 @@ void bot::wandering_strategy()
 	if ((hdist < MIN_DIST) || (ldist < MIN_DIST))
 	{
 	  _asserv.stop();
-	  _asserv.wait_done();
+	  is_moving = false;
 	}
       }
       else
