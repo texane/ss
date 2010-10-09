@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sat Oct  9 08:09:04 2010 texane
+// Last update Sat Oct  9 15:33:26 2010 texane
 //
 
 
@@ -27,7 +27,7 @@ bot bot::_blue_bot;
 
 // bot methods implementation
 
-inline bot::bot() : _body(NULL), _shape(NULL)
+inline bot::bot() : _space(NULL), _body(NULL), _shape(NULL)
 {}
 
 
@@ -58,8 +58,8 @@ void bot::update_physics()
 {
   _asserv.update(_body);
 
-//   for (pos = _sharps.begin(); pos != end; ++pos)
-//     pos->update(_space);
+  _lsharp.update(_space, _body);
+  _hsharp.update(_space, _body);
 
   // _grabber.next(_body);
 }
@@ -96,6 +96,10 @@ int bot::create_bots(const conf& conf)
 
     // configure asserv
     b->_asserv.set_angle(pos->_a);
+
+    // configure sharps
+    b->_lsharp.set_info(pos->_w / 2, 0, 0, 25);
+    b->_lsharp.set_info(pos->_w / 2, 0, 0, 10);
 
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;

@@ -3,6 +3,7 @@
 
 
 #include "asserv.hh"
+#include "sensor.hh"
 #include "conf.hh"
 #include "physics.hh"
 
@@ -17,6 +18,8 @@ private:
 
   // devices
   asserv _asserv;
+  sensor _lsharp;
+  sensor _hsharp;
 
   // instances
   static bot _red_bot;

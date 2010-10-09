@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Sat Oct  9 08:06:42 2010 texane
+// Last update Sat Oct  9 09:39:01 2010 texane
 //
 
 
@@ -39,7 +39,7 @@ void asserv::set_command
 
 void asserv::complete_command(enum cmd_status status)
 {
-  _cmd._status = CMD_STATUS_SUCCESS;
+  _cmd._status = status;
 }
 
 void asserv::lock_command()
@@ -87,6 +87,14 @@ int asserv::get_angle()
 void asserv::set_angle(int a)
 {
   _a.write(a);
+}
+
+void asserv::stop()
+{
+  // cancel the current command, if any
+  lock_command();
+  complete_command(CMD_STATUS_FAILURE);
+  unlock_command();
 }
 
 void asserv::move_forward(int d)
@@ -187,6 +195,12 @@ void asserv::wait_done()
     // avoid busy looping
     ::usleep(1);
   }
+}
+
+bool asserv::is_done()
+{
+  ::usleep(1);
+  return !(_cmd._status == CMD_STATUS_INPROGRESS);
 }
 
 void asserv::update(cpBody* body)

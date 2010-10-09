@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Sat Oct  9 08:06:14 2010 texane
+// Last update Sat Oct  9 09:36:56 2010 texane
 //
 
 
@@ -78,6 +78,7 @@ public:
   void set_angle(int);
 
   // commands
+  void stop();
   void move_forward(int);
   void move_to(unsigned int, unsigned int);
   void turn(unsigned int, int = 360);
@@ -86,6 +87,7 @@ public:
   void turn_to(unsigned int);
 
   // command completion
+  bool is_done();
   void wait_done();
 
   // update asserv state
