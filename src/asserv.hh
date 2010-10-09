@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Sat Oct  9 09:36:56 2010 texane
+// Last update Sat Oct  9 22:49:00 2010 texane
 //
 
 
@@ -28,7 +28,6 @@ class asserv
   // actual cached state from physics
   atomic_int_t _x;
   atomic_int_t _y;
-  atomic_int_t _v;
   atomic_int_t _a; // degrees
 
   // last issued command
@@ -37,7 +36,7 @@ class asserv
     CMD_OP_NONE = 0,
     CMD_OP_MOVE_FORWARD,
     CMD_OP_TURN,
-    CMD_OP_MOVE_TO,
+    CMD_OP_STOP,
     CMD_OP_INVALID
   };
 

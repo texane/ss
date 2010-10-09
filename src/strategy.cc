@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sat Oct  9 22:42:22 2010 texane
+// Last update Sat Oct  9 22:45:35 2010 texane
 //
 
 
@@ -109,6 +109,7 @@ void bot::wandering_strategy()
 	if ((hdist < MIN_DIST) || (ldist < MIN_DIST))
 	{
 	  _asserv.stop();
+	  _asserv.wait_done();
 	  is_moving = false;
 	}
       }
@@ -124,7 +125,7 @@ void bot::wandering_strategy()
       if ((hdist < MIN_DIST) || (ldist < MIN_DIST))
       {
      	_asserv.turn(15);
-	_asserv.stop();
+	_asserv.wait_done();
       }
       else
       {
