@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sat Oct  9 22:38:23 2010 texane
+// Last update Sat Oct  9 23:03:08 2010 texane
 //
 
 
@@ -58,8 +58,8 @@ void bot::update_physics()
 {
   _asserv.update(_body);
 
-  _lsharp.update(_space, _body);
-  _hsharp.update(_space, _body);
+  for (size_t i = 0; i < 3; ++i)
+    _sharps[i].update(_space, _body);
 
   // _grabber.next(_body);
 }
@@ -98,8 +98,9 @@ int bot::create_bots(const conf& conf)
     b->_asserv.set_angle(pos->_a);
 
     // configure sharps
-    b->_lsharp.set_info(pos->_w / 2, 0, 0, 25);
-    b->_lsharp.set_info(pos->_w / 2, 0, 0, 10);
+    b->_sharps[0].set_info(pos->_w / 2, -pos->_w / 2, 0, 10);
+    b->_sharps[1].set_info(pos->_w / 2, 0, 0, 10);
+    b->_sharps[2].set_info(pos->_w / 2, pos->_w / 2, 0, 10);
 
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;

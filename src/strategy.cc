@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sat Oct  9 22:45:35 2010 texane
+// Last update Sat Oct  9 23:07:36 2010 texane
 //
 
 
@@ -36,23 +36,23 @@ void bot::debug_strategy()
 
   _asserv.turn_to(90);
   _asserv.wait_done();
-  printf("d == %u\n", _lsharp.sense());
+  printf("d == %u\n", _sharps[1].sense());
   return ;
 
   _asserv.move_to(1500, 200);
   _asserv.wait_done();
 
-  printf("d == %u\n", _lsharp.sense());
+  printf("d == %u\n", _sharps[1].sense());
 
   _asserv.turn_to(90);
   _asserv.wait_done();
 
-  printf("d == %u\n", _lsharp.sense());
+  printf("d == %u\n", _sharps[1].sense());
 
   _asserv.move_forward(400);
   _asserv.wait_done();
 
-  printf("d == %u\n", _lsharp.sense());
+  printf("d == %u\n", _sharps[1].sense());
 
 #elif 0 // move_to
 
@@ -94,6 +94,8 @@ void bot::wandering_strategy()
 {
 #define MIN_DIST 400 // 30 cms
 
+  if (is_red() == true) return ;
+
   _asserv.set_velocity(400);
 
   bool is_moving = false;
@@ -104,13 +106,20 @@ void bot::wandering_strategy()
     {
       if (_asserv.is_done() == false)
       {
-	const unsigned int hdist = _hsharp.sense();
-	const unsigned int ldist = _lsharp.sense();
-	if ((hdist < MIN_DIST) || (ldist < MIN_DIST))
+	unsigned int dists[3];
+	for (size_t i = 0; i < 3; ++i)
+	  dists[i] = _sharps[i].sense();
+	const unsigned int min =
+	  std::min(dists[0], std::min(dists[1], dists[2]));
+
+	if (min <= MIN_DIST)
 	{
 	  _asserv.stop();
 	  _asserv.wait_done();
 	  is_moving = false;
+
+	  _asserv.turn(10);
+	  _asserv.wait_done();
 	}
       }
       else
@@ -118,13 +127,17 @@ void bot::wandering_strategy()
 	is_moving = false;
       }
     }
-    else
+    else // is_moving == false
     {
-      const unsigned int hdist = _hsharp.sense();
-      const unsigned int ldist = _lsharp.sense();
-      if ((hdist < MIN_DIST) || (ldist < MIN_DIST))
+      unsigned int dists[3];
+      for (size_t i = 0; i < 3; ++i)
+	dists[i] = _sharps[i].sense();
+      const unsigned int min =
+	std::min(dists[0], std::min(dists[1], dists[2]));
+
+      if (min <= MIN_DIST)
       {
-     	_asserv.turn(15);
+	_asserv.turn(10);
 	_asserv.wait_done();
       }
       else

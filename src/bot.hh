@@ -18,8 +18,7 @@ private:
 
   // devices
   asserv _asserv;
-  sensor _lsharp;
-  sensor _hsharp;
+  sensor _sharps[3];
 
   // instances
   static bot _red_bot;

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sat Oct  9 08:08:25 2010 texane
+// Last update Sun Oct 10 07:53:43 2010 texane
 //
 
 
@@ -106,14 +106,14 @@ static void draw_shape
   cpVect verts[4];
   space_to_view(shape, verts);
 
-  int x0 = (int)verts[3].x;
-  int y0 = (int)verts[3].y;
+  int x0 = (int)(shape->tVerts[shape->numVerts - 1].x / wscale);
+  int y0 = (int)(shape->tVerts[shape->numVerts - 1].y / hscale);
 
   // draw the polygon
-  for (size_t i = 0; i < 4; ++i)
+  for (int i = 0; i < shape->numVerts; ++i)
   {
-    const int x1 = (int)verts[i].x;
-    const int y1 = (int)verts[i].y;
+    const int x1 = (int)(shape->tVerts[i].x / wscale);
+    const int y1 = (int)(shape->tVerts[i].y / hscale);
 
     x_draw_line(x0, y0, x1, y1, c);
 
