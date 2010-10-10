@@ -2,12 +2,13 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 09:00:32 2010 texane
+// Last update Sun Oct 10 09:43:29 2010 texane
 //
 
 
 #include <list>
 #include <iterator>
+#include <algorithm>
 #include <stdlib.h>
 #include <pthread.h>
 #include "asserv.hh"
@@ -152,4 +153,21 @@ void* bot::static_entry(void* arg)
   b->_status = THREAD_STATUS_DONE;
 
   return NULL;
+}
+
+
+// device wrappers
+
+unsigned int bot::do_sharps()
+{
+  // return the min distance
+
+  const size_t count = sizeof(_sharps) / sizeof(_sharps[0]);
+
+  unsigned int dists[count];
+
+  for (size_t i = 0; i < count; ++i)
+    dists[i] = _sharps[i].sense();
+
+  return std::min(dists[0], std::min(dists[1], dists[2]));
 }

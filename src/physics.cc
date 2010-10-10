@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 08:03:38 2010 texane
+// Last update Sun Oct 10 09:48:18 2010 texane
 //
 
 
@@ -173,6 +173,8 @@ static void pawn_velocity_func
   cpBodyUpdateVelocity(body, gravity, damping, dt);
 
   // fixme: ground friction
+  // should be dependent on the pawn mass
+  // since we will modify it in the grabber
   body->v.x *= 0.9;
   body->v.y *= 0.9;
   body->w *= 0.9;
@@ -384,8 +386,7 @@ cpSpace* create_space(conf& conf)
 	cpBody* const body = cpBodyNew(mass, moment);
 	body->velocity_func = bot_velocity_func;
 	body->p = cpv(pos->_x, pos->_y); // position
-	body->v = cpvzero;
-	body->a = dtor(pos->_a);
+	cpBodySetAngle(body, dtor(pos->_a));
 	cpSpaceAddBody(space, body);
 
 	// shape

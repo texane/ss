@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Sun Oct 10 09:03:58 2010 texane
+// Last update Sun Oct 10 09:58:55 2010 texane
 //
 
 
@@ -291,7 +291,7 @@ void asserv::update(cpBody* body)
  on_done:
 
   // update state
-  _a.write((int)body->a);
+  _a.write((int)rtod(body->a));
   _x.write((int)body->p.x);
   _y.write((int)body->p.y);
 

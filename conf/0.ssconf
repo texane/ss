@@ -20,15 +20,6 @@ w 200
 a 180
 end object
 
-# debugging pawn
-begin object
-type pawn
-x 800
-y 380
-w 95
-end object
-
-
 # startof on area pawns
 
 # left 0 0 pawn

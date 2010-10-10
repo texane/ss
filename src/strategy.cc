@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 09:04:12 2010 texane
+// Last update Sun Oct 10 10:02:15 2010 texane
 //
 
 
@@ -34,15 +34,10 @@ void bot::debug_strategy()
 //   _asserv.move_forward(500);
 //   while (_asserv.is_done() == false)
   {
-    unsigned int dists[3];
-    for (size_t i = 0; i < 3; ++i)
-      dists[i] = _sharps[i].sense();
-    const unsigned int min =
-      std::min(dists[0], std::min(dists[1], dists[2]));
+    const unsigned int dist = do_sharps();
+    printf("d == %u\n", dist);
 
-    printf("d == %u\n", min);
-
-#define MIN_DIST 200
+#define MIN_DIST 400U
 //     if (min > MIN_DIST)
 //       continue ;
 
@@ -112,7 +107,7 @@ void bot::debug_strategy()
 
 void bot::wandering_strategy()
 {
-  if (is_red() == true) return ;
+//   if (is_red() == true) return ;
 
   _asserv.set_velocity(400);
 
@@ -124,12 +119,7 @@ void bot::wandering_strategy()
     {
       if (_asserv.is_done() == false)
       {
-	unsigned int dists[3];
-	for (size_t i = 0; i < 3; ++i)
-	  dists[i] = _sharps[i].sense();
-	const unsigned int min =
-	  std::min(dists[0], std::min(dists[1], dists[2]));
-
+	const unsigned int min = do_sharps();
 	if (min <= MIN_DIST)
 	{
 	  _asserv.stop();
@@ -147,13 +137,7 @@ void bot::wandering_strategy()
     }
     else // is_moving == false
     {
-      unsigned int dists[3];
-      for (size_t i = 0; i < 3; ++i)
-	dists[i] = _sharps[i].sense();
-      const unsigned int min =
-	std::min(dists[0], std::min(dists[1], dists[2]));
-
-      if (min <= MIN_DIST)
+      if (do_sharps() <= MIN_DIST)
       {
 	_asserv.turn(10);
 	_asserv.wait_done();
