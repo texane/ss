@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 11:10:15 2010 texane
+// Last update Sun Oct 10 17:23:28 2010 texane
 //
 
 
@@ -454,4 +454,15 @@ void update_space(cpSpace* space)
   static const cpFloat dt = 0.01;
   for (size_t i = 0; i < 4; ++i)
     cpSpaceStep(space, dt);
+}
+
+
+void remove_shape(cpSpace* space, cpShape* shape)
+{
+  cpBody* const body = shape->body;
+
+  cpSpaceRemoveShape(space, shape);
+  cpSpaceRemoveBody(space, body);
+  cpShapeFree(shape);
+  cpBodyFree(body);
 }

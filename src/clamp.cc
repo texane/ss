@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Sun Oct 10 17:14:35 2010 texane
+// Last update Sun Oct 10 17:24:57 2010 texane
 //
 
 
@@ -44,6 +44,9 @@ unsigned int clamp::grabbing_distance() const
 
 typedef struct grab_functor
 {
+  // physics space
+  cpSpace* _space;
+
   // reference body (ie. the bot)
   const cpBody* _body;
 
@@ -61,10 +64,10 @@ typedef struct grab_functor
   // has something been grabbed
   bool _has_grabbed;
 
-  grab_functor(const clamp* klamp, const cpBody* body) :
-    _body(body), _clamp(klamp), _has_grabbed(false) {}
+  grab_functor(const clamp* klamp, cpSpace* space, const cpBody* body) :
+    _space(space), _body(body), _clamp(klamp), _has_grabbed(false) {}
 
-  void operator()(const cpShape* shape)
+  void operator()(cpShape* shape)
   {
     if (_has_grabbed == true)
       return ;
@@ -100,6 +103,9 @@ typedef struct grab_functor
     else if ((rx - cs->r < 0) || (rx - cs->r > _clamp->_h))
       return ;
 
+    // remove the body from space
+    remove_shape(_space, shape);
+
     _has_grabbed = true;
   }
 
@@ -108,7 +114,7 @@ typedef struct grab_functor
 
 static void on_shape(void* shape, void* functor)
 {
-  (*(grab_functor_t*)functor)((const cpShape*)shape);
+  (*(grab_functor_t*)functor)((cpShape*)shape);
 }
 
 void clamp::update(cpSpace* space, cpBody* body)
@@ -116,7 +122,7 @@ void clamp::update(cpSpace* space, cpBody* body)
   if (_is_grabbing == false)
     return ;
 
-  grab_functor_t f(this, body);
+  grab_functor_t f(this, space, body);
 
   // translate clamp to world
   const double cosa = ::cos(body->a);
