@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 08:11:34 2010 texane
+// Last update Sun Oct 10 09:04:12 2010 texane
 //
 
 
@@ -31,8 +31,8 @@ void bot::debug_strategy()
 
   if (is_red() == false) return ;
 
-  _asserv.move_forward(500);
-  while (_asserv.is_done() == false)
+//   _asserv.move_forward(500);
+//   while (_asserv.is_done() == false)
   {
     unsigned int dists[3];
     for (size_t i = 0; i < 3; ++i)
@@ -40,13 +40,13 @@ void bot::debug_strategy()
     const unsigned int min =
       std::min(dists[0], std::min(dists[1], dists[2]));
 
+    printf("d == %u\n", min);
+
 #define MIN_DIST 200
-    if (min > MIN_DIST)
-      continue ;
+//     if (min > MIN_DIST)
+//       continue ;
 
     _asserv.stop();
-
-    printf("d == %u\n", min);
   }
 
   return ;
@@ -112,7 +112,7 @@ void bot::debug_strategy()
 
 void bot::wandering_strategy()
 {
-  // if (is_red() == false) return ;
+  if (is_red() == true) return ;
 
   _asserv.set_velocity(400);
 

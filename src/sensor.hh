@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:13:10 2010 texane
-// Last update Sat Oct  9 14:40:25 2010 texane
+// Last update Sun Oct 10 08:52:02 2010 texane
 //
 
 
@@ -20,20 +20,20 @@ class sensor
 
 private:
   // rel to bot pos
-  int _x;
-  int _y;
+  double _x;
+  double _y;
 
   // in radians (arg in degrees)
-  cpFloat _a;
+  double _a;
 
   // absolute height
-  int _h;
+  double _h;
 
 #if 0 // unused
   // phyisics model
-  int _aperture;
-  int _amplitude;
-  int _power;
+  double _aperture;
+  double _amplitude;
+  double _power;
 #endif
 
   // concurrency between physics update and sensing
@@ -44,7 +44,7 @@ private:
 public:
   sensor();
 
-  void set_info(int, int, int, int);
+  void set_info(double, double, double, double);
 
   void update(cpSpace*, cpBody*);
   unsigned int sense();

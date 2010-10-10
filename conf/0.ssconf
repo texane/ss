@@ -24,7 +24,7 @@ end object
 begin object
 type pawn
 x 800
-y 200
+y 380
 w 95
 end object
 

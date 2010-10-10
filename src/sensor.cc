@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Sat Oct  9 22:37:45 2010 texane
+// Last update Sun Oct 10 08:59:54 2010 texane
 //
 
 
@@ -23,12 +23,12 @@ sensor::sensor()
 }
 
 
-void sensor::set_info(int x, int y, int a, int h)
+void sensor::set_info(double x, double y, double a, double h)
 {
   _x = x;
   _y = y;
 
-  _a = dtor((double)a);
+  _a = dtor(a);
 
   _h = h;
 }
@@ -119,12 +119,16 @@ void sensor::update(cpSpace* space, cpBody* body)
   if (_is_sensing == 0)
     return ;
 
-  // initialize sensor line
-  const cpFloat a = body->a + _a;
-  const cpFloat x0 = body->p.x + _x * ::cos(body->a);
-  const cpFloat y0 = body->p.y + _y * ::sin(body->a);
-  const cpFloat x1 = x0 + ::cos(a) * 10000.f;
-  const cpFloat y1 = y0 + ::sin(a) * 10000.f;
+  // translate sensor in bot repere
+
+  const cpFloat cosa = ::cos(body->a);
+  const cpFloat sina = ::sin(body->a);
+  const cpFloat x0 = body->p.x + (_x * cosa + _y * sina);
+  const cpFloat y0 = body->p.y + (_x * sina + _y * cosa);
+
+  const cpFloat ba = body->a + _a;
+  const cpFloat x1 = x0 + ::cos(ba) * 10000.f;
+  const cpFloat y1 = y0 + ::sin(ba) * 10000.f;
 
   // instanciate intersection solver
   solver_info_t si(body, x0, y0, x1, y1);
