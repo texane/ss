@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 10:45:06 2010 texane
+// Last update Sun Oct 10 11:10:15 2010 texane
 //
 
 
@@ -447,7 +447,7 @@ void destroy_space(cpSpace* space)
 }
 
 
-void next_space(cpSpace* space)
+void update_space(cpSpace* space)
 {
   // this routine is called every 40ms
 

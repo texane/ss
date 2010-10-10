@@ -2,6 +2,7 @@
 # define BOT_HH_INCLUDED
 
 
+#include "ticker.hh"
 #include "asserv.hh"
 #include "sensor.hh"
 #include "conf.hh"
@@ -19,6 +20,7 @@ private:
   // devices
   asserv _asserv;
   sensor _sharps[3];
+  ticker _ticker;
 
   // instances
   static bot _red_bot;
@@ -28,7 +30,7 @@ private:
 #define THREAD_STATUS_WAIT 0L
 #define THREAD_STATUS_RUN 1L
 #define THREAD_STATUS_DONE 2L
-  volatile long _status  __attribute__((aligned));
+  volatile long _status __attribute__((aligned));
   pthread_t _thread;
 
   // is the bot valid
@@ -52,7 +54,7 @@ public:
   void set_physics(cpSpace*, cpBody*, cpPolyShape*);
   void update_physics();
 
-  // is thre red bot
+  // is the red bot
   bool is_red() const;
 
   // instances accessor

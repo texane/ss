@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 23:15:48 2010 texane
-// Last update Wed Oct  6 23:35:26 2010 texane
+// Last update Sun Oct 10 11:21:09 2010 texane
 //
 
 
@@ -18,6 +18,8 @@ typedef struct atomic_int
 
   void write(int value) { _value = value; }
   int read() const { return _value; }
+
+  void inc() { __sync_fetch_and_add(&_value, 1); }
 
 } atomic_int_t;
 

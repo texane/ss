@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 10:32:33 2010 texane
+// Last update Sun Oct 10 11:21:39 2010 texane
 //
 
 
@@ -11,6 +11,8 @@
 
 void bot::debug_strategy()
 {
+  _ticker.reset();
+
   _asserv.set_velocity(400);
 
 #if 0 // turn_to
@@ -107,7 +109,7 @@ void bot::debug_strategy()
 
 void bot::wandering_strategy()
 {
-//   if (is_red() == true) return ;
+  _ticker.reset();
 
   _asserv.set_velocity(400);
 

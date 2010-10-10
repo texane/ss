@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Fri Oct  8 13:12:01 2010 texane
+// Last update Sun Oct 10 11:10:33 2010 texane
 //
 
 
@@ -21,7 +21,7 @@ static int on_event(const struct x_event* ev, void* arg)
   switch (x_event_get_type(ev))
   {
   case X_EVENT_TICK:
-    next_space((cpSpace*)arg);
+    update_space((cpSpace*)arg);
     draw_space((cpSpace*)arg);
     break;
 

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 10:44:27 2010 texane
+// Last update Sun Oct 10 11:20:12 2010 texane
 //
 
 
@@ -13,6 +13,7 @@
 #include <pthread.h>
 #include "asserv.hh"
 #include "physics.hh"
+#include "ticker.hh"
 #include "conf.hh"
 #include "bot.hh"
 #include "rtod.hh"
@@ -63,7 +64,9 @@ void bot::update_physics()
   for (size_t i = 0; i < count; ++i)
     _sharps[i].update(_space, _body);
 
-  // _grabber.next(_body);
+  _ticker.update();
+
+  // _grabber.update(_body);
 }
 
 
@@ -103,6 +106,9 @@ int bot::create_bots(const conf& conf)
     b->_sharps[0].set_info(pos->_w / 2.f, -pos->_w / 2.f, 0, 10);
     b->_sharps[1].set_info(pos->_w / 2.f, 0, 0, 10);
     b->_sharps[2].set_info(pos->_w / 2.f, pos->_w / 2.f, 0, 10);
+
+    // configure ticker
+    b->_ticker.set_info(10);
 
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;
