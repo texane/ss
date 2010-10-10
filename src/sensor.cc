@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Sun Oct 10 10:53:24 2010 texane
+// Last update Sun Oct 10 18:01:39 2010 texane
 //
 
 
@@ -118,6 +118,10 @@ void sensor::update(cpSpace* space, cpBody* body)
   if (_is_sensing == 0)
     return ;
 
+  // already updated
+  if (_has_updated == true)
+    return ;
+
   // translate sensor in bot repere
 
   const cpFloat cosa = ::cos(body->a);
@@ -141,6 +145,7 @@ void sensor::update(cpSpace* space, cpBody* body)
     _dist = (unsigned int)si._res;
   else
     _dist = std::numeric_limits<unsigned int>::max();
+
   __sync_synchronize();
   _has_updated = 1;
 }
@@ -149,14 +154,14 @@ void sensor::update(cpSpace* space, cpBody* body)
 unsigned int sensor::sense()
 {
   _has_updated = 0;
-  __sync_synchronize();
   _is_sensing = 1;
+  __sync_synchronize();
 
   while (_has_updated == 0)
     pthread_yield();
 
-  __sync_synchronize();
   _is_sensing = 0;
 
+  __sync_synchronize();
   return _dist;
 }

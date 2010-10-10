@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 16:53:46 2010 texane
+// Last update Sun Oct 10 17:56:47 2010 texane
 //
 
 
@@ -18,29 +18,49 @@ void bot::debug_strategy()
 #if 1 // grabber
 
   const unsigned int min_dist = _clamp.grabbing_distance() - 40;
+  unsigned int d = min_dist + 1;
 
-  unsigned int d = _sharps[1].sense();
-  if (d < min_dist) goto do_grab;
-
+  // move until pawn detected
   _asserv.move_forward(1000);
   while (_asserv.is_done() == false)
-  {
-    if ((d = _sharps[1].sense()) <= min_dist)
+    if ((d = do_sharps()) <= min_dist)
       _asserv.stop();
-  }
 
   if (d > min_dist)
   {
-    printf("notgrabbing\n");
+    printf("notPlacing\n");
     return ;
   }
 
-  // pawn reached, grab it
- do_grab:
-  int x, y;
-  _asserv.get_position(x, y);
-  printf("grabbing at (%d, %d) %u\n", x, y, d);
+  printf("placing\n");
 
+  // pawn reached, place
+  unsigned int a = 30;
+  unsigned int iter = 20;
+  for (; iter; --iter)
+  {
+    unsigned int ds[3];
+    do_sharps(ds);
+
+    if (ds[1] < min_dist)
+      break ;
+
+    if (ds[0] < ds[1])
+      _asserv.turn_left(a);
+    else
+      _asserv.turn_right(a);
+    _asserv.wait_done();
+
+    a /= 2;
+  }
+
+  if (iter == 20)
+  {
+    printf("notGrabbing\n");
+    return ;
+  }
+
+  // placed, grabit
   if (_clamp.grab() == true)
     printf("grabbed\n");
   else

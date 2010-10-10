@@ -46,6 +46,7 @@ private:
 
   // device wrappers
   unsigned int do_sharps();
+  void do_sharps(unsigned int[3]);
 
   // strategies
   void wandering_strategy();

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Sun Oct 10 17:24:57 2010 texane
+// Last update Sun Oct 10 18:01:15 2010 texane
 //
 
 
@@ -122,6 +122,10 @@ void clamp::update(cpSpace* space, cpBody* body)
   if (_is_grabbing == false)
     return ;
 
+  // already updated
+  if (_has_updated == true)
+    return ;
+
   grab_functor_t f(this, space, body);
 
   // translate clamp to world
@@ -162,7 +166,7 @@ bool clamp::grab()
     pthread_yield();
 
   _is_grabbing = false;
-  __sync_synchronize();
 
+  __sync_synchronize();
   return _has_grabbed;
 }

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 17:20:37 2010 texane
+// Last update Sun Oct 10 17:53:11 2010 texane
 //
 
 
@@ -170,13 +170,13 @@ void* bot::static_entry(void* arg)
 unsigned int bot::do_sharps()
 {
   // return the min distance
+  unsigned int ds[3];
+  do_sharps(ds);
+  return std::min(ds[0], std::min(ds[1], ds[2]));
+}
 
-  const size_t count = sizeof(_sharps) / sizeof(_sharps[0]);
-
-  unsigned int dists[count];
-
-  for (size_t i = 0; i < count; ++i)
-    dists[i] = _sharps[i].sense();
-
-  return std::min(dists[0], std::min(dists[1], dists[2]));
+void bot::do_sharps(unsigned int ds[3])
+{
+  for (size_t i = 0; i < 3; ++i)
+    ds[i] = _sharps[i].sense();
 }
