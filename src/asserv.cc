@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Sat Oct  9 22:51:41 2010 texane
+// Last update Sun Oct 10 08:04:42 2010 texane
 //
 
 
@@ -287,6 +287,14 @@ void asserv::update(cpBody* body)
 
   default:
     {
+      // fixme: ground friction
+      // should be dependent on the bot mass
+      // since we will modify it in the grabber
+      // as the bot holds one or more pawns
+      body->v.x *= 0.5;
+      body->v.y *= 0.5;
+      body->w *= 0.5;
+
       break;
     }
   }

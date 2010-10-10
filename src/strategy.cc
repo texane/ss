@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sat Oct  9 23:07:36 2010 texane
+// Last update Sun Oct 10 08:00:45 2010 texane
 //
 
 
@@ -94,7 +94,7 @@ void bot::wandering_strategy()
 {
 #define MIN_DIST 400 // 30 cms
 
-  if (is_red() == true) return ;
+  // if (is_red() == true) return ;
 
   _asserv.set_velocity(400);
 
