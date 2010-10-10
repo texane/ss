@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 10:02:15 2010 texane
+// Last update Sun Oct 10 10:32:33 2010 texane
 //
 
 
@@ -33,16 +33,16 @@ void bot::debug_strategy()
 
 //   _asserv.move_forward(500);
 //   while (_asserv.is_done() == false)
-  {
-    const unsigned int dist = do_sharps();
-    printf("d == %u\n", dist);
+//   {
+  const unsigned int dist = _sharps[2].sense();
+  printf("d == %u\n", dist);
 
 #define MIN_DIST 400U
-//     if (min > MIN_DIST)
+//     if (dist > MIN_DIST)
 //       continue ;
 
-    _asserv.stop();
-  }
+//     _asserv.stop();
+//   }
 
   return ;
 

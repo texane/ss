@@ -1,11 +1,11 @@
 . todo
+ . puissance des sharps
+  . actuellement 10000, eq. a infini
+
  . specifier les reperes
   . 0 degree points on the right
   . 90 degree points on the bottom 
   . (0, 0) top left corner
-
- . implement sharp sensors
-  . method update()
 
  . implement friction ?
   . -> at least the robot should not bounce indefinitly like a ball...

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Sun Oct 10 08:59:54 2010 texane
+// Last update Sun Oct 10 10:44:02 2010 texane
 //
 
 
@@ -123,7 +123,7 @@ void sensor::update(cpSpace* space, cpBody* body)
 
   const cpFloat cosa = ::cos(body->a);
   const cpFloat sina = ::sin(body->a);
-  const cpFloat x0 = body->p.x + (_x * cosa + _y * sina);
+  const cpFloat x0 = body->p.x + (_x * cosa - _y * sina);
   const cpFloat y0 = body->p.y + (_x * sina + _y * cosa);
 
   const cpFloat ba = body->a + _a;
