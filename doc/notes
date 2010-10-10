@@ -1,9 +1,11 @@
 . todo
  . devices
   . container: a bot can contain some pawn
-  . clamp: a bot can grab a pawn (or king)
+  . more sharps -> handle height
 
- . abstraction logiciel pour l ecriture d une variable en concurrence
+ . add pawn mass to bot mass
+
+ . abstraction logicielle pour l ecriture d une variable en concurrence
   . while (isset()) ; // reader
 
  . should the global update routine be called at the
