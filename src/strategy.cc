@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 11:21:39 2010 texane
+// Last update Sun Oct 10 15:33:01 2010 texane
 //
 
 
@@ -15,7 +15,25 @@ void bot::debug_strategy()
 
   _asserv.set_velocity(400);
 
-#if 0 // turn_to
+#if 1 // grabber
+
+  _asserv.move_forward(1000);
+  while (_asserv.is_done() == false)
+  {
+    if (do_sharps() < 200)
+      _asserv.stop();
+  }
+
+  // pawn reached, grab it
+
+  printf("grabbing\n");
+
+  if (_clamp.grab() == true)
+    printf("grabbed\n");
+  else
+    printf("missed\n");
+
+#elif 0 // turn_to
 
   _asserv.turn_to(313);
   _asserv.wait_done();
@@ -29,7 +47,7 @@ void bot::debug_strategy()
   _asserv.wait_done();
   ::usleep(1000000);
 
-#elif 1 // sensor
+#elif 0 // sensor
 
   if (is_red() == false) return ;
 
@@ -38,8 +56,6 @@ void bot::debug_strategy()
 //   {
   const unsigned int dist = _sharps[2].sense();
   printf("d == %u\n", dist);
-
-#define MIN_DIST 400U
 //     if (dist > MIN_DIST)
 //       continue ;
 
@@ -122,6 +138,7 @@ void bot::wandering_strategy()
       if (_asserv.is_done() == false)
       {
 	const unsigned int min = do_sharps();
+#define MIN_DIST 400U
 	if (min <= MIN_DIST)
 	{
 	  _asserv.stop();

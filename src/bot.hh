@@ -5,6 +5,7 @@
 #include "ticker.hh"
 #include "asserv.hh"
 #include "sensor.hh"
+#include "clamp.hh"
 #include "conf.hh"
 #include "physics.hh"
 
@@ -21,6 +22,7 @@ private:
   asserv _asserv;
   sensor _sharps[3];
   ticker _ticker;
+  clamp _clamp;
 
   // instances
   static bot _red_bot;

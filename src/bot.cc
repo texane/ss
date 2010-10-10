@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 11:20:12 2010 texane
+// Last update Sun Oct 10 15:38:55 2010 texane
 //
 
 
@@ -58,15 +58,15 @@ void bot::set_physics(cpSpace* space, cpBody* body, cpPolyShape* shape)
 
 void bot::update_physics()
 {
+  _ticker.update();
+
   _asserv.update(_body);
 
   const size_t count = sizeof(_sharps) / sizeof(_sharps[0]);
   for (size_t i = 0; i < count; ++i)
     _sharps[i].update(_space, _body);
 
-  _ticker.update();
-
-  // _grabber.update(_body);
+  _clamp.update(_space, _body);
 }
 
 
@@ -102,13 +102,16 @@ int bot::create_bots(const conf& conf)
     // configure asserv
     b->_asserv.set_angle(pos->_a);
 
-    // configure sharps
-    b->_sharps[0].set_info(pos->_w / 2.f, -pos->_w / 2.f, 0, 10);
-    b->_sharps[1].set_info(pos->_w / 2.f, 0, 0, 10);
-    b->_sharps[2].set_info(pos->_w / 2.f, pos->_w / 2.f, 0, 10);
-
     // configure ticker
     b->_ticker.set_info(10);
+
+    // configure sharps
+    b->_sharps[0].set_info(pos->_w / 2, -pos->_w / 2, 0, 10);
+    b->_sharps[1].set_info(pos->_w / 2, 0, 0, 10);
+    b->_sharps[2].set_info(pos->_w / 2, pos->_w / 2, 0, 10);
+
+    // configure clamp
+    b->_clamp.set_info(pos->_w / 2, 0, 300, 300, 0);
 
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;
@@ -155,7 +158,7 @@ void* bot::static_entry(void* arg)
     ;
 
   if (b->_status == THREAD_STATUS_RUN)
-    b->wandering_strategy();
+    b->debug_strategy();
   b->_status = THREAD_STATUS_DONE;
 
   return NULL;

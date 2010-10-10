@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Sun Oct 10 11:18:07 2010 texane
+## Last update Sun Oct 10 13:15:19 2010 texane
 ##
 
 
@@ -20,6 +20,7 @@ SRCS	:=	../src/main.cc		\
 		../src/physics.cc	\
 		../src/strategy.cc	\
 		../src/bot.cc		\
+		../src/clamp.cc		\
 		../src/asserv.cc	\
 		../src/sensor.cc	\
 		../src/ticker.cc	\
