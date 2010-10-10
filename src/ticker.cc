@@ -2,11 +2,10 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 11:03:43 2010 texane
-// Last update Sun Oct 10 11:25:17 2010 texane
+// Last update Sun Oct 10 17:17:12 2010 texane
 //
 
 
-#include <stdio.h>
 #include "ticker.hh"
 #include "atomic.hh"
 

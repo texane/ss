@@ -8,23 +8,23 @@ type red_bot
 x 200
 y 200
 w 200
-a 90
+a 0
 end object
 
 # blue bot
-#begin object
+begin object
 type blue_bot
 x 2800
 y 200
 w 200
 a 180
-#end object
+end object
 
 # debugging pawn
 #begin object
 type pawn
 x 500
-y 256
+y 254
 w 95
 #end object
 

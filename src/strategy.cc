@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 16:20:38 2010 texane
+// Last update Sun Oct 10 16:53:46 2010 texane
 //
 
 
@@ -19,13 +19,13 @@ void bot::debug_strategy()
 
   const unsigned int min_dist = _clamp.grabbing_distance() - 40;
 
-  unsigned int d = do_sharps();
+  unsigned int d = _sharps[1].sense();
   if (d < min_dist) goto do_grab;
 
   _asserv.move_forward(1000);
   while (_asserv.is_done() == false)
   {
-    if ((d = do_sharps()) <= min_dist)
+    if ((d = _sharps[1].sense()) <= min_dist)
       _asserv.stop();
   }
 
