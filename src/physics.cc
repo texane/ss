@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 07:53:43 2010 texane
+// Last update Sun Oct 10 07:55:44 2010 texane
 //
 
 
@@ -64,7 +64,7 @@ static inline void __attribute__((unused)) space_to_view
   radius = shape->r / scale;
 }
 
-static inline void space_to_view
+static inline void __attribute__((unused)) space_to_view
 (cpPolyShape* shape, cpVect verts[4])
 {
   for (size_t i = 0; i < 4; ++i)
@@ -103,9 +103,6 @@ static void draw_shape
 (cpBody* body, cpPolyShape* shape, cpSpace* space, const x_color_t* c)
 {
   // translate from space to view 
-  cpVect verts[4];
-  space_to_view(shape, verts);
-
   int x0 = (int)(shape->tVerts[shape->numVerts - 1].x / wscale);
   int y0 = (int)(shape->tVerts[shape->numVerts - 1].y / hscale);
 
