@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 08:00:45 2010 texane
+// Last update Sun Oct 10 08:11:34 2010 texane
 //
 
 
@@ -29,7 +29,27 @@ void bot::debug_strategy()
 
 #elif 1 // sensor
 
-  if (is_red() == true) return ;
+  if (is_red() == false) return ;
+
+  _asserv.move_forward(500);
+  while (_asserv.is_done() == false)
+  {
+    unsigned int dists[3];
+    for (size_t i = 0; i < 3; ++i)
+      dists[i] = _sharps[i].sense();
+    const unsigned int min =
+      std::min(dists[0], std::min(dists[1], dists[2]));
+
+#define MIN_DIST 200
+    if (min > MIN_DIST)
+      continue ;
+
+    _asserv.stop();
+
+    printf("d == %u\n", min);
+  }
+
+  return ;
 
   _asserv.move_to(1500, 200);
   _asserv.wait_done();
@@ -92,9 +112,7 @@ void bot::debug_strategy()
 
 void bot::wandering_strategy()
 {
-#define MIN_DIST 400 // 30 cms
-
-  // if (is_red() == true) return ;
+  // if (is_red() == false) return ;
 
   _asserv.set_velocity(400);
 

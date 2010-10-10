@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Sun Oct 10 08:04:42 2010 texane
+// Last update Sun Oct 10 08:13:51 2010 texane
 //
 
 
@@ -237,10 +237,6 @@ void asserv::update(cpBody* body)
 	complete_command(CMD_STATUS_SUCCESS);
       }
 
-      // update state
-      _x.write((int)body->p.x);
-      _y.write((int)body->p.y);
-
       break;
     }
 
@@ -261,9 +257,6 @@ void asserv::update(cpBody* body)
 	w = 0.f;
       }
 
-      // update asserv state
-      _a.write((int)curr_a);
-
       // update body angular velocty
       body->w = w;
 
@@ -273,10 +266,6 @@ void asserv::update(cpBody* body)
   case CMD_OP_STOP:
     {
       complete_command(CMD_STATUS_SUCCESS);
-
-      _a.write((int)body->a);
-      _x.write((int)body->p.x);
-      _y.write((int)body->p.y);
 
       body->v = cpvzero;
 
@@ -294,11 +283,17 @@ void asserv::update(cpBody* body)
       body->v.x *= 0.5;
       body->v.y *= 0.5;
       body->w *= 0.5;
-
+      
       break;
     }
   }
 
  on_done:
+
+  // update state
+  _a.write((int)body->a);
+  _x.write((int)body->p.x);
+  _y.write((int)body->p.y);
+
   unlock_command();
 }
