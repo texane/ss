@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 12:59:38 2010 texane
-// Last update Sun Oct 10 16:19:49 2010 texane
+// Last update Sun Oct 10 21:12:19 2010 texane
 //
 
 
@@ -25,8 +25,12 @@ class clamp
   double _h;
   double _a;
 
+  // current held object
+  cpShape* _grabbed_shape;
+
   // conccurent grabbing protocol
   volatile bool _is_grabbing __attribute__((aligned));
+  volatile bool _is_dropping __attribute__((aligned));
   volatile bool _has_updated __attribute__((aligned));
   volatile bool _has_grabbed __attribute__((aligned));
 
@@ -36,6 +40,7 @@ public:
   unsigned int grabbing_distance() const;
   void update(cpSpace*, cpBody*);
   bool grab();
+  void drop();
 
   friend struct grab_functor;
 };

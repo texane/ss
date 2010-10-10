@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 17:53:11 2010 texane
+// Last update Sun Oct 10 21:54:20 2010 texane
 //
 
 
@@ -178,5 +178,5 @@ unsigned int bot::do_sharps()
 void bot::do_sharps(unsigned int ds[3])
 {
   for (size_t i = 0; i < 3; ++i)
-    ds[i] = _sharps[i].sense();
+    ds[i] = _sharps[i].read();
 }

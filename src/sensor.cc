@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Sun Oct 10 18:01:39 2010 texane
+// Last update Sun Oct 10 21:54:34 2010 texane
 //
 
 
@@ -115,7 +115,7 @@ static void solve_line_shape(cpShape* shape, solver_info_t* si)
 
 void sensor::update(cpSpace* space, cpBody* body)
 {
-  if (_is_sensing == 0)
+  if (_is_sensing == false)
     return ;
 
   // already updated
@@ -147,20 +147,20 @@ void sensor::update(cpSpace* space, cpBody* body)
     _dist = std::numeric_limits<unsigned int>::max();
 
   __sync_synchronize();
-  _has_updated = 1;
+  _has_updated = true;
 }
 
 
-unsigned int sensor::sense()
+unsigned int sensor::read()
 {
-  _has_updated = 0;
-  _is_sensing = 1;
+  _has_updated = false;
+  _is_sensing = true;
   __sync_synchronize();
 
-  while (_has_updated == 0)
+  while (_has_updated == false)
     pthread_yield();
 
-  _is_sensing = 0;
+  _is_sensing = false;
 
   __sync_synchronize();
   return _dist;

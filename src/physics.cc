@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 17:23:28 2010 texane
+// Last update Sun Oct 10 21:26:14 2010 texane
 //
 
 
@@ -459,10 +459,22 @@ void update_space(cpSpace* space)
 
 void remove_shape(cpSpace* space, cpShape* shape)
 {
-  cpBody* const body = shape->body;
-
   cpSpaceRemoveShape(space, shape);
-  cpSpaceRemoveBody(space, body);
+  cpSpaceRemoveBody(space, shape->body);
+
+#if 0 // do not free since aimed at being inserted
   cpShapeFree(shape);
   cpBodyFree(body);
+#endif
+}
+
+
+void insert_shape(cpSpace* space, cpShape* shape, cpFloat x, cpFloat y)
+{
+  // insert an already created shape at x, y
+
+  shape->body->p = cpv(x, y);
+
+  cpSpaceAddBody(space, shape->body);
+  cpSpaceAddShape(space, shape);
 }

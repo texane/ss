@@ -3,6 +3,9 @@
   . container: a bot can contain some pawn
   . clamp: a bot can grab a pawn (or king)
 
+ . abstraction logiciel pour l ecriture d une variable en concurrence
+  . while (isset()) ; // reader
+
  . should the global update routine be called at the
    end of cpSpaceStep instead of velocity update?
 

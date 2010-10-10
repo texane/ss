@@ -2,11 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Sun Oct 10 18:01:15 2010 texane
+// Last update Sun Oct 10 21:48:36 2010 texane
 //
 
 
 #include <math.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "physics.hh"
 #include "clamp.hh"
@@ -19,7 +20,7 @@
 
 
 clamp::clamp() :
-  _x(0), _y(0), _w(0), _h(0), _a(0), _is_grabbing(false)
+  _x(0), _y(0), _w(0), _h(0), _a(0), _grabbed_shape(NULL)
 {}
 
 
@@ -64,6 +65,9 @@ typedef struct grab_functor
   // has something been grabbed
   bool _has_grabbed;
 
+  // what has been grabbed
+  cpShape* _grabbed_shape;
+
   grab_functor(const clamp* klamp, cpSpace* space, const cpBody* body) :
     _space(space), _body(body), _clamp(klamp), _has_grabbed(false) {}
 
@@ -103,9 +107,9 @@ typedef struct grab_functor
     else if ((rx - cs->r < 0) || (rx - cs->r > _clamp->_h))
       return ;
 
-    // remove the body from space
+    // remove the shape from space
     remove_shape(_space, shape);
-
+    _grabbed_shape = shape;
     _has_grabbed = true;
   }
 
@@ -119,36 +123,64 @@ static void on_shape(void* shape, void* functor)
 
 void clamp::update(cpSpace* space, cpBody* body)
 {
-  if (_is_grabbing == false)
+  // cache the values to avoid memory accesses
+  const bool is_dropping = _is_dropping;
+  const bool is_grabbing = _is_grabbing;
+
+  // nothing to do
+  if ((is_dropping == false) && (is_grabbing == false))
     return ;
 
   // already updated
   if (_has_updated == true)
     return ;
 
-  grab_functor_t f(this, space, body);
+  if (is_grabbing == true)
+  {
+    grab_functor_t f(this, space, body);
 
-  // translate clamp to world
-  const double cosa = ::cos(body->a);
-  const double sina = ::sin(body->a);
+    // translate clamp to world
+    const double cosa = ::cos(body->a);
+    const double sina = ::sin(body->a);
 
-  f._tcx = body->p.x + (_x * cosa - _y * sina);
-  f._tcy = body->p.y + (_x * sina + _y * cosa);
+    f._tcx = body->p.x + (_x * cosa - _y * sina);
+    f._tcy = body->p.y + (_x * sina + _y * cosa);
 
 #if CONFIG_DEBUG_CLAMP
-  printf("clampInBot: %lf, %lf\n", _x, _y);
-  printf("clampInWorld: %lf, %lf\n", f._tcx, f._tcy);
+    printf("clampInBot: %lf, %lf\n", _x, _y);
+    printf("clampInWorld: %lf, %lf\n", f._tcx, f._tcy);
 #endif
 
-  // cache clamp cosa, sina
-  f._cosa = ::cos(body->a + _a);
-  f._sina = ::sin(body->a + _a);
+    // cache clamp cosa, sina
+    f._cosa = ::cos(body->a + _a);
+    f._sina = ::sin(body->a + _a);
 
-  // apply functor over each bodies
-  cpSpaceHashEach(space->activeShapes, on_shape, &f);
-  _has_grabbed = f._has_grabbed;
+    // apply functor over each bodies
+    cpSpaceHashEach(space->activeShapes, on_shape, &f);
 
-  // commit
+    // capture result
+    _grabbed_shape = f._grabbed_shape;
+    _has_grabbed = f._has_grabbed;
+  }
+  else if (is_dropping == true)
+  {
+    // tmpx, tmpy relative to clamp
+    // fixme: take into account the clamp angle
+    cpCircleShape* const cs = (cpCircleShape*)_grabbed_shape;
+    const double tmpx = _x + cs->r + 10;
+    const double tmpy = _y;
+
+    // translate clamp to world
+    const double cosa = ::cos(body->a);
+    const double sina = ::sin(body->a);
+    const double x = body->p.x + (tmpx * cosa - tmpy * sina);
+    const double y = body->p.y + (tmpx * sina + tmpy * cosa);
+
+    // insert the previously removed object
+    insert_shape(space, _grabbed_shape, x, y);
+  }
+
+  // commit, signal the reader
   __sync_synchronize();
   _has_updated = true;
 }
@@ -167,6 +199,26 @@ bool clamp::grab()
 
   _is_grabbing = false;
 
+  if (_has_grabbed == false)
+    return false;
+
+  return true;
+}
+
+
+void clamp::drop()
+{
+  if (_grabbed_shape == NULL)
+    return ;
+
+  _has_updated = false;
+  _is_dropping = true;
   __sync_synchronize();
-  return _has_grabbed;
+
+  while (_has_updated == false)
+    pthread_yield();
+
+  _is_dropping = false;
+
+  _grabbed_shape = NULL;
 }

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 17:56:47 2010 texane
+// Last update Sun Oct 10 22:00:33 2010 texane
 //
 
 
@@ -54,17 +54,29 @@ void bot::debug_strategy()
     a /= 2;
   }
 
-  if (iter == 20)
+  if (iter == 0)
   {
     printf("notGrabbing\n");
     return ;
   }
 
   // placed, grabit
-  if (_clamp.grab() == true)
-    printf("grabbed\n");
-  else
-    printf("missed\n");
+  if (_clamp.grab() == false)
+  {
+    printf("notGrabbed\n");
+    return ;
+  }
+
+  printf("grabbed\n");
+
+  _asserv.move_to(1400, 500);
+  _asserv.wait_done();
+
+  _clamp.drop();
+
+  int x, y;
+  _asserv.get_position(x, y);
+  printf("dropped(%u, %u)\n", x, y);
 
 #elif 0 // turn_to
 
@@ -87,7 +99,7 @@ void bot::debug_strategy()
 //   _asserv.move_forward(500);
 //   while (_asserv.is_done() == false)
 //   {
-  const unsigned int dist = _sharps[2].sense();
+  const unsigned int dist = _sharps[2].read();
   printf("d == %u\n", dist);
 //     if (dist > MIN_DIST)
 //       continue ;
@@ -102,23 +114,23 @@ void bot::debug_strategy()
 
   _asserv.turn_to(90);
   _asserv.wait_done();
-  printf("d == %u\n", _sharps[1].sense());
+  printf("d == %u\n", _sharps[1].read());
   return ;
 
   _asserv.move_to(1500, 200);
   _asserv.wait_done();
 
-  printf("d == %u\n", _sharps[1].sense());
+  printf("d == %u\n", _sharps[1].read());
 
   _asserv.turn_to(90);
   _asserv.wait_done();
 
-  printf("d == %u\n", _sharps[1].sense());
+  printf("d == %u\n", _sharps[1].read());
 
   _asserv.move_forward(400);
   _asserv.wait_done();
 
-  printf("d == %u\n", _sharps[1].sense());
+  printf("d == %u\n", _sharps[1].read());
 
 #elif 0 // move_to
 

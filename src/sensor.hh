@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:13:10 2010 texane
-// Last update Sun Oct 10 08:52:02 2010 texane
+// Last update Sun Oct 10 21:54:46 2010 texane
 //
 
 
@@ -37,8 +37,8 @@ private:
 #endif
 
   // concurrency between physics update and sensing
-  volatile unsigned char _is_sensing;
-  volatile unsigned char _has_updated;
+  volatile bool _is_sensing __attribute__((aligned));
+  volatile bool _has_updated __attribute__((aligned));
   volatile unsigned int _dist __attribute__((aligned));
 
 public:
@@ -47,7 +47,7 @@ public:
   void set_info(double, double, double, double);
 
   void update(cpSpace*, cpBody*);
-  unsigned int sense();
+  unsigned int read();
 };
 
 
