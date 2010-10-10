@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Sun Oct 10 15:38:55 2010 texane
+// Last update Sun Oct 10 16:17:26 2010 texane
 //
 
 
@@ -111,7 +111,7 @@ int bot::create_bots(const conf& conf)
     b->_sharps[2].set_info(pos->_w / 2, pos->_w / 2, 0, 10);
 
     // configure clamp
-    b->_clamp.set_info(pos->_w / 2, 0, 300, 300, 0);
+    b->_clamp.set_info(pos->_w / 2, 0, 300, 150, 0);
 
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;

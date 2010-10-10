@@ -2,10 +2,11 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Sun Oct 10 15:35:59 2010 texane
+// Last update Sun Oct 10 16:20:47 2010 texane
 //
 
 
+#include <stdio.h>
 #include <math.h>
 #include <pthread.h>
 #include "physics.hh"
@@ -25,6 +26,12 @@ void clamp::set_info
   _w = w;
   _h = h;
   _a = a;
+}
+
+
+unsigned int clamp::grabbing_distance() const
+{
+  return (unsigned int)_h;
 }
 
 
@@ -64,17 +71,31 @@ typedef struct grab_functor
     double tx = shape->body->p.x - _tcx;
     double ty = shape->body->p.y - _tcy;
 
+    // toremove, debug
+
+    const double dx = tx - _tcx;
+    const double dy = ty - _tcy;
+    bool do_debug = false;
+    if (sqrt(dx * dx + dy * dy) < 400)
+      do_debug = true;
+    if (do_debug)
+      printf("shapeInClamp: %lf, %lf\n", tx, ty);
+    // toremove, debug
+
     // rotate to clamp
     tx = tx * _cosa + ty * _sina;
     ty = ty * _cosa - tx * _sina;
 
+    if (do_debug)
+      printf("shapeInClampRotated: %lf, %lf\n", tx, ty);
+
     // test if shape can be grabbed
     const cpCircleShape* const cs = (const cpCircleShape*)shape;
-    if ((tx - cs->r) < (_clamp->_w / 2))
+    if ((ty - cs->r) < (-_clamp->_w / 2))
       return ;
-    else if ((tx + cs->r) > (_clamp->_w / 2))
+    else if ((ty + cs->r) > (_clamp->_w / 2))
       return ;
-    else if ((ty - cs->r < 0) || (ty - cs->r > _clamp->_h))
+    else if ((tx - cs->r < 0) || (tx - cs->r > _clamp->_h))
       return ;
 
     _has_grabbed = true;
@@ -100,6 +121,9 @@ void clamp::update(cpSpace* space, cpBody* body)
   const double sina = ::sin(body->a);
   f._tcx = body->p.x + (_x * cosa - _y * sina);
   f._tcy = body->p.y + (_x * sina + _y * cosa);
+
+  printf("clampInBot: %lf, %lf\n", _x, _y);
+  printf("clampInWorld: %lf, %lf\n", f._tcx, f._tcy);
 
   // cache clamp cosa, sina
   f._cosa = ::cos(_a);

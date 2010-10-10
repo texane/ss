@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 15:33:01 2010 texane
+// Last update Sun Oct 10 16:20:38 2010 texane
 //
 
 
@@ -17,16 +17,29 @@ void bot::debug_strategy()
 
 #if 1 // grabber
 
+  const unsigned int min_dist = _clamp.grabbing_distance() - 40;
+
+  unsigned int d = do_sharps();
+  if (d < min_dist) goto do_grab;
+
   _asserv.move_forward(1000);
   while (_asserv.is_done() == false)
   {
-    if (do_sharps() < 200)
+    if ((d = do_sharps()) <= min_dist)
       _asserv.stop();
   }
 
-  // pawn reached, grab it
+  if (d > min_dist)
+  {
+    printf("notgrabbing\n");
+    return ;
+  }
 
-  printf("grabbing\n");
+  // pawn reached, grab it
+ do_grab:
+  int x, y;
+  _asserv.get_position(x, y);
+  printf("grabbing at (%d, %d) %u\n", x, y, d);
 
   if (_clamp.grab() == true)
     printf("grabbed\n");
