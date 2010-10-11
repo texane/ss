@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Thu Oct  7 20:15:33 2010 texane
-// Last update Thu Oct  7 20:20:17 2010 texane
+// Last update Mon Oct 11 21:14:38 2010 texane
 //
 
 
-#ifndef DTOR_HH_INCLUDED
-# define DTOR_HH_INCLUDED
+#ifndef MISC_DTOR_HH_INCLUDED
+# define MISC_DTOR_HH_INCLUDED
 
 
 #include <math.h>

@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct 11 21:08:46 2010 texane
+## Last update Mon Oct 11 21:24:29 2010 texane
 ##
 
 
@@ -17,8 +17,8 @@ BIN	:=	ss
 
 SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
-		../src/physics.cc	\
 		../src/bot.cc		\
+		../src/physics/physics.cc	\
 		../src/graphics/x.cc		\
 		../src/device/clamp.cc		\
 		../src/device/asserv.cc		\

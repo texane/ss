@@ -2,15 +2,15 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Mon Oct 11 19:31:44 2010 texane
+// Last update Mon Oct 11 21:27:24 2010 texane
 //
 
 
 #include <math.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "physics.hh"
-#include "clamp.hh"
+#include "physics/physics.hh"
+#include "device/clamp.hh"
 
 
 #define CONFIG_DEBUG_CLAMP 0

@@ -2,14 +2,14 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:08:06 2010 texane
-// Last update Mon Oct 11 21:11:34 2010 texane
+// Last update Mon Oct 11 21:27:11 2010 texane
 //
 
 
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
-#include "physics.hh"
+#include "physics/physics.hh"
 #include "device/asserv.hh"
 #include "misc/dtor.hh"
 #include "misc/rtod.hh"

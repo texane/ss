@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:13:10 2010 texane
-// Last update Mon Oct 11 20:59:36 2010 texane
+// Last update Mon Oct 11 21:27:59 2010 texane
 //
 
 
@@ -11,7 +11,7 @@
 
 
 #include <pthread.h>
-#include "physics.hh"
+#include "physics/physics.hh"
 
 
 class sensor

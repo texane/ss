@@ -2,16 +2,16 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct  4 19:53:39 2010 texane
-// Last update Mon Oct 11 21:08:17 2010 texane
+// Last update Mon Oct 11 21:26:52 2010 texane
 //
 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "conf.hh"
-#include "physics.hh"
 #include "bot.hh"
 #include "graphics/x.hh"
+#include "physics/physics.hh"
 
 
 // event handlers

@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 23:15:48 2010 texane
-// Last update Sun Oct 10 11:21:09 2010 texane
+// Last update Mon Oct 11 21:14:50 2010 texane
 //
 
 
-#ifndef ATOMIC_HH_INCLUDED
-# define ATOMIC_HH_INCLUDED
+#ifndef MISC_ATOMIC_HH_INCLUDED
+# define MISC_ATOMIC_HH_INCLUDED
 
 
 typedef struct atomic_int

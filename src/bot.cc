@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Mon Oct 11 21:13:38 2010 texane
+// Last update Mon Oct 11 21:24:49 2010 texane
 //
 
 
@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "bot.hh"
-#include "physics.hh"
 #include "conf.hh"
+#include "physics/physics.hh"
 #include "misc/rtod.hh"
 #include "strategy/strategy.hh"
 

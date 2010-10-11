@@ -3,7 +3,7 @@
 
 
 #include "conf.hh"
-#include "physics.hh"
+#include "physics/physics.hh"
 #include "device/ticker.hh"
 #include "device/asserv.hh"
 #include "device/sensor.hh"

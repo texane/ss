@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:23:19 2010 texane
-// Last update Sun Oct 10 21:00:08 2010 texane
+// Last update Mon Oct 11 21:25:35 2010 texane
 //
 
 
-#ifndef CHIPMUNK_HH_INCLUDED
-# define CHIPMUNK_HH_INCLUDED
+#ifndef PHYSICS_PHYSICS_HH_INCLUDED
+# define PHYSICS_PHYSICS_HH_INCLUDED
 
 
 #include <chipmunk/chipmunk.h>
@@ -27,4 +27,4 @@ void remove_shape(cpSpace*, cpShape*);
 void insert_shape(cpSpace*, cpShape*, double, double);
 
 
-#endif // CHIPMUNK_HH_INCLUDED
+#endif // PHYSICS_PHYSICS_HH_INCLUDED
