@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Sun Oct 10 21:48:36 2010 texane
+// Last update Mon Oct 11 19:31:44 2010 texane
 //
 
 
@@ -49,7 +49,7 @@ typedef struct grab_functor
   cpSpace* _space;
 
   // reference body (ie. the bot)
-  const cpBody* _body;
+  cpBody* _body;
 
   // clamp reference
   const clamp* _clamp;
@@ -68,7 +68,7 @@ typedef struct grab_functor
   // what has been grabbed
   cpShape* _grabbed_shape;
 
-  grab_functor(const clamp* klamp, cpSpace* space, const cpBody* body) :
+  grab_functor(const clamp* klamp, cpSpace* space, cpBody* body) :
     _space(space), _body(body), _clamp(klamp), _has_grabbed(false) {}
 
   void operator()(cpShape* shape)
@@ -109,6 +109,10 @@ typedef struct grab_functor
 
     // remove the shape from space
     remove_shape(_space, shape);
+
+    // add the mass to robot
+    _body->m += shape->body->m;
+
     _grabbed_shape = shape;
     _has_grabbed = true;
   }
@@ -175,6 +179,9 @@ void clamp::update(cpSpace* space, cpBody* body)
     const double sina = ::sin(body->a);
     const double x = body->p.x + (tmpx * cosa - tmpy * sina);
     const double y = body->p.y + (tmpx * sina + tmpy * cosa);
+
+    // decrease robot mass
+    body->m -= _grabbed_shape->body->m;
 
     // insert the previously removed object
     insert_shape(space, _grabbed_shape, x, y);

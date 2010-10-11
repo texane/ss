@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Mon Oct 11 03:39:04 2010 fabien le mentec
+// Last update Mon Oct 11 19:29:41 2010 texane
 //
 
 
@@ -102,8 +102,11 @@ void bot::debug_strategy()
 
   printf("grabbed\n");
 
+  const unsigned int start = _ticker.get_msecs();
   _asserv.move_to(1400, 500);
   _asserv.wait_done();
+  const unsigned int stop = _ticker.get_msecs();
+  printf("msecs: %u\n", stop - start);
 
   _clamp.drop();
 
