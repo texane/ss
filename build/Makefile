@@ -2,16 +2,22 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct 11 21:24:29 2010 texane
+## Last update Mon Oct 11 21:52:27 2010 texane
 ##
 
 
 CC	:=	g++
 LD	:=	g++
-CFLAGS	:=	-Wall -O3 `pkg-config --cflags sdl` -I../src
-LFLAGS	:=	`pkg-config --libs sdl` -lchipmunk -lpthread -lm
-RM	:=	rm -f
 
+SDL_CFLAGS :=	$(shell pkg-config --cflags sdl)
+SDL_LFLAGS :=	$(shell pkg-config --libs sdl)
+
+CHIPMUNK_LFLAGS := -lchipmunk
+
+CFLAGS	:=	-Wall -O3 $(SDL_CFLAGS) -I../src
+LFLAGS	:=	$(SDL_LFLAGS) $(CHIPMUNK_LFLAGS) -lpthread -lm
+
+RM	:=	rm -f
 
 BIN	:=	ss
 
