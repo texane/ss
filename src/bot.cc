@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Mon Oct 11 03:36:39 2010 fabien le mentec
+// Last update Mon Oct 11 20:09:22 2010 texane
 //
 
 
@@ -17,6 +17,7 @@
 #include "conf.hh"
 #include "bot.hh"
 #include "rtod.hh"
+#include "strategy/strategy.hh"
 
 
 using std::list;
@@ -113,6 +114,9 @@ int bot::create_bots(const conf& conf)
     // configure clamp
     b->_clamp.set_info(pos->_w / 2, 0, 300, 150, 0);
 
+    // instanciate strategy
+    b->_strategy = strategy::factory(pos->_s);
+
     // create bot thread
     b->_status = THREAD_STATUS_WAIT;
     pthread_create(&b->_thread, NULL, bot::static_entry, (void*)b);
@@ -158,7 +162,8 @@ void* bot::static_entry(void* arg)
     ;
 
   if (b->_status == THREAD_STATUS_RUN)
-    b->debug_strategy();
+    b->_strategy->main(*b);
+
   b->_status = THREAD_STATUS_DONE;
 
   return NULL;

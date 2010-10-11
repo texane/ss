@@ -190,7 +190,9 @@ int conf::load(const char* path)
       continue ;
 
     if (key.compare("begin") == 0)
-      memset(&object, 0, sizeof(object));
+    {
+      object.clear();
+    }
     else if (key.compare("end") == 0)
     {
       _objects.push_back(object);
@@ -211,6 +213,8 @@ int conf::load(const char* path)
       object._h = ::atof(val.c_str());
     else if (key.compare("a") == 0)
       object._a = ::atof(val.c_str());
+    else if (key.compare("s") == 0)
+      object._s = val;
   }
 
   unmap_file(&mf);

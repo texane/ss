@@ -8,6 +8,7 @@
 #include "clamp.hh"
 #include "conf.hh"
 #include "physics.hh"
+#include "strategy/strategy.hh"
 
 
 class bot
@@ -17,6 +18,9 @@ private:
   cpSpace* _space;
   cpBody* _body;
   cpPolyShape* _shape;
+
+  // strategy
+  strategy* _strategy;
 
   // devices
   asserv _asserv;
@@ -44,10 +48,6 @@ private:
   // constructor
   bot();
 
-  // strategies
-  void wandering_strategy();
-  void debug_strategy();
-
 public:
   // physics
   void set_physics(cpSpace*, cpBody*, cpPolyShape*);
@@ -63,6 +63,11 @@ public:
   static int create_bots(const conf&);
   static void destroy_bots();
   static void start_bots();
+
+  // strategies are allowed to access robot internals
+  friend class wander;
+  friend class bsod;
+  friend class test;
 };
 
 

@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Sun Oct 10 13:15:19 2010 texane
+## Last update Mon Oct 11 20:46:20 2010 texane
 ##
 
 
@@ -18,14 +18,18 @@ BIN	:=	ss
 SRCS	:=	../src/main.cc		\
 		../src/conf.cc		\
 		../src/physics.cc	\
-		../src/strategy.cc	\
 		../src/bot.cc		\
 		../src/clamp.cc		\
 		../src/asserv.cc	\
 		../src/sensor.cc	\
 		../src/ticker.cc	\
 		../src/intersect.cc	\
-		../src/x.cc
+		../src/x.cc		\
+		../src/strategy/strategy.cc	\
+		../src/strategy/utility.cc	\
+		../src/strategy/test.cc		\
+		../src/strategy/bsod.cc		\
+		../src/strategy/wander.cc	\
 
 OBJS	:=	$(SRCS:.cc=.o)
 

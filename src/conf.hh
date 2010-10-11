@@ -35,6 +35,20 @@ public:
 
     double _a;
 
+    // bot strategy
+    std::string _s;
+
+    void clear()
+    {
+      _type = OBJECT_TYPE_INVALID;
+      _x = 0.f;
+      _y = 0.f;
+      _w = 0.f;
+      _h = 0.f;
+      _a = 0.f;
+      _s.clear();
+    }
+
   } object_t;
 
   // members
