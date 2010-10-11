@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Jun 29 15:50:24 2009 texane
-// Last update Fri Oct  8 13:48:40 2010 texane
+// Last update Mon Oct 11 21:07:22 2010 texane
 //
 
 
@@ -13,7 +13,7 @@
 #else // __linux__
 # include <SDL/SDL.h>
 #endif // _WIN32
-#include "x.hh"
+#include "graphics/x.hh"
 
 
 

@@ -2,13 +2,13 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Aug 17 17:06:48 2009 texane
-// Last update Fri Oct  8 13:44:40 2010 texane
+// Last update Mon Oct 11 21:07:44 2010 texane
 //
 
 
 
-#ifndef X_H_INCLUDED
-# define X_H_INCLUDED
+#ifndef GRAPHICS_X_H_INCLUDED
+# define GRAPHICS_X_H_INCLUDED
 
 
 #ifdef _WIN32
@@ -17,7 +17,6 @@
 #else // __linux__
 # include <SDL/SDL.h>
 #endif // _WIN32
-#include "x.hh"
 
 
 typedef struct x_color x_color_t;
@@ -59,4 +58,4 @@ void x_blit_surface(x_surface_t*, x_surface_t*);
 void x_fill_surface(x_surface_t*, const x_color_t*);
 
 
-#endif /* ! X_H_INCLUDED */
+#endif /* ! GRAPHICS_X_H_INCLUDED */

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Sun Oct 10 21:26:14 2010 texane
+// Last update Mon Oct 11 21:08:06 2010 texane
 //
 
 
@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <chipmunk/chipmunk.h>
 #include "bot.hh"
-#include "x.hh"
 #include "conf.hh"
 #include "dtor.hh"
+#include "graphics/x.hh"
 
 
 using std::list;
