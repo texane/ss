@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Sun Oct 10 22:00:33 2010 texane
+// Last update Mon Oct 11 03:26:01 2010 fabien le mentec
 //
 
 
@@ -21,17 +21,25 @@ void bot::debug_strategy()
   const unsigned int min_dist = _clamp.grabbing_distance() - 40;
   unsigned int d = min_dist + 1;
 
+  printf("moving\n");
+
   // move until pawn detected
   _asserv.move_forward(1000);
   while (_asserv.is_done() == false)
     if ((d = do_sharps()) <= min_dist)
+    {
       _asserv.stop();
+      break ;
+    }
 
   if (d > min_dist)
   {
     printf("notPlacing\n");
     return ;
   }
+
+  // wait for pending stop command
+  _asserv.wait_done();
 
   printf("placing\n");
 
