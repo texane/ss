@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:42:39 2010 texane
-// Last update Mon Oct 11 20:46:08 2010 texane
+// Last update Mon Oct 11 21:01:08 2010 texane
 //
 
 
 #include <sys/types.h>
-#include "sensor.hh"
+#include "device/sensor.hh"
 
 
 // read sharps

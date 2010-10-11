@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 12:59:38 2010 texane
-// Last update Sun Oct 10 21:12:19 2010 texane
+// Last update Mon Oct 11 20:59:24 2010 texane
 //
 
 
-#ifndef CLAMP_HH_INCLUDED
-# define CLAMP_HH_INCLUDED
+#ifndef DEVICE_CLAMP_HH_INCLUDED
+# define DEVICE_CLAMP_HH_INCLUDED
 
 
 #include "atomic.hh"
@@ -46,4 +46,4 @@ public:
 };
 
 
-#endif // ! CLAMP_HH_INCLUDED
+#endif // ! DEVICE_CLAMP_HH_INCLUDED

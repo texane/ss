@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:13:10 2010 texane
-// Last update Sun Oct 10 21:54:46 2010 texane
+// Last update Mon Oct 11 20:59:36 2010 texane
 //
 
 
-#ifndef SENSOR_HH_INCLUDED
-# define SENSOR_HH_INCLUDED
+#ifndef DEVICE_SENSOR_HH_INCLUDED
+# define DEVICE_SENSOR_HH_INCLUDED
 
 
 #include <pthread.h>
@@ -51,4 +51,4 @@ public:
 };
 
 
-#endif // ! SENSOR_HH_INCLUDED
+#endif // ! DEVICE_SENSOR_HH_INCLUDED

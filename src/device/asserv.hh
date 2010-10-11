@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Sat Oct  9 22:49:00 2010 texane
+// Last update Mon Oct 11 20:59:11 2010 texane
 //
 
 
-#ifndef ASSERV_HH_INCLUDED
-# define ASSERV_HH_INCLUDED
+#ifndef DEVICE_ASSERV_HH_INCLUDED
+# define DEVICE_ASSERV_HH_INCLUDED
 
 
 #include "atomic.hh"
@@ -94,4 +94,4 @@ public:
 };
 
 
-#endif // ! ASSERV_HH_INCLUDED
+#endif // ! DEVICE_ASSERV_HH_INCLUDED

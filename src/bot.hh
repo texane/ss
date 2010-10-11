@@ -2,12 +2,12 @@
 # define BOT_HH_INCLUDED
 
 
-#include "ticker.hh"
-#include "asserv.hh"
-#include "sensor.hh"
-#include "clamp.hh"
 #include "conf.hh"
 #include "physics.hh"
+#include "device/ticker.hh"
+#include "device/asserv.hh"
+#include "device/sensor.hh"
+#include "device/clamp.hh"
 #include "strategy/strategy.hh"
 
 
