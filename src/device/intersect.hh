@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 20:05:52 2010 texane
-// Last update Sat Oct  9 20:45:03 2010 texane
+// Last update Mon Oct 11 21:04:28 2010 texane
 //
 
 
-#ifndef INTERSECT_HH_INCLUDED
-# define INTERSECT_HH_INCLUDED
+#ifndef DEVICE_INTERSECT_HH_INCLUDED
+# define DEVICE_INTERSECT_HH_INCLUDED
 
 
 double intersect_segment
