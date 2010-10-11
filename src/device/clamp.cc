@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Mon Oct 11 21:27:24 2010 texane
+// Last update Mon Oct 11 21:56:48 2010 texane
 //
 
 
@@ -196,6 +196,9 @@ void clamp::update(cpSpace* space, cpBody* body)
 bool clamp::grab()
 {
   // return true if something grabbed
+
+  if (_grabbed_shape != NULL)
+    return false;
 
   _has_updated = false;
   _is_grabbing = true;
