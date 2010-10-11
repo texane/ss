@@ -1,7 +1,13 @@
 . todo
- . add pawn mass to bot mass
- . handle sensor height
- . more sharps on the robot
+ . every object should have a height
+  . handle height in sensor
+ . add sharps to the robot, triangle form (ie. 3 per face)
+  . the sharp height should not be more than 8 to detect walls
+ . add red blue under the robot so that the robot can continue
+ playing even if the asserv gets lost
+  . rename sensor.cc to sharp.cc
+  . create the redblue.cc
+  . implement the corresponding strategy
 
  . devices
   . container: a bot can contain some pawn
