@@ -2,12 +2,12 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 11:03:43 2010 texane
-// Last update Sun Oct 10 17:17:12 2010 texane
+// Last update Mon Oct 11 21:10:34 2010 texane
 //
 
 
-#include "ticker.hh"
-#include "atomic.hh"
+#include "device/ticker.hh"
+#include "misc/atomic.hh"
 
 
 void ticker::set_info(unsigned int ms_per_tick)

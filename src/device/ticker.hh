@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 10:57:25 2010 texane
-// Last update Mon Oct 11 20:59:49 2010 texane
+// Last update Mon Oct 11 21:13:27 2010 texane
 //
 
 
@@ -10,7 +10,7 @@
 # define DEVICE_TICKER_HH_INCLUDED
 
 
-#include "atomic.hh"
+#include "misc/atomic.hh"
 
 
 class ticker

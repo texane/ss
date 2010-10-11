@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct  6 22:56:41 2010 texane
-// Last update Mon Oct 11 20:59:11 2010 texane
+// Last update Mon Oct 11 21:10:14 2010 texane
 //
 
 
@@ -10,7 +10,7 @@
 # define DEVICE_ASSERV_HH_INCLUDED
 
 
-#include "atomic.hh"
+#include "misc/atomic.hh"
 
 
 // forward decl

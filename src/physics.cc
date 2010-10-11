@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Mon Oct 11 21:08:06 2010 texane
+// Last update Mon Oct 11 21:11:19 2010 texane
 //
 
 
@@ -14,7 +14,7 @@
 #include <chipmunk/chipmunk.h>
 #include "bot.hh"
 #include "conf.hh"
-#include "dtor.hh"
+#include "misc/dtor.hh"
 #include "graphics/x.hh"
 
 

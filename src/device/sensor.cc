@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Mon Oct 11 21:05:23 2010 texane
+// Last update Mon Oct 11 21:11:45 2010 texane
 //
 
 
@@ -11,8 +11,8 @@
 #include <math.h>
 #include <pthread.h>
 #include "physics.hh"
-#include "dtor.hh"
-#include "rtod.hh"
+#include "misc/dtor.hh"
+#include "misc/rtod.hh"
 #include "device/sensor.hh"
 #include "device/intersect.hh"
 
