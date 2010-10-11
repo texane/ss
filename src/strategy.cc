@@ -2,13 +2,37 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Fri Oct  8 12:11:44 2010 texane
-// Last update Mon Oct 11 03:26:01 2010 fabien le mentec
+// Last update Mon Oct 11 03:39:04 2010 fabien le mentec
 //
 
 
 #include <stdio.h>
 #include "bot.hh"
 
+
+// read sharps
+
+static void read_sharps
+(sensor* sharps, unsigned int* values, size_t count)
+{
+  for (size_t i = 0; i < count; ++i)
+    values[i] = sharps[i].read();
+}
+
+static unsigned int get_min_sharp
+(sensor* sharps, size_t count = 3)
+{
+  // assume count is 3
+  unsigned int values[3];
+
+  // return the min distance
+  read_sharps(sharps, values, count);
+  return std::min
+    (values[0], std::min(values[1], values[2]));
+}
+
+
+// strategy entrypoints
 
 void bot::debug_strategy()
 {
@@ -26,7 +50,7 @@ void bot::debug_strategy()
   // move until pawn detected
   _asserv.move_forward(1000);
   while (_asserv.is_done() == false)
-    if ((d = do_sharps()) <= min_dist)
+    if ((d = get_min_sharp(_sharps)) <= min_dist)
     {
       _asserv.stop();
       break ;
@@ -49,7 +73,7 @@ void bot::debug_strategy()
   for (; iter; --iter)
   {
     unsigned int ds[3];
-    do_sharps(ds);
+    read_sharps(_sharps, ds, 3);
 
     if (ds[1] < min_dist)
       break ;
@@ -191,7 +215,7 @@ void bot::wandering_strategy()
     {
       if (_asserv.is_done() == false)
       {
-	const unsigned int min = do_sharps();
+	const unsigned int min = get_min_sharp(_sharps);
 #define MIN_DIST 400U
 	if (min <= MIN_DIST)
 	{
@@ -210,7 +234,7 @@ void bot::wandering_strategy()
     }
     else // is_moving == false
     {
-      if (do_sharps() <= MIN_DIST)
+      if (get_min_sharp(_sharps) <= MIN_DIST)
       {
 	_asserv.turn(10);
 	_asserv.wait_done();

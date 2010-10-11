@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Mon Oct 11 03:26:27 2010 fabien le mentec
+// Last update Mon Oct 11 03:36:39 2010 fabien le mentec
 //
 
 
@@ -162,21 +162,4 @@ void* bot::static_entry(void* arg)
   b->_status = THREAD_STATUS_DONE;
 
   return NULL;
-}
-
-
-// device wrappers
-
-unsigned int bot::do_sharps()
-{
-  // return the min distance
-  unsigned int ds[3];
-  do_sharps(ds);
-  return std::min(ds[0], std::min(ds[1], ds[2]));
-}
-
-void bot::do_sharps(unsigned int ds[3])
-{
-  for (size_t i = 0; i < 3; ++i)
-    ds[i] = _sharps[i].read();
 }

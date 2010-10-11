@@ -44,10 +44,6 @@ private:
   // constructor
   bot();
 
-  // device wrappers
-  unsigned int do_sharps();
-  void do_sharps(unsigned int[3]);
-
   // strategies
   void wandering_strategy();
   void debug_strategy();
