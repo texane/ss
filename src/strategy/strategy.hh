@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:46:49 2010 texane
-// Last update Tue Oct 12 19:32:24 2010 texane
+// Last update Tue Oct 12 23:25:54 2010 texane
 //
 
 
@@ -51,6 +51,7 @@ public:
   static void front_low_sharps(bot&, unsigned int[4]);
   static unsigned int min_front_low_sharp(bot&);
   static unsigned int front_high_middle_sharp(bot&);
+  static void get_front_position(bot&, unsigned int, unsigned int);
 };
 
 
