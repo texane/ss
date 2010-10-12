@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Mon Oct 11 21:11:19 2010 texane
+// Last update Tue Oct 12 06:02:24 2010 texane
 //
 
 
@@ -366,10 +366,25 @@ cpSpace* create_space(conf& conf)
 	cpBody* const body = cpBodyNew(INFINITY, INFINITY);
 	body->p = cpv(pos->_x, pos->_y); // position
 
+	// local
+	const double lx0 = (pos->_w / 2.f) * -1.f;
+	const double ly0 = 0.f;
+	const double lx1 = pos->_w / 2.f;
+	const double ly1 = 0.f;
+
+	// rotate
+	const double cosa = ::cos(dtor(pos->_a));
+	const double sina = ::sin(dtor(pos->_a));
+	const double x0 = lx0 * cosa - ly0 * sina;
+	const double y0 = ly0 * cosa + lx0 * sina;
+	const double x1 = lx1 * cosa - ly1 * sina;
+	const double y1 = ly1 * cosa + lx1 * sina;
+
+	printf("pos: (%lf, %lf) (%lf, %lf)\n", x0, y0, x1, y1);
+
 	// shape
-	cpVect a = cpv(-pos->_w / 2, -pos->_h / 2);
-	cpVect b = cpv(+pos->_w / 2, +pos->_h / 2);
-	cpShape* const shape = cpSegmentShapeNew(body, a, b, 1.f);
+	cpShape* const shape = cpSegmentShapeNew
+	  (body, cpv(x0, y0), cpv(x1, y1), 1.f);
 	shape->e = 1.f; // elasticity
 	shape->u = 1.f; // friction
 	cpSpaceAddStaticShape(space, shape);
