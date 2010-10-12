@@ -1,4 +1,7 @@
 . todo
+ . wall height was previously the width...
+  . a wall should be described center, width, angle 
+  . and height for the 3rd dimension
  . every object should have a height
   . handle height in sensor
  . add sharps to the robot, triangle form (ie. 3 per face)
@@ -8,6 +11,7 @@
   . rename sensor.cc to sharp.cc
   . create the redblue.cc
   . implement the corresponding strategy
+ . documentation guide
 
  . devices
   . container: a bot can contain some pawn

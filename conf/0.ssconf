@@ -9,6 +9,7 @@ x 200
 y 200
 w 200
 a 180
+h 300
 s wander
 end object
 
@@ -19,6 +20,7 @@ x 2800
 y 200
 w 200
 a 180
+h 300
 s wander
 end object
 
@@ -27,6 +29,7 @@ end object
 type pawn
 x 500
 y 280
+h 50
 w 95
 #end object
 
@@ -37,6 +40,7 @@ begin object
 type pawn
 x 800
 y 1400
+h 50
 w 95
 end object
 
@@ -45,6 +49,7 @@ begin object
 type pawn
 x 800
 y 1050
+h 50
 w 95
 end object
 
@@ -53,6 +58,7 @@ begin object
 type pawn
 x 1150
 y 700
+h 50
 w 95
 end object
 
@@ -61,6 +67,7 @@ begin object
 type pawn
 x 1150
 y 1750
+h 50
 w 95
 end object
 
@@ -69,6 +76,7 @@ begin object
 type pawn
 x 1500
 y 1050
+h 50
 w 95
 end object
 
@@ -77,6 +85,7 @@ begin object
 type pawn
 x 2200
 y 1400
+h 50
 w 95
 end object
 
@@ -85,6 +94,7 @@ begin object
 type pawn
 x 2200
 y 1050
+h 50
 w 95
 end object
 
@@ -93,6 +103,7 @@ begin object
 type pawn
 x 1850
 y 700
+h 50
 w 95
 end object
 
@@ -101,6 +112,7 @@ begin object
 type pawn
 x 1850
 y 1750
+h 50
 w 95
 end object
 
@@ -115,6 +127,7 @@ begin object
 type king
 x 200
 y 500
+h 160
 w 95
 end object
 
@@ -123,6 +136,7 @@ begin object
 type queen
 x 200
 y 800
+h 160
 w 95
 end object
 
@@ -131,6 +145,7 @@ begin object
 type pawn
 x 200
 y 1100
+h 50
 w 95
 end object
 
@@ -139,6 +154,7 @@ begin object
 type pawn
 x 200
 y 1400
+h 50
 w 95
 end object
 
@@ -147,6 +163,7 @@ begin object
 type pawn
 x 200
 y 1700
+h 50
 w 95
 end object
 
@@ -160,6 +177,7 @@ begin object
 type king
 x 2800
 y 500
+h 160
 w 95
 end object
 
@@ -168,6 +186,7 @@ begin object
 type queen
 x 2800
 y 800
+h 160
 w 95
 end object
 
@@ -176,6 +195,7 @@ begin object
 type pawn
 x 2800
 y 1100
+h 50
 w 95
 end object
 
@@ -184,6 +204,7 @@ begin object
 type pawn
 x 2800
 y 1400
+h 50
 w 95
 end object
 
@@ -192,6 +213,7 @@ begin object
 type pawn
 x 2800
 y 1700
+h 50
 w 95
 end object
 
@@ -204,7 +226,8 @@ type wall
 x 1500
 y 0
 w 3000
-h 0
+h 100
+a 0
 end object
 
 # right wall
@@ -212,8 +235,9 @@ begin object
 type wall
 x 3000
 y 1050
-w 0
-h 2100
+w 2100
+h 100
+a 90
 end object
 
 # bottom wall
@@ -222,7 +246,8 @@ type wall
 x 1500
 y 2100
 w 3000
-h 0
+h 100
+a 0
 end object
 
 # left wall
@@ -230,8 +255,9 @@ begin object
 type wall
 x 0
 y 1050
-w 0
-h 2100
+w 2100
+h 100
+a 0
 end object
 
 # left reserved area
@@ -240,23 +266,26 @@ type wall
 x 800
 y 1980
 w 700
-h 0
+h 100
+a 0
 end object
 
 begin object
 type wall
 x 450
 y 2040
-w 0
-h 120
+w 120
+h 100
+a 90
 end object
 
 begin object
 type wall
 x 1150
 y 2040
-w 0
-h 120
+w 120
+h 100
+a 90
 end object
 
 # right reserved area
@@ -265,21 +294,24 @@ type wall
 x 2200
 y 1980
 w 700
-h 0
+h 100
+a 0
 end object
 
 begin object
 type wall
 x 1850
 y 2040
-w 0
-h 120
+w 120
+h 100
+a 90
 end object
 
 begin object
 type wall
 x 2550
 y 2040
-w 0
-h 120
+w 120
+h 100
+a 90
 end object
