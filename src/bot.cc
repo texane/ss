@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Tue Oct 12 09:55:28 2010 texane
+// Last update Tue Oct 12 10:13:10 2010 texane
 //
 
 
@@ -106,8 +106,10 @@ int bot::create_bots(const conf& conf)
 
     // configure sharps
     b->_sharps[0].set_info(pos->_w / 2, -pos->_w / 2, 0, 25);
-    b->_sharps[1].set_info(pos->_w / 2, 0, 0, 25);
-    b->_sharps[2].set_info(pos->_w / 2, pos->_w / 2, 0, 25);
+    b->_sharps[1].set_info(pos->_w / 2, -50, 0, 70);
+    b->_sharps[2].set_info(pos->_w / 2, 0, 0, 25);
+    b->_sharps[3].set_info(pos->_w / 2, 50, 0, 70);
+    b->_sharps[4].set_info(pos->_w / 2, pos->_w / 2, 0, 25);
 
     // configure clamp
     b->_clamp.set_info(pos->_w / 2, 0, 300, 150, 0);

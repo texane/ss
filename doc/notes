@@ -11,6 +11,10 @@
   . rename sensor.cc to sharp.cc
   . create the redblue.cc
   . implement the corresponding strategy
+
+ . strategy::common:: static operations so that
+  . common::read_low_sharps(sharps) possible
+
  . documentation guide
 
  . devices

@@ -24,9 +24,10 @@ private:
 
   // devices
   asserv _asserv;
-  sensor _sharps[3];
   ticker _ticker;
   clamp _clamp;
+  static const size_t _sharp_count = 5;
+  sensor _sharps[_sharp_count];
 
   // instances
   static bot _red_bot;

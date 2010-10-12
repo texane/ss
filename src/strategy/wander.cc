@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Mon Oct 11 20:41:02 2010 texane
+// Last update Tue Oct 12 10:11:58 2010 texane
 //
 
 
@@ -30,8 +30,10 @@ void wander::main(bot& b)
     {
       if (b._asserv.is_done() == false)
       {
-	const unsigned int min = get_min_sharp(b._sharps);
-#define MIN_DIST 400U
+	const unsigned int min = get_min_sharp
+	  (b._sharps, bot::_sharp_count);
+
+#define MIN_DIST 350U
 	if (min <= MIN_DIST)
 	{
 	  b._asserv.stop();
@@ -49,7 +51,7 @@ void wander::main(bot& b)
     }
     else // is_moving == false
     {
-      if (get_min_sharp(b._sharps) <= MIN_DIST)
+      if (get_min_sharp(b._sharps, bot::_sharp_count) <= MIN_DIST)
       {
 	b._asserv.turn(10);
 	b._asserv.wait_done();
