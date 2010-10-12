@@ -2,13 +2,13 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:38:16 2010 texane
-// Last update Tue Oct 12 10:14:44 2010 texane
+// Last update Tue Oct 12 12:11:36 2010 texane
 //
 
 
 #include <stdio.h>
 #include "bot.hh"
-#include "strategy/utility.hh"
+#include "strategy/strategy.hh"
 
 
 // strategy entrypoint
@@ -29,11 +29,13 @@ void test::main(bot& b)
   // move until pawn detected
   b._asserv.move_forward(1000);
   while (b._asserv.is_done() == false)
-    if ((d = get_min_sharp(b._sharps, bot::_sharp_count)) <= min_dist)
+  {
+    if ((d = util::min_front_low_sharp(b)) <= min_dist)
     {
       b._asserv.stop();
       break ;
     }
+  }
 
   if (d > min_dist)
   {
@@ -51,8 +53,9 @@ void test::main(bot& b)
   unsigned int iter = 20;
   for (; iter; --iter)
   {
-    unsigned int ds[bot::_sharp_count];
-    read_sharps(b._sharps, ds, bot::_sharp_count);
+    unsigned int ds[4];
+
+    util::front_low_sharps(b, ds);
 
     if (ds[1] < min_dist)
       break ;

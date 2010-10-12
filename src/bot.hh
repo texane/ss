@@ -26,8 +26,20 @@ private:
   asserv _asserv;
   ticker _ticker;
   clamp _clamp;
-  static const size_t _sharp_count = 5;
-  sensor _sharps[_sharp_count];
+
+  // sharps
+  enum sharp_index
+  {
+    // front face
+    FRONT_LEFT_CORNER = 0,
+    FRONT_RIGHT_CORNER,
+    FRONT_LOW_LEFT,
+    FRONT_LOW_RIGHT,
+    FRONT_HIGH_MIDDLE,
+    // end of indices
+    SHARP_COUNT
+  };
+  sensor _sharps[SHARP_COUNT];
 
   // instances
   static bot _red_bot;
@@ -69,6 +81,9 @@ public:
   friend class wander;
   friend class bsod;
   friend class test;
+
+  // utility class used by strategies
+  friend class util;
 };
 
 

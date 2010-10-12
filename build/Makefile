@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Mon Oct 11 21:52:27 2010 texane
+## Last update Tue Oct 12 12:10:20 2010 texane
 ##
 
 
@@ -32,7 +32,7 @@ SRCS	:=	../src/main.cc		\
 		../src/device/intersect.cc	\
 		../src/device/ticker.cc		\
 		../src/strategy/strategy.cc	\
-		../src/strategy/utility.cc	\
+		../src/strategy/util.cc		\
 		../src/strategy/test.cc		\
 		../src/strategy/bsod.cc		\
 		../src/strategy/wander.cc	\

@@ -2,14 +2,14 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Tue Oct 12 10:11:58 2010 texane
+// Last update Tue Oct 12 12:12:00 2010 texane
 //
 
 
 #include <stdio.h>
 #include <sys/types.h>
 #include "bot.hh"
-#include "strategy/utility.hh"
+#include "strategy/strategy.hh"
 
 
 // strategy entrypoint
@@ -30,11 +30,8 @@ void wander::main(bot& b)
     {
       if (b._asserv.is_done() == false)
       {
-	const unsigned int min = get_min_sharp
-	  (b._sharps, bot::_sharp_count);
-
 #define MIN_DIST 350U
-	if (min <= MIN_DIST)
+	if (util::min_front_low_sharp(b) <= MIN_DIST)
 	{
 	  b._asserv.stop();
 	  b._asserv.wait_done();
@@ -51,7 +48,7 @@ void wander::main(bot& b)
     }
     else // is_moving == false
     {
-      if (get_min_sharp(b._sharps, bot::_sharp_count) <= MIN_DIST)
+      if (util::min_front_low_sharp(b) <= MIN_DIST)
       {
 	b._asserv.turn(10);
 	b._asserv.wait_done();
