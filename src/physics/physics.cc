@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Tue Oct 12 06:02:24 2010 texane
+// Last update Tue Oct 12 09:43:09 2010 texane
 //
 
 
@@ -379,8 +379,6 @@ cpSpace* create_space(conf& conf)
 	const double y0 = ly0 * cosa + lx0 * sina;
 	const double x1 = lx1 * cosa - ly1 * sina;
 	const double y1 = ly1 * cosa + lx1 * sina;
-
-	printf("pos: (%lf, %lf) (%lf, %lf)\n", x0, y0, x1, y1);
 
 	// shape
 	cpShape* const shape = cpSegmentShapeNew
