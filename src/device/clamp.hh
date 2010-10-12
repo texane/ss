@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 12:59:38 2010 texane
-// Last update Mon Oct 11 21:10:22 2010 texane
+// Last update Tue Oct 12 19:43:40 2010 texane
 //
 
 
@@ -41,6 +41,7 @@ public:
   void update(cpSpace*, cpBody*);
   bool grab();
   void drop();
+  bool is_holding() const;
 
   friend struct grab_functor;
 };

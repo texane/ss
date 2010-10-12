@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:42:39 2010 texane
-// Last update Tue Oct 12 12:08:15 2010 texane
+// Last update Tue Oct 12 17:21:17 2010 texane
 //
 
 
@@ -37,4 +37,9 @@ unsigned int util::min_front_low_sharp(bot& b)
   mv = min(mv, b._sharps[bot::FRONT_RIGHT_CORNER].read());
 
   return mv;
+}
+
+unsigned int util::front_high_middle_sharp(bot& b)
+{
+  return b._sharps[bot::FRONT_HIGH_MIDDLE].read();
 }

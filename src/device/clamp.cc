@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Mon Oct 11 21:56:48 2010 texane
+// Last update Tue Oct 12 19:44:07 2010 texane
 //
 
 
@@ -231,4 +231,10 @@ void clamp::drop()
   _is_dropping = false;
 
   _grabbed_shape = NULL;
+}
+
+
+bool clamp::is_holding() const
+{
+  return !(_grabbed_shape == NULL);
 }
