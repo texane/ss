@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sat Oct  9 08:26:05 2010 texane
-// Last update Tue Oct 12 09:42:32 2010 texane
+// Last update Tue Oct 12 09:56:12 2010 texane
 //
 
 
@@ -56,9 +56,30 @@ typedef struct ray_functor
     _res = std::numeric_limits<cpFloat>::max();
   }
 
+  // fixme: should be shape->data->_h
+  static double get_height_by_type(cpShapeType type)
+  {
+    double h;
+
+    switch (type)
+      {
+      case CP_CIRCLE_SHAPE: h = 50; break; // pawn
+      case CP_SEGMENT_SHAPE: h = 100; break; // wall
+      case CP_POLY_SHAPE: h = 200; break; // bot
+      default: h = 0;
+      }
+
+    return h;
+  }
+
   void operator()(cpShape* shape)
   {
+    // dont shed ray on ourselves
     if (_body == shape->body)
+      return ;
+
+    // ray is above the shape
+    if (_h > get_height_by_type(shape->klass->type))
       return ;
 
     switch (shape->klass->type)
