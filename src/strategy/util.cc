@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:42:39 2010 texane
-// Last update Tue Oct 12 23:25:31 2010 texane
+// Last update Wed Oct 13 05:54:08 2010 texane
 //
 
 
@@ -45,8 +45,31 @@ unsigned int util::front_high_middle_sharp(bot& b)
 }
 
 
-// map related
+// get the robot front position
 
-void util::get_front_position(bot&, unsigned int, unsigned int)
+#include <math.h>
+
+void util::get_front_position
+(bot& b, unsigned int& x, unsigned int& y)
 {
+  // todo: optimize
+
+  const double a = (double)b._asserv.get_angle();
+  const double cosa = ::cos(a);
+  const double sina = ::sin(a);
+
+  // local to robot
+  unsigned int frontx, fronty;
+  frontx = 20 / 2;
+  fronty = 0;
+
+  // rotate to world
+  frontx = (frontx * cosa - fronty * sina);
+  fronty = (frontx * sina + fronty * cosa);
+
+  // translate to world
+  int posx, posy;
+  b._asserv.get_position((int&)posx, (int&)posy);
+  x = posx + frontx;
+  y = posy + fronty;
 }
