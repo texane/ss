@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:42:39 2010 texane
-// Last update Wed Oct 13 05:54:08 2010 texane
+// Last update Wed Oct 13 03:41:55 2010 fabien le mentec
 //
 
 
@@ -60,7 +60,7 @@ void util::get_front_position
 
   // local to robot
   unsigned int frontx, fronty;
-  frontx = 20 / 2;
+  frontx = 200 / 2;
   fronty = 0;
 
   // rotate to world

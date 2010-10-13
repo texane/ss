@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Wed Oct 13 05:42:54 2010 texane
+// Last update Wed Oct 13 04:02:20 2010 fabien le mentec
 //
 
 
@@ -44,28 +44,48 @@ static inline void world_to_tile
   y = y / 30000;
 }
 
-static inline tile_t* get_tile_at
+static inline tile_t& get_tile_at
 (unsigned int x, unsigned int y)
 {
   // all the above function are in tile coords
-  return tiles + x * tiles_per_row + y;
+  return tiles[y * tiles_per_row + x];
 }
 
-static inline bool is_tile_used(const tile_t* tile)
+static inline bool is_tile_used
+(const tile_t& tile)
 {
-  return *tile & TILE_FLAG_USED;
+  return tile & TILE_FLAG_USED;
 }
 
-static inline void set_tile_used(tile_t* tile, bool is_red)
+static inline bool is_tile_used
+(unsigned int x, unsigned int y)
 {
-  *tile |= TILE_FLAG_USED;
+  return is_tile_used(get_tile_at(x, y));
+}
+
+static inline void set_tile_used
+(tile_t& tile, bool is_red)
+{
+  tile |= TILE_FLAG_USED;
   if (is_red == true)
-    *tile |= TILE_FLAG_RED;
+    tile |= TILE_FLAG_RED;
 }
 
-static inline void clear_tile_used(tile_t* tile)
+static inline void set_tile_used
+(unsigned int x, unsigned int y, bool is_red)
 {
-  *tile &= ~(TILE_FLAG_USED | TILE_FLAG_RED);
+  set_tile_used(get_tile_at(x, y), is_red);
+}
+
+static inline void clear_tile_used(tile_t& tile)
+{
+  tile &= ~(TILE_FLAG_USED | TILE_FLAG_RED);
+}
+
+static inline void clear_tile_used
+(unsigned int x, unsigned int y)
+{
+  clear_tile_used(get_tile_at(x, y));
 }
 
 static inline bool is_tile_red(unsigned int x, unsigned int y)
@@ -81,8 +101,8 @@ static inline void get_tile_xy
   y = pos % tiles_per_col;
 }
 
-static tile_t* find_free_neighbor_tile
-(bool is_red, unsigned int x, unsigned int y)
+static bool find_free_neighbor_tile
+(bool is_red, unsigned int& x, unsigned int& y)
 {
   // find a free neighbor tile of the same color
 
@@ -113,15 +133,17 @@ static tile_t* find_free_neighbor_tile
       continue ;
     else if (is_tile_red(nx, ny) != is_red)
       continue ;
-
-    tile_t* const tile = get_tile_at(x, y);
-    if (is_tile_used(tile))
+    else if (is_tile_used(nx, ny))
       continue ;
 
-    return tile;
+    // found a free is_red tile
+    x = (unsigned int)nx;
+    y = (unsigned int)ny;
+
+    return true;
   }
 
-  return NULL;
+  return false;
 }
 
 // implemented as a state machine
@@ -192,7 +214,7 @@ void wander::main(bot& b)
 	  world_to_tile(tilex, tiley);
 
 	  // scan if this is not a self tile
-	  if (is_tile_red(tilex, tiley) == false)
+	  if (is_tile_red(tilex, tiley) == b.is_red())
 	    NEXT_STATE(SCAN);
 
 	  // otherwise, avoid
@@ -205,6 +227,8 @@ void wander::main(bot& b)
 	  b._asserv.move_forward(1000);
 	  NEXT_STATE(WANDER);
 	}
+
+	NEXT_STATE(WANDER);
 
 	break;
       }
@@ -249,7 +273,7 @@ void wander::main(bot& b)
 	  const unsigned int r = b._sharps[bot::FRONT_LOW_RIGHT].read();
 	  const unsigned int delta = l > r ? l - r : r - l;
 
-	  if (delta < 10)
+	  if (delta < 100)
 	  {
 	    const unsigned int m = b._sharps[bot::FRONT_HIGH_MIDDLE].read();
 	    if (m < 200)
@@ -303,24 +327,47 @@ void wander::main(bot& b)
 	b._asserv.get_position((int&)tilex, (int&)tiley);
 	world_to_tile(tilex, tiley);
 
-	tile_t* const tile =
-	  find_free_neighbor_tile(b.is_red(), tilex, tiley);
+	if (find_free_neighbor_tile(b.is_red(), tilex, tiley) == false)
+	{
+	  printf("[%s] no file free found\n", id);
+
+	  // drop and wander
+
+	  b._asserv.turn(90);
+	  b._asserv.wait_done();
+
+	  NEXT_STATE(WANDER);
+	}
+
+	printf("[%s] free found file (%u, %u)\n", id, tilex, tiley);
 
 	// work in world coords
 	tile_to_world(tilex, tiley);
 
+	// goto the tile, avoid if necessary
 	b._asserv.move_to(tilex, tiley);
-	b._asserv.wait_done();
+	while (b._asserv.is_done() == false)
+	{
+	  if (util::min_front_low_sharp(b) > min_dist)
+	    continue ;
 
-	b._asserv.move_forward(-100);
-	b._asserv.wait_done();
+	  b._asserv.stop();
+	  b._asserv.wait_done();
 
+	  b._asserv.turn(20);
+	  b._asserv.wait_done();
+
+	  b._asserv.move_to(tilex, tiley);
+	}
+
+	// we are on the tile, dropit
 	b._clamp.drop();
 
 	// mark the tile as used
-	set_tile_used(tile, b.is_red());
+	world_to_tile(tilex, tiley);
+	set_tile_used(tilex, tiley);
 
-	b._asserv.turn(180);
+	b._asserv.turn(90);
 	b._asserv.wait_done();
 
 	NEXT_STATE(WANDER);
