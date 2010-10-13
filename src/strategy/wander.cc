@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Wed Oct 13 04:02:20 2010 fabien le mentec
+// Last update Wed Oct 13 12:08:05 2010 fabien le mentec
 //
 
 
@@ -33,15 +33,16 @@ static inline void init_tiles(void)
 static inline void tile_to_world
 (unsigned int& x, unsigned int& y)
 {
-  x = 4500 + x * 3500;
-  y = y * 30000;
+  x = 450 + x * 350;
+  y = y * 3000;
 }
 
 static inline void world_to_tile
 (unsigned int& x, unsigned int& y)
 {
-  x = x - 4500 / 3500;
-  y = y / 30000;
+  // assume x >= 450
+  x = (x - 450) / 350;
+  y = y / 3000;
 }
 
 static inline tile_t& get_tile_at
@@ -168,7 +169,8 @@ void wander::main(bot& b)
 {
   const char* const id = b.is_red() ? "red" : "blu"; 
 
-  const unsigned int min_dist = b._clamp.grabbing_distance() - 10;
+  const unsigned int avoid_dist = 250;
+  const unsigned int grab_dist = b._clamp.grabbing_distance() - 100;
 
   printf("[%s] wander strategy\n", id);
 
@@ -203,7 +205,7 @@ void wander::main(bot& b)
       STATE_CASE(WANDER)
       {
 	// there is something nearby, stop
-	if (util::min_front_low_sharp(b) <= min_dist)
+	if (util::min_front_low_sharp(b) <= avoid_dist)
 	{
 	  b._asserv.stop();
 	  b._asserv.wait_done();
@@ -236,7 +238,7 @@ void wander::main(bot& b)
       STATE_CASE(SCAN)
       {
 	// scan to know if this is a pawn
-	if (util::front_high_middle_sharp(b) <= min_dist)
+	if (util::front_high_middle_sharp(b) <= avoid_dist)
 	{
 	  NEXT_STATE(AVOID);
 	}
@@ -250,7 +252,7 @@ void wander::main(bot& b)
       {
 	while (1)
 	{
-	  if (util::min_front_low_sharp(b) > min_dist)
+	  if (util::min_front_low_sharp(b) > avoid_dist)
 	    break ;
 	  b._asserv.turn(10);
 	  b._asserv.wait_done();
@@ -273,14 +275,24 @@ void wander::main(bot& b)
 	  const unsigned int r = b._sharps[bot::FRONT_LOW_RIGHT].read();
 	  const unsigned int delta = l > r ? l - r : r - l;
 
+	  // balanced engouh orientation
 	  if (delta < 100)
 	  {
 	    const unsigned int m = b._sharps[bot::FRONT_HIGH_MIDDLE].read();
-	    if (m < 200)
+	    if (m < avoid_dist)
 	    {
 	      // this was not a pawn
 	      NEXT_STATE(WANDER);
 	    }
+
+	    // position near enough to grab
+	    const unsigned int dist = l < r ? l : r;
+	    if (dist > grab_dist)
+	    {
+	      b._asserv.move_forward(dist - grab_dist);
+	      b._asserv.wait_done();
+	    }
+
 	    NEXT_STATE(GRAB);
 	  }
 	  else if (l < r)
@@ -325,16 +337,29 @@ void wander::main(bot& b)
 	// find a free self tile to drop on
 	unsigned int tilex, tiley;
 	b._asserv.get_position((int&)tilex, (int&)tiley);
+
+	printf("[%s] pos(%u, %u)\n", id, tilex, tiley);
+
+	if ((tilex < 450) || (tilex > 2550))
+	{
+	  // doesnot handle distribution area yet
+	  b._asserv.turn(90);
+	  b._asserv.wait_done();
+	  b._clamp.drop();
+	  NEXT_STATE(WANDER);
+	}
+
 	world_to_tile(tilex, tiley);
 
 	if (find_free_neighbor_tile(b.is_red(), tilex, tiley) == false)
 	{
-	  printf("[%s] no file free found\n", id);
-
-	  // drop and wander
+	  printf("[%s] no file free found(%u, %u)\n", id, tilex, tiley);
 
 	  b._asserv.turn(90);
 	  b._asserv.wait_done();
+
+	  // drop and wander
+	  b._clamp.drop();
 
 	  NEXT_STATE(WANDER);
 	}
@@ -348,7 +373,7 @@ void wander::main(bot& b)
 	b._asserv.move_to(tilex, tiley);
 	while (b._asserv.is_done() == false)
 	{
-	  if (util::min_front_low_sharp(b) > min_dist)
+	  if (util::min_front_low_sharp(b) > avoid_dist)
 	    continue ;
 
 	  b._asserv.stop();
