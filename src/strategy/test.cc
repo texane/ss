@@ -1,8 +1,8 @@
 //
 // Made by fabien le mentec <texane@gmail.com>
 // 
-// Started on  Mon Oct 11 20:38:16 2010 texane
-// Last update Tue Oct 12 12:11:36 2010 texane
+// Started on  Wed Oct 13 18:38:16 2010 texane
+// Last update Wed Oct 13 20:48:41 2010 texane
 //
 
 
@@ -18,7 +18,7 @@ void test::main(bot& b)
   b._ticker.reset();
   b._asserv.set_velocity(400);
 
-#if 1 // grabber
+#if 0 // grabber
 
   printf("moving\n");
 
@@ -174,13 +174,15 @@ void test::main(bot& b)
     b._asserv.move_forward(200);
     b._asserv.wait_done();
 
-    if (is_red())
+    if (b.is_red())
       b._asserv.turn_right(90);
     else
       b._asserv.turn_left(90);
 
     b._asserv.wait_done();
   }
+
+#else
 
 #endif
 }

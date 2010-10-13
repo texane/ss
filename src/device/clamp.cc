@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 13:15:37 2010 texane
-// Last update Tue Oct 12 19:44:07 2010 texane
+// Last update Wed Oct 13 21:07:06 2010 texane
 //
 
 
@@ -69,7 +69,8 @@ typedef struct grab_functor
   cpShape* _grabbed_shape;
 
   grab_functor(const clamp* klamp, cpSpace* space, cpBody* body) :
-    _space(space), _body(body), _clamp(klamp), _has_grabbed(false) {}
+    _space(space), _body(body), _clamp(klamp),
+    _has_grabbed(false), _grabbed_shape(NULL) {}
 
   void operator()(cpShape* shape)
   {

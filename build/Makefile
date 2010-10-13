@@ -2,7 +2,7 @@
 ## Made by fabien le mentec <texane@gmail.com>
 ## 
 ## Started on  Sun Oct 25 10:42:55 2009 texane
-## Last update Tue Oct 12 12:10:20 2010 texane
+## Last update Wed Oct 13 20:40:04 2010 texane
 ##
 
 
@@ -36,6 +36,7 @@ SRCS	:=	../src/main.cc		\
 		../src/strategy/test.cc		\
 		../src/strategy/bsod.cc		\
 		../src/strategy/wander.cc	\
+		../src/strategy/tiler.cc
 
 OBJS	:=	$(SRCS:.cc=.o)
 

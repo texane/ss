@@ -79,6 +79,7 @@ public:
 
   // strategies are allowed to access robot internals
   friend class wander;
+  friend class tiler;
   friend class bsod;
   friend class test;
 

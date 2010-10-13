@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Wed Oct 13 12:08:05 2010 fabien le mentec
+// Last update Wed Oct 13 20:36:35 2010 texane
 //
 
 
@@ -33,8 +33,8 @@ static inline void init_tiles(void)
 static inline void tile_to_world
 (unsigned int& x, unsigned int& y)
 {
-  x = 450 + x * 350;
-  y = y * 3000;
+  x = 450 + x * 350 + 350 / 2;
+  y = y * 350 + 350 / 2;
 }
 
 static inline void world_to_tile
@@ -42,7 +42,7 @@ static inline void world_to_tile
 {
   // assume x >= 450
   x = (x - 450) / 350;
-  y = y / 3000;
+  y = y / 350;
 }
 
 static inline tile_t& get_tile_at
@@ -278,10 +278,13 @@ void wander::main(bot& b)
 	  // balanced engouh orientation
 	  if (delta < 100)
 	  {
+	    printf("[%s] delta %u\n", id, delta);
+
 	    const unsigned int m = b._sharps[bot::FRONT_HIGH_MIDDLE].read();
 	    if (m < avoid_dist)
 	    {
 	      // this was not a pawn
+	      printf("[%s] going to wander\n", id);
 	      NEXT_STATE(WANDER);
 	    }
 
@@ -289,9 +292,21 @@ void wander::main(bot& b)
 	    const unsigned int dist = l < r ? l : r;
 	    if (dist > grab_dist)
 	    {
+	      printf("[%s] move_forward(%u)\n", id, dist);
 	      b._asserv.move_forward(dist - grab_dist);
-	      b._asserv.wait_done();
+
+	      while (b._asserv.is_done() == false)
+	      {
+		if (util::min_front_low_sharp(b) <= grab_dist)
+		{
+		  // asserv::is_done will
+		  b._asserv.stop();
+		  break ;
+		}
+	      }
 	    }
+
+	    printf("[%s] going to grab\n", id);
 
 	    NEXT_STATE(GRAB);
 	  }
@@ -343,10 +358,7 @@ void wander::main(bot& b)
 	if ((tilex < 450) || (tilex > 2550))
 	{
 	  // doesnot handle distribution area yet
-	  b._asserv.turn(90);
-	  b._asserv.wait_done();
-	  b._clamp.drop();
-	  NEXT_STATE(WANDER);
+	  goto drop_and_wander;
 	}
 
 	world_to_tile(tilex, tiley);
@@ -355,16 +367,14 @@ void wander::main(bot& b)
 	{
 	  printf("[%s] no file free found(%u, %u)\n", id, tilex, tiley);
 
+	drop_and_wander:
 	  b._asserv.turn(90);
 	  b._asserv.wait_done();
-
-	  // drop and wander
 	  b._clamp.drop();
-
 	  NEXT_STATE(WANDER);
 	}
 
-	printf("[%s] free found file (%u, %u)\n", id, tilex, tiley);
+	printf("[%s] found free tile (%u, %u)\n", id, tilex, tiley);
 
 	// work in world coords
 	tile_to_world(tilex, tiley);
