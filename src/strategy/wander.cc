@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Tue Oct 12 23:29:10 2010 texane
+// Last update Wed Oct 13 05:42:54 2010 texane
 //
 
 
@@ -70,7 +70,7 @@ static inline void clear_tile_used(tile_t* tile)
 
 static inline bool is_tile_red(unsigned int x, unsigned int y)
 {
-  return ((~(y & 1)) + x) & 1;
+  return (y & 1) ^ (x & 1); 
 }
 
 static inline void get_tile_xy
