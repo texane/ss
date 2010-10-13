@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Wed Oct 13 20:36:35 2010 texane
+// Last update Wed Oct 13 21:34:00 2010 texane
 //
 
 
@@ -216,7 +216,7 @@ void wander::main(bot& b)
 	  world_to_tile(tilex, tiley);
 
 	  // scan if this is not a self tile
-	  if (is_tile_red(tilex, tiley) == b.is_red())
+	  if (is_tile_red(tilex, tiley) != b.is_red())
 	    NEXT_STATE(SCAN);
 
 	  // otherwise, avoid
@@ -351,7 +351,7 @@ void wander::main(bot& b)
       {
 	// find a free self tile to drop on
 	unsigned int tilex, tiley;
-	b._asserv.get_position((int&)tilex, (int&)tiley);
+	util::get_front_position(b, tilex, tiley);
 
 	printf("[%s] pos(%u, %u)\n", id, tilex, tiley);
 
@@ -371,6 +371,8 @@ void wander::main(bot& b)
 	  b._asserv.turn(90);
 	  b._asserv.wait_done();
 	  b._clamp.drop();
+	  b._asserv.move_forward(-100);
+	  b._asserv.wait_done();
 	  NEXT_STATE(WANDER);
 	}
 
@@ -396,7 +398,13 @@ void wander::main(bot& b)
 	}
 
 	// we are on the tile, dropit
+	b._asserv.move_forward(-150);
+	b._asserv.wait_done();
+
 	b._clamp.drop();
+
+	b._asserv.move_forward(-100);
+	b._asserv.wait_done();
 
 	// mark the tile as used
 	world_to_tile(tilex, tiley);

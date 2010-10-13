@@ -1,7 +1,9 @@
 . todo
- . map the tiles in wander strategy
- . every object should have a height
-  . handle height in sensor
+ . distribution area
+  . allows for debugging
+
+ . then util::tile
+
  . add red blue under the robot so that the robot can continue playing even if the asserv gets lost
   . create the redblue.cc
   . implement the corresponding strategy
@@ -11,13 +13,7 @@
 
  . devices
   . container: a bot can contain some pawn
-
- . 
-
-
-
- . abstraction logicielle pour l ecriture d une variable en concurrence
-  . while (isset()) ; // reader
+   . the clamp moves the pawn in a container of size 1 per default
 
  . should the global update routine be called at the
    end of cpSpaceStep instead of velocity update?

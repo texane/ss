@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct 13 20:37:06 2010 texane
-// Last update Wed Oct 13 21:02:29 2010 texane
+// Last update Wed Oct 13 21:19:07 2010 texane
 //
 
 
@@ -71,6 +71,8 @@ void tiler::main(bot& b)
 
 	if (sharps[bot::FRONT_HIGH_MIDDLE] >= AVOID_DIST)
 	{
+	  printf("placing\n");
+
 	  printf("grabbing\n");
 
 	  if (b._clamp.grab() == true)
@@ -79,10 +81,17 @@ void tiler::main(bot& b)
 
 	    b._asserv.turn(180);
 	    b._asserv.wait_done();
+
 	    b._clamp.drop();
+
+	    b._asserv.move_forward(-100);
+	    b._asserv.wait_done();
+
 	    b._asserv.turn(180);
 	    b._asserv.wait_done();
+
 	    b._asserv.move_to(x, y);
+
 	    continue ;
 	  }
 
