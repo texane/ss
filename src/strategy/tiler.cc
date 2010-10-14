@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct 13 20:37:06 2010 texane
-// Last update Thu Oct 14 03:36:31 2010 fabien le mentec
+// Last update Thu Oct 14 04:09:40 2010 fabien le mentec
 //
 
 
@@ -152,9 +152,9 @@ void tiler::main(bot& b)
 	}
 
 	// avoid
-	if (sharps[bot::FRONT_LEFT_CORNER] <= AVOID_DIST)
+	if (sharps[bot::FRONT_LOW_LCORNER] <= AVOID_DIST)
 	  b._asserv.turn_left(10);
-	else if (sharps[bot::FRONT_RIGHT_CORNER] <= AVOID_DIST)
+	else if (sharps[bot::FRONT_LOW_RCORNER] <= AVOID_DIST)
 	  b._asserv.turn_right(10);
 	b._asserv.wait_done();
 

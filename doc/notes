@@ -1,33 +1,37 @@
 . todo
- . implement switches at each corners
-  . implement as sharp with a very small distance
+ . devices
+  . puissance des sharps
+   . actuellement 10000, eq. a infini
+
+  . container: a bot can contain some pawn
+   . the clamp moves the pawn in a container of size 1 per default
+
+  . implement switches at each corners
+   . implement as sharp with a very small distance ?
+   . should have an aperture in that case...
+   . more simple to implement it by walking object list
+
+  . add red blue under the robot so that the robot can continue playing even if the asserv gets lost
+   . create the redblue.cc
+   . implement the corresponding strategy
+
+  . rename sensor.cc to sharp.cc
 
  . distribution area
   . allows for debugging
 
  . factorize tile code in tile.{hh,cc}
 
- . add red blue under the robot so that the robot can continue playing even if the asserv gets lost
-  . create the redblue.cc
-  . implement the corresponding strategy
- . rename sensor.cc to sharp.cc
-
  . documentation guide
-
- . devices
-  . container: a bot can contain some pawn
-   . the clamp moves the pawn in a container of size 1 per default
 
  . should the global update routine be called at the
    end of cpSpaceStep instead of velocity update?
-
- . puissance des sharps
-  . actuellement 10000, eq. a infini
 
  . optimisation
   . cpShape->sensor can be used to implement a sensor more efficiently
 
  . specifier les reperes
+  . tous les reperes (local du robot...)
   . 0 degree points on the right
   . 90 degree points on the bottom 
   . (0, 0) top left corner

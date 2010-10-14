@@ -31,19 +31,19 @@ private:
   enum sharp_index
   {
     // front face
-    FRONT_LEFT_CORNER = 0,
-    FRONT_RIGHT_CORNER,
+    FRONT_LOW_LCORNER = 0,
+    FRONT_LOW_RCORNER,
     FRONT_LOW_LEFT,
     FRONT_LOW_RIGHT,
     FRONT_HIGH_MIDDLE,
     // side faces
-    LEFT_HIGH,
-    LEFT_LOW,
-    RIGHT_HIGH,
-    RIGHT_LOW,
+    LEFT_HIGH_MIDDLE,
+    LEFT_LOW_MIDDLE,
+    RIGHT_HIGH_MIDDLE,
+    RIGHT_LOW_MIDDLE,
     // back face
-    BACK_LOW,
-    BACK_HIGH,
+    BACK_LOW_MIDDLE,
+    BACK_HIGH_MIDDLE,
     // end of indices
     SHARP_COUNT
   };
