@@ -1,4 +1,9 @@
 . todo
+ . bugs
+  . wander strat -> dont move back while placing pawns
+   . more generally, better handling of collision, dont
+   use a wait_done
+
  . devices
   . puissance des sharps
    . actuellement 10000, eq. a infini
