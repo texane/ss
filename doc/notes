@@ -17,39 +17,33 @@
 
   . rename sensor.cc to sharp.cc
 
- . distribution area
-  . allows for debugging
-
- . factorize tile code in tile.{hh,cc}
+ . strategy
+  . distribution area
+   . allows for debugging
 
  . documentation guide
+  . specifier les reperes
+   . tous les reperes (local du robot...)
+   . 0 degree points on the right
+   . 90 degree points on the bottom 
+   . (0, 0) top left corner
 
- . should the global update routine be called at the
-   end of cpSpaceStep instead of velocity update?
-
- . optimisation
+ . optimisation, code
+  . should the global update routine be called at the
+    end of cpSpaceStep instead of velocity update?
   . cpShape->sensor can be used to implement a sensor more efficiently
+  . factorize tile code in tile.{hh,cc}
+  . cache a surface for bot, update only when angle changes
+   . in asserv.next(), set body->flags | NEED_GRAPHICS_UPDATE;
+   . in draw_shape, recompute the surface
 
- . specifier les reperes
-  . tous les reperes (local du robot...)
-  . 0 degree points on the right
-  . 90 degree points on the bottom 
-  . (0, 0) top left corner
-
- . implement friction ?
-  . -> at least the robot should not bounce indefinitly like a ball...
-
- . cache a surface for bot, update only when angle changes
-  . in asserv.next(), set body->flags | NEED_GRAPHICS_UPDATE;
-  . in draw_shape, recompute the surface
-
- . angular velocity should be a function of velocity and wheels circumference
-
- . create graphics.cc, graphics.hh
-
-. wanted features
+. features
  . state snapshot
   . snap::load, snap::store
+ . implement friction ?
+  . -> at least the robot should not bounce indefinitly like a ball...
+  . angular velocity should be a function of velocity and wheels circumference
 
-. line intersection
- . http://alienryderflex.com/intersect/
+. references
+ . line intersection
+  . http://alienryderflex.com/intersect/
