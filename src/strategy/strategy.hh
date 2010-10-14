@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:46:49 2010 texane
-// Last update Wed Oct 13 20:40:23 2010 texane
+// Last update Thu Oct 14 20:11:45 2010 texane
 //
 
 
@@ -41,6 +41,7 @@ public:
 
 DECLARE_STRATEGY_CLASS(wander);
 DECLARE_STRATEGY_CLASS(tiler);
+DECLARE_STRATEGY_CLASS(distri);
 DECLARE_STRATEGY_CLASS(test);
 DECLARE_STRATEGY_CLASS(bsod);
 

@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Thu Oct 14 20:03:19 2010 texane
+// Last update Thu Oct 14 20:55:55 2010 texane
 //
 
 
@@ -19,15 +19,13 @@
 #define TILE_FLAG_USED (1 << 0)
 #define TILE_FLAG_RED (1 << 1)
 
-typedef unsigned int tile_t;
-
 static const size_t tiles_per_row = 6;
 static const size_t tiles_per_col = 6;
-static tile_t tiles[tiles_per_row * tiles_per_col];
+static const size_t tile_count = tiles_per_col * tiles_per_row;
 
-static inline void init_tiles(void)
+static inline void init_tiles(unsigned int* tiles)
 {
-  memset(tiles, 0, sizeof(tiles));
+  memset(tiles, 0, tile_count * sizeof(unsigned int));
 }
 
 static inline void tile_to_world
@@ -45,27 +43,27 @@ static inline void world_to_tile
   y = y / 350;
 }
 
-static inline tile_t& get_tile_at
-(unsigned int x, unsigned int y)
+static inline unsigned int& get_tile_at
+(unsigned int* tiles, unsigned int x, unsigned int y)
 {
   // all the above function are in tile coords
   return tiles[y * tiles_per_row + x];
 }
 
 static inline bool is_tile_used
-(const tile_t& tile)
+(const unsigned int& tile)
 {
   return tile & TILE_FLAG_USED;
 }
 
 static inline bool is_tile_used
-(unsigned int x, unsigned int y)
+(unsigned int* tiles, unsigned int x, unsigned int y)
 {
-  return is_tile_used(get_tile_at(x, y));
+  return is_tile_used(get_tile_at(tiles, x, y));
 }
 
 static inline void set_tile_used
-(tile_t& tile, bool is_red)
+(unsigned int& tile, bool is_red)
 {
   tile |= TILE_FLAG_USED;
   if (is_red == true)
@@ -73,29 +71,30 @@ static inline void set_tile_used
 }
 
 static inline void set_tile_used
-(unsigned int x, unsigned int y, bool is_red)
+(unsigned int* tiles, unsigned int x, unsigned int y, bool is_red)
 {
-  set_tile_used(get_tile_at(x, y), is_red);
+  set_tile_used(get_tile_at(tiles, x, y), is_red);
 }
 
-static inline void clear_tile_used(tile_t& tile)
+static inline void clear_tile_used(unsigned int& tile)
 {
   tile &= ~(TILE_FLAG_USED | TILE_FLAG_RED);
 }
 
 static inline void clear_tile_used
-(unsigned int x, unsigned int y)
+(unsigned int* tiles, unsigned int x, unsigned int y)
 {
-  clear_tile_used(get_tile_at(x, y));
+  clear_tile_used(get_tile_at(tiles, x, y));
 }
 
-static inline bool is_tile_red(unsigned int x, unsigned int y)
+static inline bool is_tile_red
+(unsigned int x, unsigned int y)
 {
   return (y & 1) ^ (x & 1); 
 }
 
 static inline void get_tile_xy
-(const tile_t* tile, unsigned int& x, unsigned int& y)
+(unsigned int* tiles, unsigned int* tile, unsigned int& x, unsigned int& y)
 {
   const size_t pos = tile - tiles;
   x = pos / tiles_per_row;
@@ -103,7 +102,7 @@ static inline void get_tile_xy
 }
 
 static bool find_free_neighbor_tile
-(bool is_red, unsigned int& x, unsigned int& y)
+(unsigned int* tiles, bool is_red, unsigned int& x, unsigned int& y)
 {
   // find a free neighbor tile of the same color
 
@@ -134,7 +133,7 @@ static bool find_free_neighbor_tile
       continue ;
     else if (is_tile_red(nx, ny) != is_red)
       continue ;
-    else if (is_tile_used(nx, ny))
+    else if (is_tile_used(tiles, nx, ny))
       continue ;
 
     // found a free is_red tile
@@ -167,6 +166,9 @@ enum state
 
 void wander::main(bot& b)
 {
+  // tile array
+  unsigned int tiles[tiles_per_row * tiles_per_col];
+
   const char* const id = b.is_red() ? "red" : "blu"; 
 
   const unsigned int avoid_dist = 250;
@@ -363,7 +365,7 @@ void wander::main(bot& b)
 
 	world_to_tile(tilex, tiley);
 
-	if (find_free_neighbor_tile(b.is_red(), tilex, tiley) == false)
+	if (find_free_neighbor_tile(tiles, b.is_red(), tilex, tiley) == false)
 	{
 	  printf("[%s] no file free found(%u, %u)\n", id, tilex, tiley);
 
@@ -408,7 +410,7 @@ void wander::main(bot& b)
 
 	// mark the tile as used
 	world_to_tile(tilex, tiley);
-	set_tile_used(tilex, tiley);
+	set_tile_used(tiles, tilex, tiley, b.is_red());
 
 	b._asserv.turn(90);
 	b._asserv.wait_done();
