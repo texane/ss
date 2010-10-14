@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:18:42 2010 texane
-// Last update Tue Oct 12 09:43:09 2010 texane
+// Last update Thu Oct 14 22:38:53 2010 texane
 //
 
 
@@ -35,6 +35,7 @@ static const x_color_t* lblue_color = NULL;
 static const x_color_t* lgreen_color = NULL;
 static const x_color_t* black_color = NULL;
 static const x_color_t* grey_color = NULL;
+static const x_color_t* white_color = NULL;
 
 static x_surface_t* pawn_surface = NULL;
 static x_surface_t* king_surface = NULL;
@@ -85,7 +86,7 @@ static void __attribute__((unused)) draw_shape
   space_to_view(shape, a, b);
 
   // draw the line
-  x_draw_line((int)a.x, (int)a.y, (int)b.x, (int)b.y, red_color);
+  x_draw_line((int)a.x, (int)a.y, (int)b.x, (int)b.y, white_color);
 }
 
 
@@ -149,13 +150,11 @@ static void draw_object(cpShape* shape, cpSpace* space)
       break;
     }
 
-#if 0
   case CP_SEGMENT_SHAPE:
     {
       draw_shape(body, (cpSegmentShape*)shape, space);
       break;
     }
-#endif
 
   default:
     {
@@ -175,9 +174,9 @@ static void pawn_velocity_func
   // fixme: ground friction
   // should be dependent on the pawn mass
   // since we will modify it in the grabber
-  body->v.x *= 0.8;
-  body->v.y *= 0.8;
-  body->w *= 0.8;
+  body->v.x *= 0.75;
+  body->v.y *= 0.75;
+  body->w *= 0.75;
 }
 
 
@@ -287,6 +286,7 @@ static void init_graphics_stuff(const conf& conf)
   static const unsigned char lgreen_rgb[3] = {0x70, 0xff, 0x70};
   static const unsigned char black_rgb[3] = {0x00, 0x00, 0x00};
   static const unsigned char grey_rgb[3] = {0x80, 0x80, 0x80};
+  static const unsigned char white_rgb[3] = {0xff, 0xff, 0xff};
 
   x_alloc_color(red_rgb, &red_color);
   x_alloc_color(yellow_rgb, &yellow_color);
@@ -297,6 +297,7 @@ static void init_graphics_stuff(const conf& conf)
   x_alloc_color(lblue_rgb, &lblue_color);
   x_alloc_color(black_rgb, &black_color);
   x_alloc_color(grey_rgb, &grey_color);
+  x_alloc_color(white_rgb, &white_color);
 
   // create background surface
   back_surface = create_background_surface();

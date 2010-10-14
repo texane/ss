@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 19:43:48 2010 texane
-// Last update Thu Oct 14 20:55:55 2010 texane
+// Last update Thu Oct 14 21:01:38 2010 texane
 //
 
 
@@ -373,7 +373,7 @@ void wander::main(bot& b)
 	  b._asserv.turn(90);
 	  b._asserv.wait_done();
 	  b._clamp.drop();
-	  b._asserv.move_forward(-100);
+	  b._asserv.turn(90);
 	  b._asserv.wait_done();
 	  NEXT_STATE(WANDER);
 	}

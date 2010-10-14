@@ -14,15 +14,15 @@ s distri
 end object
 
 # blue bot
-#begin object
+begin object
 type blue_bot
 x 2800
 y 200
 w 200
 a 180
 h 300
-s wander
-#end object
+s distri
+end object
 
 # startof debugging pawns
 #begin object
@@ -235,7 +235,7 @@ type wall
 x 1500
 y 0
 w 3000
-h 100
+h 70
 a 0
 end object
 
@@ -245,7 +245,7 @@ type wall
 x 3000
 y 1050
 w 2100
-h 100
+h 70
 a 90
 end object
 
@@ -255,7 +255,7 @@ type wall
 x 1500
 y 2100
 w 3000
-h 100
+h 70
 a 0
 end object
 
@@ -265,8 +265,18 @@ type wall
 x 0
 y 1050
 w 2100
-h 100
+h 70
 a 90
+end object
+
+# left distribution area
+begin object
+type wall
+x 200
+y 400
+w 400
+h 70
+a 0
 end object
 
 # left reserved area
@@ -275,7 +285,7 @@ type wall
 x 800
 y 1980
 w 700
-h 100
+h 70
 a 0
 end object
 
@@ -284,7 +294,7 @@ type wall
 x 450
 y 2040
 w 120
-h 100
+h 70
 a 90
 end object
 
@@ -293,8 +303,18 @@ type wall
 x 1150
 y 2040
 w 120
-h 100
+h 70
 a 90
+end object
+
+# right distribution area
+begin object
+type wall
+x 2800
+y 400
+w 400
+h 70
+a 0
 end object
 
 # right reserved area
@@ -303,7 +323,7 @@ type wall
 x 2200
 y 1980
 w 700
-h 100
+h 70
 a 0
 end object
 
@@ -312,7 +332,7 @@ type wall
 x 1850
 y 2040
 w 120
-h 100
+h 70
 a 90
 end object
 
@@ -321,6 +341,6 @@ type wall
 x 2550
 y 2040
 w 120
-h 100
+h 70
 a 90
 end object

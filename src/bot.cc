@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Thu Oct 14 04:08:03 2010 fabien le mentec
+// Last update Thu Oct 14 22:30:54 2010 texane
 //
 
 
@@ -107,18 +107,18 @@ int bot::create_bots(const conf& conf)
     // configure sharps
     b->_sharps[FRONT_LOW_LCORNER].set_info(pos->_w / 2, -pos->_w / 2, 0, 25);
     b->_sharps[FRONT_LOW_LEFT].set_info(pos->_w / 2, -50, 0, 25);
-    b->_sharps[FRONT_HIGH_MIDDLE].set_info(pos->_w / 2, 0, 0, 70);
+    b->_sharps[FRONT_HIGH_MIDDLE].set_info(pos->_w / 2, 0, 0, 60);
     b->_sharps[FRONT_LOW_RIGHT].set_info(pos->_w / 2, 50, 0, 25);
     b->_sharps[FRONT_LOW_RCORNER].set_info(pos->_w / 2, pos->_w / 2, 0, 25);
     b->_sharps[LEFT_LOW_MIDDLE].set_info(0, -pos->_w / 2, 270, 25);
-    b->_sharps[LEFT_HIGH_MIDDLE].set_info(0, -pos->_w / 2, 270, 70);
+    b->_sharps[LEFT_HIGH_MIDDLE].set_info(0, -pos->_w / 2, 270, 60);
     b->_sharps[RIGHT_LOW_MIDDLE].set_info(0, pos->_w / 2, 90, 25);
-    b->_sharps[RIGHT_HIGH_MIDDLE].set_info(0, pos->_w / 2, 90, 70);
+    b->_sharps[RIGHT_HIGH_MIDDLE].set_info(0, pos->_w / 2, 90, 60);
     b->_sharps[BACK_LOW_MIDDLE].set_info(-pos->_w / 2, 0, 180, 25);
-    b->_sharps[BACK_HIGH_MIDDLE].set_info(-pos->_w / 2, 0, 180, 70);
+    b->_sharps[BACK_HIGH_MIDDLE].set_info(-pos->_w / 2, 0, 180, 60);
 
     // configure clamp
-    b->_clamp.set_info(pos->_w / 2, 0, 300, 150, 0);
+    b->_clamp.set_info(pos->_w / 2, 0, 300, 100, 0);
 
     // instanciate strategy
     b->_strategy = strategy::factory(pos->_s);

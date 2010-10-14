@@ -24,6 +24,7 @@
 
  . strategy
   . distribution area
+   . move forward and put pawns on case
    . allows for debugging
 
  . documentation guide
