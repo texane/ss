@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Mon Oct 11 20:42:39 2010 texane
-// Last update Thu Oct 14 04:09:09 2010 fabien le mentec
+// Last update Thu Oct 14 20:06:54 2010 texane
 //
 
 
@@ -48,28 +48,22 @@ unsigned int util::front_high_middle_sharp(bot& b)
 // get the robot front position
 
 #include <math.h>
+#include "misc/dtor.hh"
 
 void util::get_front_position
 (bot& b, unsigned int& x, unsigned int& y)
 {
   // todo: optimize
 
-  const double a = (double)b._asserv.get_angle();
-  const double cosa = ::cos(a);
-  const double sina = ::sin(a);
+  const double a = dtor((double)b._asserv.get_angle());
 
-  // local to robot
-  unsigned int frontx, fronty;
-  frontx = 200 / 2;
-  fronty = 0;
-
-  // rotate to world
-  frontx = (frontx * cosa - fronty * sina);
-  fronty = (frontx * sina + fronty * cosa);
+  // robot rotate to world. fronty is 0, thus dont mul.
+  const double frontx = (200 / 2) * ::cos(a) ; // - fronty * sina
+  const double fronty = (200 / 2) * ::sin(a) ; // + fronty * cosa;
 
   // translate to world
   int posx, posy;
-  b._asserv.get_position((int&)posx, (int&)posy);
-  x = posx + frontx;
-  y = posy + fronty;
+  b._asserv.get_position(posx, posy);
+  x = (unsigned int)((double)posx + frontx);
+  y = (unsigned int)((double)posy + fronty);
 }
