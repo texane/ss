@@ -1,4 +1,13 @@
 . todo
+ . mettre en place les side corner sharps
+  -> bot._sharp[xxx].set_info() pas encore fait
+  . les utiliser
+   . d une part pour savoir si on passe devant un obstacle
+   qui sera par la suite detecte par le side sharp du milieu
+   . d autre part pour assurer une distance mini avec les murs
+    -> impossible avec le side sharp du milieu puisqu il peut
+    voir le mur trop tard
+
  . bugs
   . wander strat -> dont move back while placing pawns
    . more generally, better handling of collision, dont
@@ -23,9 +32,6 @@
   . rename sensor.cc to sharp.cc
 
  . strategy
-  . distribution area
-   . move forward and put pawns on case
-   . allows for debugging
 
  . documentation guide
   . specifier les reperes

@@ -39,8 +39,10 @@ private:
     // side faces
     LEFT_HIGH_MIDDLE,
     LEFT_LOW_MIDDLE,
+    LEFT_LOW_FCORNER,
     RIGHT_HIGH_MIDDLE,
     RIGHT_LOW_MIDDLE,
+    RIGHT_LOW_FCORNER,
     // back face
     BACK_LOW_MIDDLE,
     BACK_HIGH_MIDDLE,

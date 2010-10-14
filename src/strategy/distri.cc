@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Thu Oct 14 20:12:05 2010 texane
-// Last update Thu Oct 14 21:58:26 2010 texane
+// Last update Thu Oct 14 22:46:51 2010 texane
 //
 
 
@@ -29,10 +29,13 @@ void distri::main(bot& b)
     b.is_red() ? bot::RIGHT_HIGH_MIDDLE : bot::LEFT_HIGH_MIDDLE;
   const int w = b.is_red() ? 300 : -300;
 
-  b._asserv.move_forward(290);
+  b._asserv.move_forward(350);
   b._asserv.wait_done();
 
-  b._asserv.turn_to(90);
+  b._asserv.turn(95, w);
+  b._asserv.wait_done();
+
+  b._asserv.move_forward(300);
   b._asserv.wait_done();
 
   bool is_placing = false;
