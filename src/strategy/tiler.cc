@@ -105,7 +105,12 @@ void tiler::main(bot& b)
 	{
 	  sharps[n] = b._sharps[n].read();
 
+	  // do not take those into account for avoidance
 	  if (n == bot::FRONT_HIGH_MIDDLE)
+	    continue ;
+	  else if (n == bot::BACK_LOW_MIDDLE)
+	    continue ;
+	  else if (n == bot::BACK_HIGH_MIDDLE)
 	    continue ;
 
 	  if (sharps[n] < lowmin)
@@ -121,12 +126,28 @@ void tiler::main(bot& b)
 	b._asserv.stop();
 	b._asserv.wait_done();
 
+	printf("something in the air\n");
+
+	// left or right wall
+	if (sharps[bot::LEFT_LOW_MIDDLE] <= AVOID_DIST)
+	{
+	  printf("left wall\n");
+	  b._asserv.turn_right(10);
+	  b._asserv.wait_done();
+	  continue ;
+	}
+	else if (sharps[bot::RIGHT_HIGH_MIDDLE] <= AVOID_DIST)
+	{
+	  printf("right wall\n");
+	  b._asserv.turn_left(10);
+	  b._asserv.wait_done();
+	  continue ;
+	}
+
 	// this is a pawn
 	if (sharps[bot::FRONT_HIGH_MIDDLE] >= AVOID_DIST)
 	{
-	  printf("placing\n");
-
-	  printf("grabbing\n");
+	  printf("pawn, grabbing (%u)\n", sharps[bot::FRONT_HIGH_MIDDLE]);
 
 	  if (b._clamp.grab() == true)
 	  {

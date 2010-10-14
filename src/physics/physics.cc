@@ -175,9 +175,9 @@ static void pawn_velocity_func
   // fixme: ground friction
   // should be dependent on the pawn mass
   // since we will modify it in the grabber
-  body->v.x *= 0.9;
-  body->v.y *= 0.9;
-  body->w *= 0.9;
+  body->v.x *= 0.8;
+  body->v.y *= 0.8;
+  body->w *= 0.8;
 }
 
 
