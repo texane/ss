@@ -1,8 +1,11 @@
 . todo
+ . implement switches at each corners
+  . implement as sharp with a very small distance
+
  . distribution area
   . allows for debugging
 
- . then util::tile
+ . factorize tile code in tile.{hh,cc}
 
  . add red blue under the robot so that the robot can continue playing even if the asserv gets lost
   . create the redblue.cc

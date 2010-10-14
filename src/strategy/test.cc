@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct 13 18:38:16 2010 texane
-// Last update Wed Oct 13 20:48:41 2010 texane
+// Last update Thu Oct 14 03:50:25 2010 fabien le mentec
 //
 
 
@@ -181,6 +181,11 @@ void test::main(bot& b)
 
     b._asserv.wait_done();
   }
+
+#elif 1 // test sharps
+
+  for (size_t i = 0; i < bot::SHARP_COUNT; ++i)
+    printf("%u\n", b._sharps[i].read());
 
 #else
 

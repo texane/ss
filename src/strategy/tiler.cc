@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct 13 20:37:06 2010 texane
-// Last update Thu Oct 14 05:45:24 2010 texane
+// Last update Thu Oct 14 03:36:31 2010 fabien le mentec
 //
 
 
@@ -83,6 +83,8 @@ void tiler::main(bot& b)
   b._ticker.reset();
   b._asserv.set_velocity(400);
 
+  init_tiles();
+
   for (unsigned int i = 0; i < 6; ++i)
   {
     for (unsigned int j = 0; j < 6; ++j)
@@ -119,6 +121,7 @@ void tiler::main(bot& b)
 	b._asserv.stop();
 	b._asserv.wait_done();
 
+	// this is a pawn
 	if (sharps[bot::FRONT_HIGH_MIDDLE] >= AVOID_DIST)
 	{
 	  printf("placing\n");

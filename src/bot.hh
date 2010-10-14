@@ -36,6 +36,14 @@ private:
     FRONT_LOW_LEFT,
     FRONT_LOW_RIGHT,
     FRONT_HIGH_MIDDLE,
+    // side faces
+    LEFT_HIGH,
+    LEFT_LOW,
+    RIGHT_HIGH,
+    RIGHT_LOW,
+    // back face
+    BACK_LOW,
+    BACK_HIGH,
     // end of indices
     SHARP_COUNT
   };
