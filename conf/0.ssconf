@@ -136,7 +136,7 @@ begin object
 type king
 x 200
 y 500
-h 160
+h 210
 w 95
 end object
 
@@ -145,7 +145,7 @@ begin object
 type queen
 x 200
 y 800
-h 160
+h 210
 w 95
 end object
 
@@ -186,7 +186,7 @@ begin object
 type king
 x 2800
 y 500
-h 160
+h 210
 w 95
 end object
 
@@ -195,7 +195,7 @@ begin object
 type queen
 x 2800
 y 800
-h 160
+h 210
 w 95
 end object
 
