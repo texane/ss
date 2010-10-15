@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Tue Oct  5 22:33:27 2010 texane
-// Last update Thu Oct 14 22:30:54 2010 texane
+// Last update Fri Oct 15 05:40:14 2010 texane
 //
 
 
@@ -112,8 +112,10 @@ int bot::create_bots(const conf& conf)
     b->_sharps[FRONT_LOW_RCORNER].set_info(pos->_w / 2, pos->_w / 2, 0, 25);
     b->_sharps[LEFT_LOW_MIDDLE].set_info(0, -pos->_w / 2, 270, 25);
     b->_sharps[LEFT_HIGH_MIDDLE].set_info(0, -pos->_w / 2, 270, 60);
+    b->_sharps[LEFT_LOW_FCORNER].set_info(pos->_w, -pos->_w / 2, 270, 25);    
     b->_sharps[RIGHT_LOW_MIDDLE].set_info(0, pos->_w / 2, 90, 25);
     b->_sharps[RIGHT_HIGH_MIDDLE].set_info(0, pos->_w / 2, 90, 60);
+    b->_sharps[RIGHT_LOW_FCORNER].set_info(pos->_w / 2, pos->_w / 2, 90, 25);
     b->_sharps[BACK_LOW_MIDDLE].set_info(-pos->_w / 2, 0, 180, 25);
     b->_sharps[BACK_HIGH_MIDDLE].set_info(-pos->_w / 2, 0, 180, 60);
 
