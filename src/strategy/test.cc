@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Wed Oct 13 18:38:16 2010 texane
-// Last update Fri Oct 15 05:42:35 2010 texane
+// Last update Fri Oct 15 17:29:56 2010 texane
 //
 
 
@@ -182,7 +182,49 @@ void test::main(bot& b)
     b._asserv.wait_done();
   }
 
-#elif 1 // test sharps
+#elif 1 // wall follower
+
+  // assume the red pawn
+
+  bool is_moving = false;
+
+  while (1)
+  {
+    if (is_moving == true)
+    {
+      if (b._asserv.is_done() == true)
+      {
+	is_moving = false;
+	continue ;
+      }
+
+      const unsigned int dr = b._sharps[bot::RIGHT_LOW_FCORNER].read();
+      const unsigned int df = b._sharps[bot::FRONT_LOW_RCORNER].read();
+
+      if ((dr > 20) && (dr < 100) && (df > 20))
+	continue ;
+
+      is_moving = false;
+      b._asserv.stop();
+      b._asserv.wait_done();
+
+      if (df <= 20)
+	b._asserv.turn_left(45);
+      else if (dr > 200)
+	b._asserv.turn_right(5);
+      else if (dr <= 10)
+	b._asserv.turn_left(5);
+
+      b._asserv.wait_done();
+    }
+    else
+    {
+      b._asserv.move_forward(1000);
+      is_moving = true;
+    }
+  }
+
+#elif 0 // test sharps
 
   for (size_t i = 0; i < bot::SHARP_COUNT; ++i)
     printf("%u\n", b._sharps[i].read());

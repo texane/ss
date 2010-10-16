@@ -2,7 +2,7 @@
 // Made by fabien le mentec <texane@gmail.com>
 // 
 // Started on  Sun Oct 10 10:57:25 2010 texane
-// Last update Mon Oct 11 21:13:27 2010 texane
+// Last update Fri Oct 15 17:31:04 2010 texane
 //
 
 
@@ -23,6 +23,7 @@ public:
   void set_info(unsigned int);
   void update();
   void reset();
+  unsigned int read();
   unsigned int get_msecs();
 };
 
