@@ -24,7 +24,7 @@ void draw_space(cpSpace*);
 void destroy_space(cpSpace*);
 cpSpace* create_space(conf&);
 void remove_shape(cpSpace*, cpShape*);
-void insert_shape(cpSpace*, cpShape*, double, double);
+void insert_shape(cpSpace*, cpShape*, cpFloat, cpFloat);
 
 
 #endif // PHYSICS_PHYSICS_HH_INCLUDED

@@ -168,6 +168,7 @@ void wander::main(bot& b)
 {
   // tile array
   unsigned int tiles[tiles_per_row * tiles_per_col];
+  init_tiles(tiles);
 
   const char* const id = b.is_red() ? "red" : "blu"; 
 
