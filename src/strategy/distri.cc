@@ -7,6 +7,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "bot.hh"
@@ -100,7 +101,7 @@ static inline void get_tile_xy
   y = pos % tiles_per_col;
 }
 
-static bool find_free_neighbor_tile
+static bool  __attribute__((unused)) find_free_neighbor_tile
 (unsigned int* tiles, bool is_red, unsigned int& x, unsigned int& y)
 {
   // find a free neighbor tile of the same color
@@ -155,6 +156,10 @@ enum state
   STATE_FIND_PAWN,
   STATE_PLACE_TO_GRAB,
   STATE_TAKE_PAWN,
+  STATE_DROP_PAWN_0,
+  STATE_DROP_PAWN_1,
+  STATE_DROP_PAWN_COMMON,
+  STATE_DROP_GO_BACK,
   STATE_DISTRI_DONE,
   STATE_INVALID
 };
@@ -173,27 +178,26 @@ void distri::main(bot& b)
   b._ticker.reset();
   b._asserv.set_velocity(400);
 
+  // bot color
+  const bool is_red = b.is_red();
+
+  // angular velocity
+  const int w = is_red ? 300 : -300;
+
   // angle to turn to at initialisation
-  const unsigned int init_a = b.is_red() ? 95 : 85;
+  const unsigned int init_a = is_red ? 100 : 80;
 
   // angle to turn to at grabbing
   unsigned int grab_a;
-
-  // tile row, coloumn to walk
-  const unsigned int next_col = b.is_red() ? 5 : 0;
-  unsigned int next_row = 1;
 
   // minimum grabbing distance
   const unsigned int grab_dist = b._clamp.grabbing_distance();
 
   // index of the side sharps
   const size_t side_lo =
-    b.is_red() ? bot::RIGHT_LOW_MIDDLE : bot::LEFT_LOW_MIDDLE;
-  const size_t side_hi =
-    b.is_red() ? bot::RIGHT_HIGH_MIDDLE : bot::LEFT_HIGH_MIDDLE;
+    is_red ? bot::RIGHT_LOW_MIDDLE : bot::LEFT_LOW_MIDDLE;
   const size_t side_co =
-    b.is_red() ? bot::RIGHT_LOW_FCORNER : bot::LEFT_LOW_FCORNER;
-  const int w = b.is_red() ? 300 : -300;
+    is_red ? bot::RIGHT_LOW_FCORNER : bot::LEFT_LOW_FCORNER;
 
   // automaton state
   enum state state = STATE_LEAVE_START_AREA;
@@ -205,6 +209,21 @@ void distri::main(bot& b)
   // front sharps distance
   unsigned int ldist;
   unsigned int rdist;
+
+  // current position
+  int cur_x;
+  int cur_y;
+
+  // saved position
+  int saved_x;
+  int saved_y;
+
+  // tile position
+  unsigned int tile_x = 0;
+  unsigned int tile_y = 0;
+
+  // difference
+  int diff;
 
   // schedule automaton
   while (1)
@@ -283,8 +302,6 @@ void distri::main(bot& b)
       ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
       rdist = b._sharps[bot::FRONT_LOW_RIGHT].read();
 
-      printf("d: %u %u\n", ldist, rdist);
-
       // adjust orientation
       grab_a = 8;
       while (fabs(ldist - rdist) > 50)
@@ -300,6 +317,9 @@ void distri::main(bot& b)
 	ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
 	rdist = b._sharps[bot::FRONT_LOW_RIGHT].read();
       }
+
+      // get the position before moving to grab
+      b._asserv.get_position(saved_x, saved_y);
 
       // make ldist contain the max dist
       if (ldist < rdist)
@@ -326,23 +346,83 @@ void distri::main(bot& b)
 	break ;
       }
 
-      b._asserv.move_forward(-100);
+      // get the tile we are on and normalize
+      b._asserv.get_position(cur_x, cur_y);
+      tile_x = (unsigned int)cur_x;
+      tile_y = (unsigned int)cur_y;
+      if (tile_x < 450) tile_x = 450;
+      else if (tile_x > (3000 - 500)) tile_x = 3000 - 500;
+
+      // if same color case 0, else case 1
+      world_to_tile(tile_x, tile_y);
+      if (is_red == is_tile_red(tile_x, tile_y))
+	state = STATE_DROP_PAWN_0;
+      else
+	state = STATE_DROP_PAWN_1;
+
+      // orient east west so that linear trajectory
+      if (is_red) b._asserv.turn_to(180);
+      else b._asserv.turn_to(0);
+
+      break ;
+
+    case STATE_DROP_PAWN_0:
+      // move on the cell behind 
+      printf("drop_pawn_0\n");
+
+      tile_to_world(tile_x, tile_y);
+      diff = ::abs(cur_x - (int)tile_x);
+      b._asserv.move_forward(-diff);
       b._asserv.wait_done();
 
-      b._asserv.turn(90, w);
+      state = STATE_DROP_PAWN_COMMON;
+      break;
+
+    case STATE_DROP_PAWN_1:
+      // move one cell behind
+      printf("drop_pawn_1\n");
+
+      if (is_red) tile_x += 1;
+      else tile_x -= 1;
+
+      tile_to_world(tile_x, tile_y);
+      diff = ::abs(cur_x - (int)tile_x);
+      b._asserv.move_forward(-diff);
+      b._asserv.wait_done();
+
+      state = STATE_DROP_PAWN_COMMON;
+
+      break;
+
+    case STATE_DROP_PAWN_COMMON:
+      // turn south, move back, drop pawn
+
+      b._asserv.turn_to(270);
+      b._asserv.wait_done();
+
+      // next tile minus something
+      tile_y += 350 - 110;
+      b._asserv.get_position(cur_x, cur_y);
+      b._asserv.move_forward(-(abs(cur_y - tile_y)));
       b._asserv.wait_done();
 
       b._clamp.drop();
 
-#warning TODO
-#if 0
-      next_row += 2;
-      // last row reached
-      if (next_row >= 6)
-	state = STATE_DISTRI_DONE;
-      else
-#endif
-	state = STATE_FIND_PAWN;
+      state = STATE_DROP_GO_BACK;
+
+      break;
+
+    case STATE_DROP_GO_BACK:
+      // go back to original pos
+
+      b._asserv.move_forward(-50);
+      b._asserv.wait_done();
+
+      b._asserv.get_position(cur_x, cur_y);
+      b._asserv.move_to(saved_x, cur_y);
+      b._asserv.wait_done();
+
+      state = STATE_FIND_PAWN;
 
       break;
 

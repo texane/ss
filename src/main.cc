@@ -18,10 +18,17 @@
 
 static int on_event(const struct x_event* ev, void* arg)
 {
+  static bool is_pause = false;
+
   switch (x_event_get_type(ev))
   {
+  case X_EVENT_KDOWN_SPACE:
+    is_pause = !is_pause;
+    break;
+
   case X_EVENT_TICK:
-    update_space((cpSpace*)arg);
+    if (is_pause == false)
+      update_space((cpSpace*)arg);
     draw_space((cpSpace*)arg);
     break;
 
