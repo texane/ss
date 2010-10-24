@@ -1,5 +1,11 @@
 . todo
- . strat distri: ne pas se decaler des sides
+ . avant de passer dans l automat distri, il faudrait
+  degager le 2 pions qui trainent (?)
+ . implementer un automate de prise des pions en fonction
+  de la configuration
+  . implementer les configurations de test associees
+ . il faudrait un master automata qui drive les autres
+  . d abord distri, ensuite wander, dans wander -> taker...
 
  . mettre en place les side corner sharps
   -> bot._sharp[xxx].set_info() pas encore fait

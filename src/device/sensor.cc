@@ -57,17 +57,31 @@ typedef struct ray_functor
   }
 
   // fixme: should be shape->data->_h
-  static double get_height_by_type(cpShapeType type)
+  static double get_shape_height(const cpShape* shape)
   {
     double h;
 
-    switch (type)
-      {
-      case CP_CIRCLE_SHAPE: h = 50; break; // pawn
-      case CP_SEGMENT_SHAPE: h = 100; break; // wall
-      case CP_POLY_SHAPE: h = 200; break; // bot
-      default: h = 0;
-      }
+    switch (shape->klass->type)
+    {
+      // pawn or figure
+    case CP_CIRCLE_SHAPE:
+      h = (shape->body->m == 500.f ? 50.f : 210.f);
+      break;
+
+      // wall
+    case CP_SEGMENT_SHAPE:
+      h = 100.f;
+      break;
+
+      // bot
+    case CP_POLY_SHAPE:
+      h = 200.f;
+      break;
+
+    default:
+      h = 0.f;
+      break;
+    }
 
     return h;
   }
@@ -79,7 +93,7 @@ typedef struct ray_functor
       return ;
 
     // ray is above the shape
-    if (_h > get_height_by_type(shape->klass->type))
+    if (_h > get_shape_height(shape))
       return ;
 
     switch (shape->klass->type)

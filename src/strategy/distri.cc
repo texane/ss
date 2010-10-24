@@ -312,6 +312,9 @@ void distri::main(bot& b)
 	  b._asserv.turn_left(grab_a);
 	b._asserv.wait_done();
 
+	if (grab_a == 1)
+	  break ;
+
 	grab_a -= 1;
 
 	ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
@@ -320,6 +323,15 @@ void distri::main(bot& b)
 
       // get the position before moving to grab
       b._asserv.get_position(saved_x, saved_y);
+
+      if (b._sharps[bot::FRONT_HIGH_MIDDLE].read() < 250)
+      {
+	printf("found a figure\n");
+      }
+      else
+      {
+	printf("dhigh: %d\n", b._sharps[bot::FRONT_HIGH_MIDDLE].read());
+      }
 
       // make ldist contain the max dist
       if (ldist < rdist)
