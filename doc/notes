@@ -1,4 +1,6 @@
 . todo
+ . strat distri: ne pas se decaler des sides
+
  . mettre en place les side corner sharps
   -> bot._sharp[xxx].set_info() pas encore fait
   . les utiliser

@@ -3,7 +3,7 @@
 #
 
 # red bot
-#begin object
+begin object
 type red_bot
 x 200
 y 200
@@ -11,7 +11,7 @@ w 200
 a 0
 h 300
 s distri
-#end object
+end object
 
 # blue bot
 begin object
@@ -30,7 +30,7 @@ type pawn
 x 500
 y 240
 h 50
-w 95
+w 100
 #end object
 
 #begin object
@@ -38,7 +38,7 @@ type pawn
 x 1000
 y 240
 h 50
-w 95
+w 100
 #end object
 # endof debugging pawns
 
@@ -50,7 +50,7 @@ type pawn
 x 800
 y 1400
 h 50
-w 95
+w 100
 end object
 
 # left 1 0 pawn
@@ -59,7 +59,7 @@ type pawn
 x 800
 y 700
 h 50
-w 95
+w 100
 end object
 
 # left 0 1 pawn
@@ -68,7 +68,7 @@ type pawn
 x 1150
 y 350
 h 50
-w 95
+w 100
 end object
 
 # left 1 1 pawn
@@ -77,7 +77,7 @@ type pawn
 x 1150
 y 1750
 h 50
-w 95
+w 100
 end object
 
 # central pawn
@@ -86,7 +86,7 @@ type pawn
 x 1500
 y 1050
 h 50
-w 95
+w 100
 end object
 
 # right 0 1 pawn
@@ -95,7 +95,7 @@ type pawn
 x 2200
 y 1400
 h 50
-w 95
+w 100
 end object
 
 # right 1 1 pawn
@@ -104,7 +104,7 @@ type pawn
 x 2200
 y 700
 h 50
-w 95
+w 100
 end object
 
 # right 1 0 pawn
@@ -113,7 +113,7 @@ type pawn
 x 1850
 y 350
 h 50
-w 95
+w 100
 end object
 
 # right 0 0 pawn
@@ -122,58 +122,58 @@ type pawn
 x 1850
 y 1750
 h 50
-w 95
+w 100
 end object
 
 # endof on area pawns
 
 
 # startof left distribution area
-# y pos: 400 + 170 + 300 * n
+# y pos: 450 + 170 + 300 * n
 
 # king
 begin object
 type king
 x 200
-y 500
+y 550
 h 210
-w 95
+w 100
 end object
 
 # queen
 begin object
 type queen
 x 200
-y 800
+y 850
 h 210
-w 95
+w 100
 end object
 
 # pawn 0
 begin object
 type pawn
 x 200
-y 1100
+y 1150
 h 50
-w 95
+w 100
 end object
 
 # pawn 1
 begin object
 type pawn
 x 200
-y 1400
+y 1450
 h 50
-w 95
+w 100
 end object
 
 # pawn 2
 begin object
 type pawn
 x 200
-y 1700
+y 1750
 h 50
-w 95
+w 100
 end object
 
 # endof left distribution area
@@ -185,45 +185,45 @@ end object
 begin object
 type king
 x 2800
-y 500
+y 550
 h 210
-w 95
+w 100
 end object
 
 # queen
 begin object
 type queen
 x 2800
-y 800
+y 850
 h 210
-w 95
+w 100
 end object
 
 # pawn 0
 begin object
 type pawn
 x 2800
-y 1100
+y 1150
 h 50
-w 95
+w 100
 end object
 
 # pawn 1
 begin object
 type pawn
 x 2800
-y 1400
+y 1450
 h 50
-w 95
+w 100
 end object
 
 # pawn 2
 begin object
 type pawn
 x 2800
-y 1700
+y 1750
 h 50
-w 95
+w 100
 end object
 
 # endof right distribution area

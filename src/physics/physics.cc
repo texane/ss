@@ -303,7 +303,7 @@ static void init_graphics_stuff(const conf& conf)
   back_surface = create_background_surface();
 
   // create pawn surface
-  const int radius = (int)(95.f / ((wscale + hscale) / 2.f));
+  const int radius = (int)(100.f / ((wscale + hscale) / 2.f));
   pawn_surface = x_create_surface(radius * 2, radius * 2);
   x_fill_surface(pawn_surface, x_get_transparency_color());
   x_draw_disk(pawn_surface, radius, radius, radius - 1, yellow_color);

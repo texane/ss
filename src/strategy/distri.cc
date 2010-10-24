@@ -173,6 +173,12 @@ void distri::main(bot& b)
   b._ticker.reset();
   b._asserv.set_velocity(400);
 
+  // angle to turn to at initialisation
+  const unsigned int init_a = b.is_red() ? 95 : 85;
+
+  // angle to turn to at grabbing
+  unsigned int grab_a;
+
   // tile row, coloumn to walk
   const unsigned int next_col = b.is_red() ? 5 : 0;
   unsigned int next_row = 1;
@@ -200,9 +206,6 @@ void distri::main(bot& b)
   unsigned int ldist;
   unsigned int rdist;
 
-  // turn angle
-  unsigned int angle;
-
   // schedule automaton
   while (1)
   {
@@ -210,6 +213,7 @@ void distri::main(bot& b)
     {
     case STATE_INIT:
     case STATE_LEAVE_START_AREA:
+      printf("state_leave_start\n");
       b._asserv.move_forward(350);
       b._asserv.wait_done();
       b._asserv.turn(95, w);
@@ -225,7 +229,7 @@ void distri::main(bot& b)
       dist_co = (unsigned int)-1;
       dist_lo = (unsigned int)-1;
 
-      b._asserv.turn_to(90);
+      b._asserv.turn_to(init_a);
       b._asserv.wait_done();
 
       b._asserv.move_forward(3000);
@@ -282,16 +286,16 @@ void distri::main(bot& b)
       printf("d: %u %u\n", ldist, rdist);
 
       // adjust orientation
-      angle = 8;
+      grab_a = 8;
       while (fabs(ldist - rdist) > 50)
       {
 	if (ldist > rdist)
-	  b._asserv.turn_right(angle);
+	  b._asserv.turn_right(grab_a);
 	else
-	  b._asserv.turn_left(angle);
+	  b._asserv.turn_left(grab_a);
 	b._asserv.wait_done();
 
-	angle -= 1;;
+	grab_a -= 1;
 
 	ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
 	rdist = b._sharps[bot::FRONT_LOW_RIGHT].read();
@@ -346,6 +350,7 @@ void distri::main(bot& b)
       printf("distri_done\n");
       b._asserv.stop();
       b._asserv.wait_done();
+      return ;
       break;
 
     default: break;
