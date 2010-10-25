@@ -45,6 +45,27 @@ unsigned int util::front_high_middle_sharp(bot& b)
 }
 
 
+size_t util::read_front_sharps_get_min
+(bot& b, unsigned int values[bot::SHARP_COUNT])
+{
+  unsigned int min_value = (unsigned int)-1;
+  size_t min_index = 0;
+  size_t i;
+
+  for (i = 0; i < bot::FRONT_COUNT; ++i)
+  {
+    values[i] = b._sharps[i].read();
+    if (values[i] < min_value)
+    {
+      min_value = values[i];
+      min_index = i;
+    }
+  }
+
+  return min_index;
+}
+
+
 // get the robot front position
 
 #include <math.h>

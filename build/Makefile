@@ -36,6 +36,7 @@ SRCS	:=	../src/main.cc		\
 		../src/strategy/test.cc		\
 		../src/strategy/bsod.cc		\
 		../src/strategy/wander.cc	\
+		../src/strategy/moveto.cc	\
 		../src/strategy/tiler.cc	\
 		../src/strategy/distri.cc
 

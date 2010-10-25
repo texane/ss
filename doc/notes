@@ -64,6 +64,21 @@
   . -> at least the robot should not bounce indefinitly like a ball...
   . angular velocity should be a function of velocity and wheels circumference
 
+. programming concept
+ . la programmation du robot repose sur 2 concepts
+  . une strategie
+  . un ensemble d automates
+ . la strategie est le comportement general qu adopte le robot. les actions basiques
+ de la strategie s appuient sur un ou plusieurs automates
+  . description des strategies
+   . pour le moment, seule une strategie floue est definie
+  . description des automates
+   . automate sortie de zone de depart
+   . automate vidange de la zone de distribution
+   . automate moveto
+   . automate deplacement de pion
+   . automate deplacement de tour
+
 . references
  . line intersection
   . http://alienryderflex.com/intersect/

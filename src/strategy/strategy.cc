@@ -14,9 +14,11 @@ strategy* strategy::factory(const std::string& name)
 {
   if (name == std::string("wander"))
     return new wander();
-  if (name == std::string("tiler"))
+  else if (name == std::string("moveto"))
+    return new moveto();
+  else if (name == std::string("tiler"))
     return new tiler();
-  if (name == std::string("distri"))
+  else if (name == std::string("distri"))
     return new distri();
   else if (name == std::string("test"))
     return new test();

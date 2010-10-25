@@ -41,6 +41,7 @@ public:
 
 DECLARE_STRATEGY_CLASS(wander);
 DECLARE_STRATEGY_CLASS(tiler);
+DECLARE_STRATEGY_CLASS(moveto);
 DECLARE_STRATEGY_CLASS(distri);
 DECLARE_STRATEGY_CLASS(test);
 DECLARE_STRATEGY_CLASS(bsod);
@@ -53,6 +54,7 @@ public:
   static void front_low_sharps(bot&, unsigned int[4]);
   static unsigned int min_front_low_sharp(bot&);
   static unsigned int front_high_middle_sharp(bot&);
+  static size_t read_front_sharps_get_min(bot&, unsigned int[12]);
   static void get_front_position(bot&, unsigned int&, unsigned int&);
 };
 

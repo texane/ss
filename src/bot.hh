@@ -36,8 +36,10 @@ private:
     FRONT_LOW_LEFT,
     FRONT_LOW_RIGHT,
     FRONT_HIGH_MIDDLE,
+    FRONT_COUNT = FRONT_HIGH_MIDDLE,
+
     // side faces
-    LEFT_HIGH_MIDDLE,
+    LEFT_HIGH_MIDDLE = FRONT_COUNT,
     LEFT_LOW_MIDDLE,
     LEFT_LOW_FCORNER,
     RIGHT_HIGH_MIDDLE,
@@ -91,6 +93,7 @@ public:
   friend class wander;
   friend class tiler;
   friend class distri;
+  friend class moveto;
   friend class bsod;
   friend class test;
 

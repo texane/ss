@@ -155,6 +155,7 @@ enum state
   STATE_LEAVE_START_AREA,
   STATE_FIND_PAWN,
   STATE_PLACE_TO_GRAB,
+  STATE_SKIP_PAWN,
   STATE_TAKE_PAWN,
   STATE_DROP_PAWN_0,
   STATE_DROP_PAWN_1,
@@ -225,6 +226,11 @@ void distri::main(bot& b)
   // difference
   int diff;
 
+#if 0 // unused
+  // seen figure count
+  unsigned int fig_count = 0;
+#endif // unused
+
   // schedule automaton
   while (1)
   {
@@ -240,7 +246,7 @@ void distri::main(bot& b)
       b._asserv.move_forward(300);
       b._asserv.wait_done();
       state = STATE_FIND_PAWN;
-      break;
+      break ;
 
     case STATE_FIND_PAWN:
       printf("state_find_pawn\n");
@@ -289,9 +295,9 @@ void distri::main(bot& b)
 	b._asserv.wait_done();
 
 	state = STATE_PLACE_TO_GRAB;
-	break;
+	break ;
       }
-      break;
+      break ;
 
     case STATE_PLACE_TO_GRAB:
       printf("place_to_grab\n");
@@ -324,14 +330,17 @@ void distri::main(bot& b)
       // get the position before moving to grab
       b._asserv.get_position(saved_x, saved_y);
 
-      if (b._sharps[bot::FRONT_HIGH_MIDDLE].read() < 250)
+#if 0 // unused
+      if (b._sharps[bot::FRONT_HIGH_MIDDLE].read() < 200)
       {
-	printf("found a figure\n");
+	// skip the second figure, keep for bonus area
+	if ((++fig_count) == 2)
+	{
+	  state = STATE_SKIP_PAWN;
+	  break ;
+	}
       }
-      else
-      {
-	printf("dhigh: %d\n", b._sharps[bot::FRONT_HIGH_MIDDLE].read());
-      }
+#endif // unused
 
       // make ldist contain the max dist
       if (ldist < rdist)
@@ -346,6 +355,17 @@ void distri::main(bot& b)
 
       state = STATE_TAKE_PAWN;
       break ;
+
+#if 0 // unused
+    case STATE_SKIP_PAWN:
+      // skip the pawn
+      b._asserv.turn_to(90);
+      b._asserv.wait_done();
+      b._asserv.move_forward(100);
+      b._asserv.wait_done();
+      state = STATE_FIND_PAWN;
+      break ;
+#endif // unused
 
     case STATE_TAKE_PAWN:
       printf("take_pawn\n");
@@ -388,7 +408,8 @@ void distri::main(bot& b)
       b._asserv.wait_done();
 
       state = STATE_DROP_PAWN_COMMON;
-      break;
+
+      break ;
 
     case STATE_DROP_PAWN_1:
       // move one cell behind
@@ -404,7 +425,7 @@ void distri::main(bot& b)
 
       state = STATE_DROP_PAWN_COMMON;
 
-      break;
+      break ;
 
     case STATE_DROP_PAWN_COMMON:
       // turn south, move back, drop pawn
@@ -422,7 +443,7 @@ void distri::main(bot& b)
 
       state = STATE_DROP_GO_BACK;
 
-      break;
+      break ;
 
     case STATE_DROP_GO_BACK:
       // go back to original pos
@@ -436,16 +457,17 @@ void distri::main(bot& b)
 
       state = STATE_FIND_PAWN;
 
-      break;
+      break ;
 
     case STATE_DISTRI_DONE:
       printf("distri_done\n");
       b._asserv.stop();
       b._asserv.wait_done();
       return ;
-      break;
+      break ;
 
-    default: break;
+    default:
+      break ;
     }
   }
 }
