@@ -1,4 +1,31 @@
 . todo
+ . debugger la fonction get_pawn_position
+  . elle est importante
+  . il faudrait utiliser les sharps middle pour estimer l erreur
+  d angle (car nous ne sommes pas forcement en face du centre du
+  pion, ce qui induit des erreur)
+
+ . attention a ne pas deplacer les pions mis sur les zones reservees
+
+ . moveto
+  . devrait poser sur les cases bonus en priorite
+  . devrait shaper left et right pour detecter les pions durant
+  un move
+
+ . maintenir une liste d observations + solutions
+  . on se cogne souvent en tournant, reculant
+   . il faut utiliser mieux les sharps derriere, sur les cotes
+  . lorsqu on tient un pion, on ne voit plus rien devant
+  . la vitesse de deplacement et la frequence de sampling des
+  sharps sont liees: on doit sampler au moins une fois tous les
+  10 cms
+
+ . faire le test suivant pour valider: ia seule, en combien de
+ temps on converge
+ . tester les fonctions d estimation de la position d un pion
+  . on devrait etre capable de ne pas perdre de temps a prendre
+  un pion bien place qui nous appartient
+
  . mieux modeliser les sharps, tester que les assumptions
  faites sont correctes. notament pour la distance min/max fiables,
  et la perte sur la distance

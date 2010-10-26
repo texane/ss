@@ -209,5 +209,8 @@ unsigned int sensor::read()
   _is_sensing = false;
 
   __sync_synchronize();
-  return _dist;
+
+  // post processing, refer to sharp documentation
+  const unsigned int dist = _dist;
+  return dist < 100 ? (unsigned int)-1 : (dist > 800 ? 800 : dist);
 }
