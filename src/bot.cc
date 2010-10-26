@@ -61,11 +61,12 @@ void bot::update_physics()
 
   _asserv.update(_body);
 
-  const size_t count = sizeof(_sharps) / sizeof(_sharps[0]);
-  for (size_t i = 0; i < count; ++i)
+  for (size_t i = 0; i < bot::SHARP_COUNT; ++i)
     _sharps[i].update(_space, _body);
 
   _clamp.update(_space, _body);
+
+  _redblu.update(_space, _body);
 }
 
 
@@ -103,6 +104,9 @@ int bot::create_bots(const conf& conf)
 
     // configure ticker
     b->_ticker.set_info(10);
+
+    // configure redblu led
+    b->_redblu.set_info(pos->_w / 2, -pos->_w / 2);
 
     // configure sharps
     b->_sharps[FRONT_LOW_LCORNER].set_info(pos->_w / 2, -pos->_w / 2, 0, 25);

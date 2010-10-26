@@ -8,6 +8,7 @@
 #include "device/asserv.hh"
 #include "device/sensor.hh"
 #include "device/clamp.hh"
+#include "device/redblu.hh"
 #include "strategy/strategy.hh"
 
 
@@ -26,6 +27,7 @@ public:
   asserv _asserv;
   ticker _ticker;
   clamp _clamp;
+  redblu _redblu;
 
   // sharps
   enum sharp_index

@@ -18,7 +18,7 @@ void test::main(bot& b)
   printf("test strat\n");
 
   b._ticker.reset();
-  b._asserv.set_velocity(400);
+  b._asserv.set_velocity(350);
 
 #if 0 // grabber
 
@@ -226,7 +226,7 @@ void test::main(bot& b)
     }
   }
 
-#elif 1 // test sharps
+#elif 0 // test sharps
 
   b._asserv.move_forward(500);
   b._asserv.wait_done();
@@ -236,6 +236,22 @@ void test::main(bot& b)
 
   for (size_t i = 0; i < bot::FRONT_COUNT; ++i)
     printf("%u\n", b._sharps[i].read());
+
+#elif 0 // test redblu
+
+  printf("fubar\n");
+
+  static const char* s[] = { "blu", "red" };
+
+  b._asserv.move_forward(3000);
+  while (!b._asserv.is_done())
+  {
+    printf("%s\n", s[b._redblu.read()]);
+    usleep(300000);
+  }
+
+  b._asserv.stop();
+  b._asserv.wait_done();
 
 #else
 

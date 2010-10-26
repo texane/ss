@@ -19,6 +19,7 @@
 
 sensor::sensor()
 {
+  _is_sensing = false;
 }
 
 

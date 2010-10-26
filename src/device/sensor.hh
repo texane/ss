@@ -10,7 +10,6 @@
 # define DEVICE_SENSOR_HH_INCLUDED
 
 
-#include <pthread.h>
 #include "physics/physics.hh"
 
 

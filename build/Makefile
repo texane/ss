@@ -31,6 +31,7 @@ SRCS	:=	../src/main.cc			\
 		../src/device/sensor.cc		\
 		../src/device/intersect.cc	\
 		../src/device/ticker.cc		\
+		../src/device/redblu.cc		\
 		../src/strategy/strategy.cc	\
 		../src/strategy/tile.cc		\
 		../src/strategy/util.cc		\
