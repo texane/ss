@@ -100,7 +100,10 @@ static inline void get_tile_xy
 
 /* non inlined */
 bool find_free_neighbor_tile(const unsigned int*, bool, unsigned int&, unsigned int&);
+
+#if CONFIG_DEBUG
 void print_tiles(const unsigned int*);
+#endif
 
 
 #endif /* STRATEGY_TILE_HH_INCLUDED */

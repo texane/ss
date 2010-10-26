@@ -1,15 +1,21 @@
 . todo
  . mettre en place l automate de recalage
   . si on est trop pret d un mur alors que l asserv ne le voit
-  pas, se recaler
+  pas, ajuster la position de l asservissement
+
+ . se deplacer a cheval sur des tiles permet de se replacer avec
+ un systeme de led de couleur. normalement facilite par le fait
+ que les leds sont placees sous le robot, donc pas de probleme de
+ luminosite. par contre, probleme si peinture brillante (lackee).
+  . il faudrait se servir de ca seulement pour apporter des legeres
+  corrections a l asservissement, mais le robot devrait pouvoir
+  fonctionner sans
 
  . path_xxx api -> on veut pouvoir rajouter des points de passage
   . actuellement, si on veut aller d un point a un autre
   tout en contournant les objets, c est difficile. A priori,
   le terrain va etre encombre et il faut profiter des deplacements
   pour remttre sur nos cases un max de pions possible
-
- . exporter les fonctions de tiling, et maintient des etats des tiles
 
  . mieux modeliser les sharps, tester que les assumptions
  faites sont correctes. notament pour la distance min/max fiables,
@@ -23,19 +29,7 @@
  . il faudrait un master automata qui drive les autres
   . d abord distri, ensuite wander, dans wander -> taker...
 
- . mettre en place les side corner sharps
-  -> bot._sharp[xxx].set_info() pas encore fait
-  . les utiliser
-   . d une part pour savoir si on passe devant un obstacle
-   qui sera par la suite detecte par le side sharp du milieu
-   . d autre part pour assurer une distance mini avec les murs
-    -> impossible avec le side sharp du milieu puisqu il peut
-    voir le mur trop tard
-
  . bugs
-  . wander strat -> dont move back while placing pawns
-   . more generally, better handling of collision, dont
-   use a wait_done
 
  . devices
   . puissance des sharps
@@ -54,8 +48,6 @@
    . implement the corresponding strategy
 
   . rename sensor.cc to sharp.cc
-
- . strategy
 
  . documentation guide
   . specifier les reperes

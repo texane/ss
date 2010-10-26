@@ -48,6 +48,8 @@ bool find_free_neighbor_tile(const unsigned int* tiles, bool is_red, unsigned in
 }
 
 
+#if CONFIG_DEBUG
+
 /* print the tile states */
 
 static inline char tile_to_char(unsigned int tile)
@@ -56,7 +58,7 @@ static inline char tile_to_char(unsigned int tile)
   {
     return '?';
   }
-  if (tile & TILE_FLAG_USED)
+  else if (tile & TILE_FLAG_USED)
   {
     if (tile & TILE_FLAG_RED)
       return 'r';
@@ -75,3 +77,5 @@ void print_tiles(const unsigned int* tiles)
   }
   printf("\n");
 }
+
+#endif /* CONFIG_DEBUG */
