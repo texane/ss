@@ -13,7 +13,7 @@
 
 class bot
 {
-private:
+public:
   // physics
   cpSpace* _space;
   cpBody* _body;
@@ -36,7 +36,7 @@ private:
     FRONT_LOW_LEFT,
     FRONT_LOW_RIGHT,
     FRONT_HIGH_MIDDLE,
-    FRONT_COUNT = FRONT_HIGH_MIDDLE,
+    FRONT_COUNT,
 
     // side faces
     LEFT_HIGH_MIDDLE = FRONT_COUNT,
@@ -45,9 +45,11 @@ private:
     RIGHT_HIGH_MIDDLE,
     RIGHT_LOW_MIDDLE,
     RIGHT_LOW_FCORNER,
+
     // back face
     BACK_LOW_MIDDLE,
     BACK_HIGH_MIDDLE,
+
     // end of indices
     SHARP_COUNT
   };
@@ -73,7 +75,6 @@ private:
   // constructor
   bot();
 
-public:
   // physics
   void set_physics(cpSpace*, cpBody*, cpPolyShape*);
   void update_physics();

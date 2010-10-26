@@ -14,7 +14,7 @@ s moveto
 end object
 
 # blue bot
-begin object
+#begin object
 type blue_bot
 x 2800
 y 200
@@ -22,14 +22,14 @@ w 200
 a 180
 h 300
 s moveto
-end object
+#end object
 
 # startof debugging pawns
 #begin object
-type pawn
-x 500
-y 240
-h 50
+type queen
+x 600
+y 550
+h 210
 w 100
 #end object
 

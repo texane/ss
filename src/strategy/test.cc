@@ -15,6 +15,8 @@
 
 void test::main(bot& b)
 {
+  printf("test strat\n");
+
   b._ticker.reset();
   b._asserv.set_velocity(400);
 
@@ -182,7 +184,7 @@ void test::main(bot& b)
     b._asserv.wait_done();
   }
 
-#elif 1 // wall follower
+#elif 0 // wall follower
 
   // assume the red pawn
 
@@ -224,9 +226,15 @@ void test::main(bot& b)
     }
   }
 
-#elif 0 // test sharps
+#elif 1 // test sharps
 
-  for (size_t i = 0; i < bot::SHARP_COUNT; ++i)
+  b._asserv.move_forward(500);
+  b._asserv.wait_done();
+
+  b._asserv.turn(110);
+  b._asserv.wait_done();
+
+  for (size_t i = 0; i < bot::FRONT_COUNT; ++i)
     printf("%u\n", b._sharps[i].read());
 
 #else

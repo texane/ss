@@ -1,4 +1,21 @@
 . todo
+ . mettre en place l automate de recalage
+  . si on est trop pret d un mur alors que l asserv ne le voit
+  pas, se recaler
+
+ . path_xxx api -> on veut pouvoir rajouter des points de passage
+  . actuellement, si on veut aller d un point a un autre
+  tout en contournant les objets, c est difficile. A priori,
+  le terrain va etre encombre et il faut profiter des deplacements
+  pour remttre sur nos cases un max de pions possible lors des
+  deplacements
+
+ . exporter les fonctions de tiling, et maintient des etats des tiles
+
+ . mieux modeliser les sharps, tester que les assumptions
+ faites sont correctes. notament pour la distance min/max fiables,
+ et la perte sur la distance
+
  . avant de passer dans l automat distri, il faudrait
   degager le 2 pions qui trainent (?)
  . implementer un automate de prise des pions en fonction
@@ -78,6 +95,7 @@
    . automate moveto
    . automate deplacement de pion
    . automate deplacement de tour
+  . on devrait avoir un automate pour tout: turn, turn_safe...
 
 . references
  . line intersection
