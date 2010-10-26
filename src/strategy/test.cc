@@ -239,8 +239,6 @@ void test::main(bot& b)
 
 #elif 0 // test redblu
 
-  printf("fubar\n");
-
   static const char* s[] = { "blu", "red" };
 
   b._asserv.move_forward(3000);
