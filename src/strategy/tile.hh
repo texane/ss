@@ -32,6 +32,12 @@ static inline void world_to_tile(unsigned int& x, unsigned int& y)
   y = y / 350;
 }
 
+static inline unsigned int clamp_tile_x(unsigned int world_x)
+{
+  /* ensure world_x fits in is in tile range */
+  return world_x < 500 ? 500 : (world_x > 2500 ? 2500 : world_x);
+}
+
 static inline void init_tiles(unsigned int* tiles)
 {
   /* initialize an array of tile states */

@@ -9,8 +9,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <sys/types.h>
 #include "bot.hh"
+#include "misc/dtor.hh"
 #include "strategy/strategy.hh"
 #include "strategy/tile.hh"
 
@@ -25,11 +27,12 @@ enum state
   STATE_AVOID_COMMON,
   STATE_AVOID_HIGH,
   STATE_AVOID_PAWN,
+  STATE_FIND_FREE_TILE,
   STATE_INVALID
 };
 
 
-static int place_take_pawn(bot& b, unsigned int sharps[bot::SHARP_COUNT])
+static void place_to_take_pawn(bot& b, unsigned int sharps[bot::SHARP_COUNT])
 {
   /* code taken from distri fsm */
 
@@ -118,12 +121,45 @@ static int place_take_pawn(bot& b, unsigned int sharps[bot::SHARP_COUNT])
     b._asserv.move_forward(ldist - grab_dist + 20);
     b._asserv.wait_done();
   }
+}
 
-  /* state = STATE_TAKE_PAWN */
-  if (b._clamp.grab() == false)
-    return -1;
 
-  return 0;
+static void get_pawn_position
+(bot& b, unsigned int* pawn_x, unsigned int* pawn_y)
+{
+  /* assuming the bot is placed to take a pawn,
+     get the pawn center coordinates. assume
+     the distance from the pawn center is 200
+  */
+
+  static const unsigned int dist_pawn_center = 200;
+
+  unsigned int pos_x, pos_y, pos_a;
+
+  b._asserv.get_position((int&)pos_x, (int&)pos_y);
+  pos_a = b._asserv.get_angle();
+
+  *pawn_x = pos_x + cos(dtor(pos_a)) * dist_pawn_center;
+  *pawn_y = pos_y + sin(dtor(pos_a)) * dist_pawn_center;
+}
+
+
+static unsigned int get_dist_from_tile_center
+(unsigned int pawn_x, unsigned int pawn_y)
+{
+  unsigned int tile_x = clamp_tile_x(pawn_x);
+  unsigned int tile_y = pawn_y;
+  unsigned int dx, dy;
+
+  /* translating back and forth to get the center */
+  /* todo: avoid the double translation */
+  world_to_tile(tile_x, tile_y);
+  tile_to_world(tile_x, tile_y);
+
+  dx = abs(tile_x - pawn_x);
+  dy = abs(tile_y - pawn_y);
+
+  return (unsigned int)sqrt(dx * dx + dy * dy);
 }
 
 
@@ -160,6 +196,9 @@ void moveto::main(bot& b)
   unsigned int pos_x;
   unsigned int pos_y;
   unsigned int pos_a;
+
+  /* distance */
+  unsigned int dist;
 
   /* schedule automaton */
   while (1)
@@ -240,21 +279,15 @@ void moveto::main(bot& b)
       b._asserv.move_forward(-40);
       b._asserv.wait_done();
 
-      if (sharps[bot::FRONT_LOW_RCORNER] < 50)
+      if (b._sharps[bot::RIGHT_LOW_FCORNER].read() < 50)
       {
-	if (b._sharps[bot::RIGHT_LOW_FCORNER].read() < 50)
-	{
-	  b._asserv.turn_right(30);
-	  b._asserv.wait_done();
-	}
+	b._asserv.turn_right(90);
+	b._asserv.wait_done();
       }
-      else if (sharps[bot::FRONT_LOW_LCORNER] < 50)
+      else if (b._sharps[bot::LEFT_LOW_FCORNER].read() < 50)
       {
-	if (b._sharps[bot::LEFT_LOW_FCORNER].read() < 50)
-	{
-	  b._asserv.turn_left(30);
-	  b._asserv.wait_done();
-	}
+	b._asserv.turn_left(90);
+	b._asserv.wait_done();
       }
 
       state = STATE_CHOOSE_TILE;
@@ -264,41 +297,67 @@ void moveto::main(bot& b)
     case STATE_AVOID_PAWN:
       printf("state_avoid_pawn\n");
 
-      if (place_take_pawn(b, sharps) == -1)
+      /* place in front of the pawn */
+      place_to_take_pawn(b, sharps);
+
+      /* if the pawn is not well placed, take and move it */
+      get_pawn_position(b, &pos_x, &pos_y);
+
+#if 0
       {
-	state = STATE_CHOOSE_TILE;
+	unsigned int posx, posy, posa;
+	b._asserv.get_position((int&)posx, (int&)posy);
+	posa = b._asserv.get_angle();
+	printf("position: %u %u %u %u %u\n", posa, posx, posy, pos_x, pos_y);
+      }
+#endif
+
+      dist = get_dist_from_tile_center(pos_x, pos_y);
+      if (dist < 75 || (is_tile_red(pos_x, pos_y) == is_red))
+      {
+	/* todo: mark the tile */
+	state = STATE_AVOID_HIGH;
 	break ;
       }
 
-      /* get position, handle overflow for tile translation */
+      printf("pawn is not well placed\n");
+      if (b._clamp.grab() == false)
+      {
+	printf("grab failure\n");
+	state = STATE_AVOID_HIGH;
+	break ;
+      }
+
+      state = STATE_FIND_FREE_TILE;
+      break ;
+
+    case STATE_FIND_FREE_TILE:
+      /* find a cell to drop the pawn to */
+      printf("state_find_free_tile\n");
+
+      /* get center of the current tile */
+      /* todo: already computed before */
       b._asserv.get_position((int&)pos_x, (int&)pos_y);
-      if (pos_x < 500) pos_x = 500;
-      else if (pos_x > (3000 - 500)) pos_x = 3000 - 500;
+      pos_x = clamp_tile_x(pos_x);
       world_to_tile(pos_x, pos_y);
+      tile_to_world(pos_x, pos_y);
 
       /* move to the tile center */
       b._asserv.move_to(pos_x, pos_y);
       b._asserv.wait_done();
 
-      /* points towards the nearest possible direction */
+      /* points towards the nearest direction */
       pos_a = b._asserv.get_angle() % 360;
       if ((pos_a < 45) || (pos_a > 315)) pos_a = 0;
       else if (pos_a < 135) pos_a = 90;
       else if (pos_a < 225) pos_a = 180;
       else pos_a = 270;
 
-      /* todo */
-      while (1) ;
-
-      state = STATE_CHOOSE_TILE;
-
-      break ; /* STATE_AVOID_PAWN */
-
-#if 0 /* todo */
-      b._asserv.get_position(cur_x, cur_y);
-
-      if (is_red != is_tile_red(cur_x, cur_y))
+      /* todo: use previous computations */
+      world_to_tile(pos_x, pos_y);
+      if (is_red != is_tile_red(pos_x, pos_y))
       {
+#if 0 /* todo */
 	/* not the same color, move the pawn on a neighboring
 	   tile. use side sharps to detect if a tile is empty
 	 */
@@ -319,18 +378,21 @@ void moveto::main(bot& b)
 	b._asserv.wait_done();
 	if (is_free == false)
 	  goto redo;
+#else
+	b._clamp.drop();
+#endif /* todo */
       }
       else /* is_red == b.is_red() */
       {
-	/* same color, drop on the tile we are on */
+	/* todo: is moving backward safe? */
+	b._asserv.move_forward(-150);
+	b._asserv.wait_done();
+	b._clamp.drop();
       }
 
-      /* continue moving to */
-      b._asserv.move_to(moveto_x, moveto_y);
+      state = STATE_AVOID_HIGH;
 
-#endif /* todo */
-
-      break;
+      break ; /* STATE_AVOID_PAWN */
 
     default:
       break ;

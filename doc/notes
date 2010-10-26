@@ -3,6 +3,9 @@
   . si on est trop pret d un mur alors que l asserv ne le voit
   pas, ajuster la position de l asservissement
 
+ . on devrait a tout instant savoir si reculer est safe (ie. pas
+ d obstacle). si on ne sait pas, sharper
+
  . se deplacer a cheval sur des tiles permet de se replacer avec
  un systeme de led de couleur. normalement facilite par le fait
  que les leds sont placees sous le robot, donc pas de probleme de
