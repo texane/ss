@@ -7,8 +7,7 @@
   . actuellement, si on veut aller d un point a un autre
   tout en contournant les objets, c est difficile. A priori,
   le terrain va etre encombre et il faut profiter des deplacements
-  pour remttre sur nos cases un max de pions possible lors des
-  deplacements
+  pour remttre sur nos cases un max de pions possible
 
  . exporter les fonctions de tiling, et maintient des etats des tiles
 

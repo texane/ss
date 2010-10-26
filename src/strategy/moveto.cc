@@ -12,25 +12,7 @@
 #include <sys/types.h>
 #include "bot.hh"
 #include "strategy/strategy.hh"
-
-
-/* tiles */
-static const size_t tiles_per_row = 6;
-static const size_t tiles_per_col = 6;
-static const size_t tile_count = tiles_per_col * tiles_per_row;
-
-static inline void tile_to_world(unsigned int& x, unsigned int& y)
-{
-  x = 450 + x * 350 + 350 / 2;
-  y = y * 350 + 350 / 2;
-}
-
-static inline void world_to_tile(unsigned int& x, unsigned int& y)
-{
-  /* assume x >= 450 */
-  x = (x - 450) / 350;
-  y = y / 350;
-}
+#include "strategy/tile.hh"
 
 
 /* fsm states */

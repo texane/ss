@@ -10,71 +10,10 @@
 #include <string.h>
 #include "bot.hh"
 #include "strategy/strategy.hh"
+#include "strategy/tile.hh"
 
 
 // tile routines
-
-#define TILE_FLAG_SEEN (1 << 0)
-#define TILE_FLAG_USED (1 << 1)
-#define TILE_FLAG_RED (1 << 2)
-
-static const size_t tiles_per_row = 6;
-static const size_t tiles_per_col = 6;
-
-static unsigned int tiles[tiles_per_row * tiles_per_col];
-
-static inline void tile_to_world
-(unsigned int& x, unsigned int& y)
-{
-  x = 450 + x * 350 + 350 / 2;
-  y = y * 350 + 350 / 2;
-}
-
-static inline void world_to_tile
-(unsigned int& x, unsigned int& y)
-{
-  // assume x >= 450
-  x = (x - 450) / 350;
-  y = y / 350;
-}
-
-static void init_tiles(void)
-{
-  memset(tiles, 0, sizeof(tiles));
-}
-
-static inline unsigned int get_tile_at
-(unsigned int x, unsigned int y)
-{
-  // all the above function are in tile coords
-  return tiles[y * tiles_per_row + x];
-}
-
-static char tile_to_char(unsigned int tile)
-{
-  if ((tile & TILE_FLAG_SEEN) == 0)
-  {
-    return '?';
-  }
-  if (tile & TILE_FLAG_USED)
-  {
-    if (tile & TILE_FLAG_RED)
-      return 'r';
-    return 'b';
-  }
-  return ' ';
-}
-
-static void print_tiles(void)
-{
-  for (size_t i = 0; i < tiles_per_row; ++i)
-  {
-    for (size_t j = 0; j < tiles_per_col; ++j)
-      printf("%c", tile_to_char(get_tile_at(i, j)));
-    printf("\n");
-  }
-  printf("\n");
-}
 
 void tiler::main(bot& b)
 {
@@ -82,8 +21,6 @@ void tiler::main(bot& b)
 
   b._ticker.reset();
   b._asserv.set_velocity(400);
-
-  init_tiles();
 
   for (unsigned int i = 0; i < 6; ++i)
   {

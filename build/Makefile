@@ -21,9 +21,9 @@ RM	:=	rm -f
 
 BIN	:=	ss
 
-SRCS	:=	../src/main.cc		\
-		../src/conf.cc		\
-		../src/bot.cc		\
+SRCS	:=	../src/main.cc			\
+		../src/conf.cc			\
+		../src/bot.cc			\
 		../src/physics/physics.cc	\
 		../src/graphics/x.cc		\
 		../src/device/clamp.cc		\
@@ -32,6 +32,7 @@ SRCS	:=	../src/main.cc		\
 		../src/device/intersect.cc	\
 		../src/device/ticker.cc		\
 		../src/strategy/strategy.cc	\
+		../src/strategy/tile.cc		\
 		../src/strategy/util.cc		\
 		../src/strategy/test.cc		\
 		../src/strategy/bsod.cc		\
