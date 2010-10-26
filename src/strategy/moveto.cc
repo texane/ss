@@ -279,6 +279,7 @@ void moveto::main(bot& b)
       b._asserv.move_forward(-40);
       b._asserv.wait_done();
 
+#if 0 /* todo */
       if (b._sharps[bot::RIGHT_LOW_FCORNER].read() < 50)
       {
 	b._asserv.turn_right(90);
@@ -289,6 +290,10 @@ void moveto::main(bot& b)
 	b._asserv.turn_left(90);
 	b._asserv.wait_done();
       }
+#else
+      b._asserv.turn(70);
+      b._asserv.wait_done();
+#endif
 
       state = STATE_CHOOSE_TILE;
 
@@ -313,7 +318,7 @@ void moveto::main(bot& b)
 #endif
 
       dist = get_dist_from_tile_center(pos_x, pos_y);
-      if (dist < 75 || (is_tile_red(pos_x, pos_y) == is_red))
+      if (! ( (dist > 75) || (is_tile_red(pos_x, pos_y) != is_red) ) )
       {
 	/* todo: mark the tile */
 	state = STATE_AVOID_HIGH;
@@ -352,6 +357,9 @@ void moveto::main(bot& b)
       else if (pos_a < 135) pos_a = 90;
       else if (pos_a < 225) pos_a = 180;
       else pos_a = 270;
+
+      b._asserv.turn_to(pos_a);
+      b._asserv.wait_done();
 
       /* todo: use previous computations */
       world_to_tile(pos_x, pos_y);

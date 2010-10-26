@@ -1,4 +1,8 @@
 . todo
+ . mieux modeliser les sharps, tester que les assumptions
+ faites sont correctes. notament pour la distance min/max fiables,
+ et la perte sur la distance
+
  . mettre en place l automate de recalage
   . si on est trop pret d un mur alors que l asserv ne le voit
   pas, ajuster la position de l asservissement
@@ -19,10 +23,6 @@
   tout en contournant les objets, c est difficile. A priori,
   le terrain va etre encombre et il faut profiter des deplacements
   pour remttre sur nos cases un max de pions possible
-
- . mieux modeliser les sharps, tester que les assumptions
- faites sont correctes. notament pour la distance min/max fiables,
- et la perte sur la distance
 
  . avant de passer dans l automat distri, il faudrait
   degager le 2 pions qui trainent (?)
@@ -58,15 +58,6 @@
    . 0 degree points on the right
    . 90 degree points on the bottom 
    . (0, 0) top left corner
-
- . optimisation, code
-  . should the global update routine be called at the
-    end of cpSpaceStep instead of velocity update?
-  . cpShape->sensor can be used to implement a sensor more efficiently
-  . factorize tile code in tile.{hh,cc}
-  . cache a surface for bot, update only when angle changes
-   . in asserv.next(), set body->flags | NEED_GRAPHICS_UPDATE;
-   . in draw_shape, recompute the surface
 
 . features
  . state snapshot
