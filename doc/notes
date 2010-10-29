@@ -1,7 +1,26 @@
 . todo
 
+ . liste des deplacement en trop
+  . post leapfrog ->
+  . evitement du mur, on devrait gerer le cas
+   TODO
+   . si on est face a un mur, alors demi tour
+   TODO
+
  . actuellement probleme lors de l evitement apres la depose, car
- le robot a tendance a revenir
+ le robot a tendance a revenir: c est le probleme de repasser dans
+ avoid high? -> ca ne devrait pas etre le cas puisqu on fait le
+ necessaire pour eviter (turn_until_ok). MAIS ensuite on retombe
+ dans le continue_moveto... -> probleme puisque on va probablement
+ se redirigerer vers le pions, donc lent a sortir de la position
+  -> finalement je sais pas si le probleme vient de la ou du fait
+  que le robot voit le pion et donc essaie de se replacer.
+
+ . le leapfrog marche environ mais probleme, c est qu on choisi une
+ tile juste apres. donc on risque de se retrouver a faire marche
+ arriere. de maniere generale il faut eviter de faire des coups
+ pour rien, ie. par exemple revenir en arriere lors du choix de la
+ nouvelle tile
 
  . la fonction find_free_tile
   . actuellement pas mal mais devrait visiter d abord les zone bonus

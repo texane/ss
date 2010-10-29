@@ -173,7 +173,7 @@ static int __attribute__((unused)) do_leapfrog(bot& b)
   if (!b._clamp.grab())
     return -1;
 
-  b._asserv.move_forward(350);
+  b._asserv.move_forward(400);
   b._asserv.wait_done();
 
   b._asserv.turn(180);
@@ -458,12 +458,10 @@ void moveto::main(bot& b)
       /* theoritical distance is 75, but 80 works best */
       if (!((dist > 80) || (is_tile_red(pos_x, pos_y) != is_red)))
       {
-#if 0
 	printf("leapfrog\n");
 	do_leapfrog(b);
 	state = STATE_CHOOSE_TILE;
 	break ;
-#endif
 
 	/* todo: mark the tile */
 	state = STATE_AVOID_HIGH;
@@ -566,7 +564,7 @@ void moveto::main(bot& b)
       /* drop and move back to avoid */
       b._clamp.drop();
 
-      b._asserv.move_backward(100);
+      b._asserv.move_backward(150);
       b._asserv.wait_done();
 
       state = STATE_AVOID_HIGH;
