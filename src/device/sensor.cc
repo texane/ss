@@ -212,5 +212,5 @@ unsigned int sensor::read()
 
   // post processing, refer to sharp documentation
   const unsigned int dist = _dist;
-  return dist < 100 ? (unsigned int)-1 : (dist > 800 ? 800 : dist);
+  return dist < 30 ? (unsigned int)-1 : (dist > 800 ? 800 : dist);
 }

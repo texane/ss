@@ -166,6 +166,94 @@ static unsigned int get_dist_from_tile_center
 }
 
 
+static int __attribute__((unused)) do_leapfrog(bot& b)
+{
+  /* saute mouton */
+
+  if (!b._clamp.grab())
+    return -1;
+
+  b._asserv.move_forward(350);
+  b._asserv.wait_done();
+
+  b._asserv.turn(180);
+  b._asserv.wait_done();
+
+  b._clamp.drop();
+
+  b._asserv.move_backward(50);
+  b._asserv.wait_done();
+
+  b._asserv.turn(180);
+  b._asserv.wait_done();
+
+  return 0;
+}
+
+
+static int turn_until_front_ok(bot& b)
+{
+  /* use the corner sharps to choose the direction to move */
+
+  unsigned int ldist, rdist, fdist; /* left right distances */
+  size_t side_sharps[2]; /* the side sharp to check */
+  size_t front_sharp;
+  int w; /* angular vel */
+
+  /* peek the direction whose sharps is the farest */
+  ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
+  rdist = b._sharps[bot::FRONT_LOW_RIGHT].read();
+  if (ldist > rdist)
+  {
+    /* turn left */
+    w = 300;
+    front_sharp = bot::FRONT_LOW_LCORNER;
+    side_sharps[0] = bot::LEFT_LOW_FCORNER;
+    side_sharps[1] = bot::LEFT_LOW_MIDDLE;
+  }
+  else /* ldist <= rdist */
+  {
+    /* turn right */
+    w = -300;
+    front_sharp = bot::FRONT_LOW_RCORNER;
+    side_sharps[0] = bot::RIGHT_LOW_FCORNER;
+    side_sharps[1] = bot::RIGHT_LOW_MIDDLE;
+  }
+
+  /* turn until front middle ok */
+  while (1)
+  {
+    ldist = b._sharps[bot::FRONT_LOW_LEFT].read();
+    rdist = b._sharps[bot::FRONT_LOW_RIGHT].read();
+    fdist = b._sharps[front_sharp].read();
+
+    /* fdist to contains the min dist */
+    fdist = fdist < ldist ? fdist : ldist;
+    fdist = fdist < rdist ? fdist : rdist;
+
+    /* front ok, stop turning */
+    if (fdist > CONFIG_MIN_DIST)
+      break ;
+
+    /* check it is safe to turn */
+    /* todo: should be proximity sensors */
+    if ((b._sharps[side_sharps[0]].read() < 50) ||
+	(b._sharps[side_sharps[1]].read() < 50))
+    {
+      printf("not ok to turn\n");
+      return -1;
+    }
+
+    b._asserv.turn(10, w);
+    b._asserv.wait_done();
+  }
+
+  printf("ok to turn\n");
+
+  return 0;
+}
+
+
 void moveto::main(bot& b)
 {
   printf("moveto fsm\n");
@@ -225,8 +313,11 @@ void moveto::main(bot& b)
 	 parametrized given remaining time, bonus area,
 	 proximity, item density, opponent distance...
        */
+
       moveto_x = rand() % tiles_per_row;
       moveto_y = rand() % tiles_per_col;
+      printf("move_to %u %u\n", moveto_x, moveto_y);
+
       tile_to_world(moveto_x, moveto_y);
       state = STATE_MOVE_TO;
       break ;
@@ -247,6 +338,50 @@ void moveto::main(bot& b)
 	state = STATE_AVOID_COMMON;
 	break ;
       }
+
+#if 0 /* toimprove */
+      /* sharp left right to detect a pawn */
+      if (b._sharps[bot::LEFT_LOW_MIDDLE].read() < 150)
+      {
+	/* this is not a wall */
+	if (b._sharps[bot::LEFT_HIGH_MIDDLE].read() > 200)
+	{
+	  printf("found pawn at left\n");
+
+	  if (in_progress)
+	  {
+	    b._asserv.stop();
+	    b._asserv.wait_done();
+	  }
+
+	  b._asserv.turn_left(90);
+	  b._asserv.wait_done();
+
+	  state = STATE_AVOID_COMMON;
+	  break ;
+	}
+      }
+      if (b._sharps[bot::RIGHT_LOW_MIDDLE].read() < 150)
+      {
+	/* this is not a wall */
+	if (b._sharps[bot::RIGHT_HIGH_MIDDLE].read() > 200)
+	{
+	  printf("found pawn at right\n");
+
+	  if (in_progress)
+	  {
+	    b._asserv.stop();
+	    b._asserv.wait_done();
+	  }
+
+	  b._asserv.turn_right(90);
+	  b._asserv.wait_done();
+
+	  state = STATE_AVOID_COMMON;
+	  break ;
+	}
+      }
+#endif /* toimprove */
 
       /* do this way to allow the above check prior moving */
       if (in_progress == 0)
@@ -276,29 +411,23 @@ void moveto::main(bot& b)
       break ; /* STATE_AVOID_COMMON */
 
     case STATE_AVOID_HIGH:
-      /* move back, turn a bit and restart moveto */
+      /* avoid the stuff in front of us. if failed choose a tile */
       printf("state_avoid_high\n");
-
-      b._asserv.move_forward(-150);
-      b._asserv.wait_done();
-
-#if 0 /* todo */
-      if (b._sharps[bot::RIGHT_LOW_FCORNER].read() < 50)
+      if (turn_until_front_ok(b) == -1)
       {
-	b._asserv.turn_right(90);
+	/* try going backward since choosing a new tile will
+	   probably need a turn, which is currently impossible
+	   todo: check moving back is possible
+	 */
+	b._asserv.move_backward(100);
 	b._asserv.wait_done();
-      }
-      else if (b._sharps[bot::LEFT_LOW_FCORNER].read() < 50)
-      {
-	b._asserv.turn_left(90);
-	b._asserv.wait_done();
-      }
-#else
-      b._asserv.turn(90);
-      b._asserv.wait_done();
-#endif
 
-      state = STATE_CHOOSE_TILE;
+	state = STATE_CHOOSE_TILE;
+	break;
+      }
+
+      /* continue moving to */
+      state = STATE_MOVE_TO;
 
       break ; /* STATE_AVOID_HIGH */
 
@@ -329,6 +458,13 @@ void moveto::main(bot& b)
       /* theoritical distance is 75, but 80 works best */
       if (!((dist > 80) || (is_tile_red(pos_x, pos_y) != is_red)))
       {
+#if 0
+	printf("leapfrog\n");
+	do_leapfrog(b);
+	state = STATE_CHOOSE_TILE;
+	break ;
+#endif
+
 	/* todo: mark the tile */
 	state = STATE_AVOID_HIGH;
 	break ;
@@ -342,6 +478,14 @@ void moveto::main(bot& b)
       if (b._clamp.grab() == false)
       {
 	printf("grab failure\n");
+
+	/* move back, avoid */
+	b._asserv.move_backward(CONFIG_MIN_DIST);
+	while (!b._asserv.is_done())
+	{
+	  if (b._sharps[bot::BACK_LOW_MIDDLE].read() < CONFIG_MIN_DIST)
+	    b._asserv.stop();
+	}
 	state = STATE_AVOID_HIGH;
 	break ;
       }
@@ -406,16 +550,24 @@ void moveto::main(bot& b)
 	b._asserv.wait_done();
 	b._asserv.move_forward(200);
 	b._asserv.wait_done();
-	b._clamp.drop();
       }
       else /* is_red == b.is_red() */
       {
 	/* todo: is moving backward safe? */
 	printf("tile ok, dropping here\n");
-	b._asserv.move_forward(-175);
-	b._asserv.wait_done();
-	b._clamp.drop();
+	b._asserv.move_backward(190);
+	while (!b._asserv.is_done())
+	{
+	  if (b._sharps[bot::BACK_LOW_MIDDLE].read() < 150)
+	    b._asserv.stop();
+	}
       }
+
+      /* drop and move back to avoid */
+      b._clamp.drop();
+
+      b._asserv.move_backward(100);
+      b._asserv.wait_done();
 
       state = STATE_AVOID_HIGH;
 

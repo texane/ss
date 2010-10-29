@@ -111,6 +111,11 @@ void asserv::move_forward(int d)
   unlock_command();
 }
 
+void asserv::move_backward(int d)
+{
+  return move_forward(-d);
+}
+
 void asserv::move_to(unsigned int x, unsigned int y)
 {
   // casting to int important since x,y unsigneds

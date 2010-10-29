@@ -79,6 +79,7 @@ public:
   // commands
   void stop();
   void move_forward(int);
+  void move_backward(int);
   void move_to(unsigned int, unsigned int);
   void turn(unsigned int, int = 360);
   void turn_left(unsigned int);

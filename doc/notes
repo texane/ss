@@ -1,4 +1,22 @@
 . todo
+
+ . actuellement probleme lors de l evitement apres la depose, car
+ le robot a tendance a revenir
+
+ . la fonction find_free_tile
+  . actuellement pas mal mais devrait visiter d abord les zone bonus
+
+ . a la fin du match, aller defendre le pion bonus
+
+ . c est facile de rester bloquer contre un mur. bien faire attention
+ de sortir de l etat courant en essayer de detecter que c est le cas
+
+ . sensor sharp short range:
+  . Infrared Proximity Sensor Short Range - Sharp GP2D120XJ00F
+   . from 3 to 40 cms
+   . maybe should be better to use ultrasound for short distance sensing,
+   or even switches
+
  . debugger la fonction get_pawn_position
   . elle est importante
   . il faudrait utiliser les sharps middle pour estimer l erreur
