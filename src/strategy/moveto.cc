@@ -254,12 +254,120 @@ static int turn_until_front_ok(bot& b)
 }
 
 
+static void __attribute__((unused)) choose_tile_random
+(bot& b, unsigned int& tile_x, unsigned int& tile_y)
+{
+  /* tile_x, tile_y the previous tile coord or -1 */
+
+  tile_x = rand() % tiles_per_col;
+  tile_y = rand() % tiles_per_row;
+}
+
+
+static void __attribute__((unused)) choose_tile_far
+(bot& b, unsigned int& tile_x, unsigned int& tile_y)
+{
+  /* choose a tile in an opposite area */
+
+  unsigned int pos_x, pos_y;
+
+  b._asserv.get_position((int&)pos_x, (int&)pos_y);
+  pos_x = clamp_tile_x(pos_x);
+  world_to_tile(pos_x, pos_y);
+
+  tile_x = rand() % (tiles_per_row / 2);
+  if (pos_x < (tiles_per_col / 2))
+    tile_x += tiles_per_col / 2;
+
+  tile_y = rand() % (tiles_per_row / 2);
+  if (pos_y < (tiles_per_row / 2))
+    tile_y += tiles_per_row / 2;
+}
+
+
+static void __attribute__((unused)) choose_tile_dense
+(bot& b, const unsigned int* tiles, const unsigned int* pawns_per_col,
+ unsigned int& tile_x, unsigned int& tile_y)
+{
+  /* choose a tile based on the opponent pawn count
+     on the left and right sides. the rule is that
+     if the current col has more than 1 opponent pawn
+     we continue its exploration. otherwise, we move
+     to the area that have the more opponent pawns.
+   */
+
+  unsigned int pos_x, pos_y;
+  unsigned int lcount, rcount;
+  unsigned int i;
+
+  b._asserv.get_position((int&)pos_x, (int&)pos_y);
+  pos_x = clamp_tile_x(pos_x);
+  world_to_tile(pos_x, pos_y);
+
+  /* finish visiting the current column */
+  if (pawns_per_col[pos_x] > 1)
+  {
+    tile_x = pos_x;
+    tile_y = rand() % tiles_per_col;
+    return ;
+  }
+  else if (pos_x == 0)
+  {
+    tile_x = 1;
+    tile_y = pos_y;
+    return ;
+  }
+  else if (pos_x == tiles_per_row)
+  {
+    tile_x = tiles_per_row - 1;
+    tile_y = pos_y;
+    return ;
+  }
+
+  /* count right, left */
+  for (lcount = 0, i = 0; i < pos_x; ++i)
+    lcount += pawns_per_col[i];
+  for (rcount = 0, i = pos_x + 1; i < tiles_per_row; ++i)
+    rcount += pawns_per_col[i];
+  tile_x = pos_x + ((lcount > rcount) ? -1 : 1);
+  tile_y = pos_y;
+}
+
+
+static void init_pawns_per_col(bot& b, unsigned int* pawns_per_col)
+{
+  /* guess the pawn count per col. at the beginning we assume
+     the opponent owns all the tiles we have not yet seen
+   */
+
+  if (b.is_red())
+  {
+    pawns_per_col[0] = 2;
+    pawns_per_col[1] = 2;
+    pawns_per_col[2] = 2;
+    pawns_per_col[3] = 1;
+    pawns_per_col[4] = 2;
+    pawns_per_col[5] = 7;
+  }
+  else
+  {
+    pawns_per_col[0] = 7;
+    pawns_per_col[1] = 2;
+    pawns_per_col[2] = 1;
+    pawns_per_col[3] = 2;
+    pawns_per_col[4] = 2;
+    pawns_per_col[5] = 2;
+  }
+}
+
+
 void moveto::main(bot& b)
 {
-  printf("moveto fsm\n");
+  /* opponent pawn per column */
+  unsigned int pawns_per_col[tiles_per_col];
 
-  b._ticker.reset();
-  b._asserv.set_velocity(400);
+  /* tiles array */
+  unsigned int tiles[tile_count];
 
   /* bot color */
   const bool is_red = b.is_red();
@@ -271,8 +379,8 @@ void moveto::main(bot& b)
   enum state state = STATE_LEAVE_START_AREA;
   
   /* where to move */
-  unsigned int moveto_x = 0;
-  unsigned int moveto_y = 0;
+  unsigned int moveto_x = (unsigned int)-1;
+  unsigned int moveto_y = (unsigned int)-1;
 
   /* move is in progress */
   uint8_t in_progress;
@@ -290,6 +398,14 @@ void moveto::main(bot& b)
 
   /* distance */
   unsigned int dist;
+
+  printf("moveto fsm\n");
+
+  init_pawns_per_col(b, pawns_per_col);
+  init_tiles(tiles);
+
+  b._ticker.reset();
+  b._asserv.set_velocity(300);
 
   /* schedule automaton */
   while (1)
@@ -309,14 +425,9 @@ void moveto::main(bot& b)
       break ;
 
     case STATE_CHOOSE_TILE:
-      /* peek a random destination. the choice could be
-	 parametrized given remaining time, bonus area,
-	 proximity, item density, opponent distance...
-       */
+      choose_tile_dense(b, tiles, pawns_per_col, moveto_x, moveto_y);
 
-      moveto_x = rand() % tiles_per_row;
-      moveto_y = rand() % tiles_per_col;
-      printf("move_to %u %u\n", moveto_x, moveto_y);
+      printf("--> move_to %u %u\n", moveto_x, moveto_y);
 
       tile_to_world(moveto_x, moveto_y);
       state = STATE_MOVE_TO;
@@ -326,12 +437,36 @@ void moveto::main(bot& b)
       in_progress = 0;
 
     continue_move:
+      /* have we reached the tile */
+      b._asserv.get_position((int&)pos_x, (int&)pos_y);
+      pos_x = clamp_tile_x(pos_x);
+      world_to_tile(pos_x, pos_y);
+      if ((pos_x == moveto_x) && (pos_y == moveto_y))
+      {
+      moveto_done:
+	if (in_progress)
+	{
+	  in_progress = 0;
+	  b._asserv.stop();
+	  b._asserv.wait_done();
+	}
+
+	/* move is done */
+	state = STATE_CHOOSE_TILE;
+	break ;
+      }
+
+      /* we were moving, tile reached */
+      if (in_progress && b._asserv.is_done())
+	goto moveto_done;
+
       /* move to the destination unless something in front */
       min_index = util::read_front_sharps_get_min(b, sharps);
       if (sharps[min_index] < CONFIG_MIN_DIST)
       {
 	if (in_progress)
 	{
+	  in_progress = 0;
 	  b._asserv.stop();
 	  b._asserv.wait_done();
 	}
@@ -383,24 +518,27 @@ void moveto::main(bot& b)
       }
 #endif /* toimprove */
 
-      /* do this way to allow the above check prior moving */
+      /* this way to allow the above checks prior moving */
       if (in_progress == 0)
       {
 	in_progress = 1;
 	b._asserv.move_to((int)moveto_x, (int)moveto_y);
       }
-      else if (b._asserv.is_done())
-      {
-	/* move is done */
-	state = STATE_CHOOSE_TILE;
-	break ;
-      }
+
       goto continue_move;
 
       break ; /* STATE_MOVE_TO */
 
     case STATE_AVOID_COMMON:
       printf("avoid_common\n");
+
+#if 0 /* todo */
+      /* if the robot points toward a wall AND is too
+	 near (say adjacent tile), then dont try to avoid
+	 high. this should handle the problem of useless
+	 moves when in front of a wall.
+       */
+#endif
 
       /* bot, wall, tower */
       if (sharps[bot::FRONT_HIGH_MIDDLE] < CONFIG_MIN_DIST)
@@ -458,14 +596,18 @@ void moveto::main(bot& b)
       /* theoritical distance is 75, but 80 works best */
       if (!((dist > 80) || (is_tile_red(pos_x, pos_y) != is_red)))
       {
-	printf("leapfrog\n");
+	/* todo: mark the tile */
+	printf("leapfroging\n");
 	do_leapfrog(b);
 	state = STATE_CHOOSE_TILE;
+	/* todo: why not continue the move, so that the leapfrog
+	   was not useless...
+	 */
 	break ;
-
-	/* todo: mark the tile */
+#if 0
 	state = STATE_AVOID_HIGH;
 	break ;
+#endif
       }
 
       if (dist > 75)
@@ -488,6 +630,13 @@ void moveto::main(bot& b)
 	break ;
       }
 
+      /* one less pawn in this col */
+      b._asserv.get_position((int&)pos_x, (int&)pos_y);
+      pos_x = clamp_tile_x(pos_x);
+      world_to_tile(pos_x, pos_y);
+      if (pawns_per_col[pos_x] > 0)
+	--pawns_per_col[pos_x];
+
       state = STATE_FIND_FREE_TILE;
       break ;
 
@@ -504,7 +653,16 @@ void moveto::main(bot& b)
 
       /* move to the tile center */
       b._asserv.move_to(pos_x, pos_y);
-      b._asserv.wait_done();
+      while (!b._asserv.is_done())
+      {
+	min_index = util::read_front_sharps_get_min(b, sharps);
+	if (sharps[min_index] < CONFIG_MIN_DIST)
+	{
+	  b._asserv.stop();
+	  b._asserv.wait_done();
+	  break ;
+	}
+      }
 
       /* todo: use previous computations */
       world_to_tile(pos_x, pos_y);

@@ -16,6 +16,7 @@ static const size_t tile_count = tiles_per_col * tiles_per_row;
 #define TILE_FLAG_SEEN (1 << 0)
 #define TILE_FLAG_USED (1 << 1)
 #define TILE_FLAG_RED (1 << 2)
+#define TILE_FLAG_MEIN (1 << 2)
 
 
 static inline void tile_to_world(unsigned int& x, unsigned int& y)
