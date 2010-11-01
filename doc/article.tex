@@ -1,0 +1,103 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{Strategie Eurobot 2011}
+\author{Le Mentec Fabien, IGREBOT}
+\date{} 
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+\section{Introduction et choix}
+L originalite de cette annee est que les elements ne sont pas
+figes sur le plateau (a l exception des zones reservees). Ils
+peuvent a tout moment etre deplaces. Ce type de jeu laisse
+envisager 2 classes de profil chez le robot adverse:
+\begin{itemize}
+\item
+  positionne ses pions mais ne quittera pas sa zone de jeu.
+  Si c est un bon robot, il construira des tours, surement dans les
+  zones bonus. On peut envisager qu un robot cherchera a defendre
+  ses elements en fin de jeu (en priorite bonus et tours), par
+  exemple en refermant sa pince autour.
+\item
+  c est un robot plus aggressif, il penetre la zone adverse pour
+  aller retirer des points a l adversaire. Cela peut s envisager
+  de deux manieres:
+   \begin{itemize}
+   \item soit le robot pousse les pions au hasard en esperant retirer
+     un maximum de points a l adversaire,
+   \item soit le robot prend le temps de deplacer proprement les elements
+     de jeu positionnes par l adversaire.
+   \end{itemize}
+\end{itemize}
+
+A noter que les deux profils ne sont pas exclusifs, et ne sont pas
+forcement ordonnes: un robot peut choisir d attaquer d abord puis
+positionner ses elements de jeu ensuite.
+
+Face a ces profils possibles, et en anticipant les capacites du
+robot de cette annee, nous envisageons la solution suivante. On
+decompose le match de 90 secondes en 3 phases:
+\begin{itemize}
+  \item la phase 1, 60 secondes: consacrees  vider la zone de distribution et
+    a positionner les elments de notre camps
+  \item la phase 2, 20 secondes: temps de jeu sera passe dans la zone adverse.
+    le but est de retirer des points a l adversaire, et si possible de nous les
+    attribuer
+  \item  la phase 3: on defend la case la plus proche, si possible une zone bonus
+\end{itemize}
+
+Ce choix de decoupe du temps est motive par les raisons suivantes:
+\begin{itemize}
+   \item l idee, c est qu on a plus de chance de gagner un match en retirant des points
+     et en se les attribuant (surtout les tours) 
+   \item 90 secondes c est peu, et on prefere eviter les aller retours. Notre robot
+     opere donc d abord dans zone, lentement, puis dans la zone de l adversaire,
+     plus rapidement
+   \item on suppose que la plupart des robots vont construire dans leur zone
+     en priorite
+   \item le terrain risque d etre rapidement encombre, on evite donc de revenir sur
+     nos pas
+   \item on suppose que nous ne pouvons pas construire de tour, on prefere prendre
+     celles de l adversaire
+   \item d un point de vue gestion de projet, ca permet de realiser les choses
+     progressivement et dans l ordre (ie. phase 1 prioritaire)
+\end{itemize}
+
+
+\newpage
+\section{Details sur les phases}
+\subsection{Phase 1, positionnement de nos pions}
+\subsubsection{Algorithme}
+TODO
+
+\subsection{Phase 2, vidage de la zone de depart}
+\subsubsection{Algorithme}
+TODO
+
+\subsection{Phase 3, defense de la case la plus proche}
+\subsubsection{Algorithme}
+TODO
+
+\newpage
+\section{Implementation}
+\subsection{Configuration du robot}
+Afin d implementer cette strategie, on suppose un robot dont le modele est le suivant:
+\begin{itemize}
+  \item TODO: element de prehension
+  \item TODO: sharps (differents modeles)
+\end{itemize}
+
+\subsection{Simulation}
+Un simulateur est disponible ici: http://github.com/texane/ss
+
+\newpage
+\section{Conclusion}
+
+\end{document}
